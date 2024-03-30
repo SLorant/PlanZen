@@ -1,0 +1,11 @@
+
+###GET request
+GET http://localhost:5000/posts
+
+###
+POST http://localhost:5000/login
+Content-Type: application/json
+
+{
+    "username":"Kyle"
+}
