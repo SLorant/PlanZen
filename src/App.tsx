@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 import { Card, CardBody, Text } from "@chakra-ui/react";
+import Register from "./components/Register";
 
 function App() {
   const [count, setCount] = useState(0);
 
   const [backend, setBackend] = useState({});
 
-  useEffect(() => {
+  /*   useEffect(() => {
     try {
       fetchData();
     } catch (e) {
@@ -24,7 +25,7 @@ function App() {
     const js = await res.json();
     setBackend(js);
     console.log(js);
-  };
+  }; */
 
   return (
     <>
@@ -36,6 +37,7 @@ function App() {
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
       </div>
+      <Register />
       <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
       <Card>
         <CardBody>
