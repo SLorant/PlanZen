@@ -67,16 +67,6 @@ const itemRoutes = (app, options, done) => {
 
   app.get("/posts", updateItemOpts);
 
-  app.post("/login", async (req, reply) => {
-    //auth
-    const username = req.body.username;
-    const password = req.body.password;
-    const user = { name: username, password: password };
-    // eslint-disable-next-line no-undef
-    const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
-    reply.send({ accessToken: accessToken });
-  });
-
   done();
 };
 
