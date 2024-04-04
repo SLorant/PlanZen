@@ -1,11 +1,9 @@
 import fastify from "fastify";
 import fastifySwagger from "@fastify/swagger";
 import fastifyCors from "@fastify/cors";
-import jwt from "jsonwebtoken";
 import { configDotenv } from "dotenv";
-import bcrypt from "bcrypt";
 import fastifyCookie from "@fastify/cookie";
-import { authenticate, loginUser, registerUser } from "./controllers/auth.js";
+import { authRoutes } from "./routes/authRoutes.js";
 
 const app = fastify({ logger: true });
 configDotenv.apply();
@@ -31,94 +29,6 @@ app.register(fastifyCors, {
 });
 
 // Middleware to check if the user is authenticated
-
-const postLoginOpts = {
-  schema: {
-    body: {
-      type: "object",
-      required: ["name"],
-      required: ["password"],
-      properties: {
-        name: { type: "string" },
-        password: { type: "string" },
-      },
-    },
-    response: {
-      500: {
-        type: "object",
-        properties: {
-          message: { type: "string" },
-        },
-      },
-      400: {
-        type: "object",
-        properties: {
-          message: { type: "string" },
-        },
-      },
-      200: {
-        type: "object",
-        properties: {
-          message: { type: "string" },
-        },
-      },
-    },
-  },
-  handler: loginUser,
-};
-
-const postRegisterOpts = {
-  schema: {
-    body: {
-      type: "object",
-      required: ["name"],
-      required: ["password"],
-      properties: {
-        name: { type: "string" },
-        password: { type: "string" },
-      },
-    },
-    response: {
-      500: {
-        type: "object",
-        properties: {
-          message: { type: "string" },
-        },
-      },
-      400: {
-        type: "object",
-        properties: {
-          message: { type: "string" },
-        },
-      },
-      200: {
-        type: "object",
-        properties: {
-          message: { type: "string" },
-        },
-      },
-    },
-  },
-  handler: registerUser,
-};
-
-const authRoutes = (app, options, done) => {
-  //Get all
-  app.get("/protected-route", { preHandler: authenticate }, async (req, reply) => {
-    reply.send("Protected route accessed successfully!");
-  });
-
-  app.delete("/logout", async (req, reply) => {
-    // Clear the access token cookie
-    reply.clearCookie("access_token").code(204).send("success");
-  });
-
-  app.post("/register", postRegisterOpts);
-
-  app.post("/login", postLoginOpts);
-
-  done();
-};
 
 app.register(authRoutes);
 

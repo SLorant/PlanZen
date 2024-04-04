@@ -25,3 +25,5 @@ dist-ssr
 
 authServerRefreshTokens.js
 server/.env
+server/pocketbase
+adminLogin.js
