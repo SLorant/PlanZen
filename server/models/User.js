@@ -6,7 +6,6 @@ const User = {
     name: { type: "string" },
     email: { type: "string" },
     password: { type: "string" },
-    birthdate: { type: "string" },
   },
 };
 
@@ -15,12 +14,10 @@ const UserExt = {
   required: ["name"],
   required: ["email"],
   required: ["password"],
-  required: ["birthdate"],
   properties: {
     name: { type: "string" },
     email: { type: "string" },
     password: { type: "string" },
-    birthdate: { type: "string" },
   },
 };
 

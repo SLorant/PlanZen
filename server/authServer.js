@@ -5,7 +5,7 @@ import { configDotenv } from "dotenv";
 import fastifyCookie from "@fastify/cookie";
 import { authRoutes } from "./routes/authRoutes.js";
 
-const app = fastify({ logger: true });
+const app = fastify({ logger: false });
 configDotenv.apply();
 const PORT = 4000;
 

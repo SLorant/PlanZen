@@ -13,15 +13,15 @@ const loginUser = async (req, reply) => {
     });
     reply.send({ accessToken });
   } catch (e) {
-    reply.code(400).send(e.message);
+    reply.code(e.status).send(e.name);
   }
 };
 
 const registerUser = async (req, reply) => {
-  const { username, email, password, birthdate } = req.body;
+  const { username, email, password } = req.body;
 
   try {
-    const accessToken = await registerUserService(username, email, password, birthdate);
+    const accessToken = await registerUserService(username, email, password);
     reply
       .setCookie("access_token", accessToken, {
         httpOnly: true,
@@ -31,8 +31,7 @@ const registerUser = async (req, reply) => {
       })
       .send({ accessToken });
   } catch (e) {
-    console.log(e);
-    reply.code(500).send(e.message);
+    reply.code(e.status).send(e.name);
   }
 };
 
@@ -42,7 +41,7 @@ const authorize = async (req, reply, done) => {
     req.user = user;
     done();
   } catch (e) {
-    reply.code(401).send(e.message);
+    reply.code(e.status).send(e.name);
   }
 };
 
