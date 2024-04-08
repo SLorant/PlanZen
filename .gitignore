@@ -27,3 +27,5 @@ authServerRefreshTokens.js
 server/.env
 server/pocketbase
 adminLogin.js
+regtemp.tsx
+authServiceOld.js

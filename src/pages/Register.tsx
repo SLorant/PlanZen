@@ -1,17 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
-  Modal,
-  ModalBody,
-  Button,
-  ModalOverlay,
-  ModalContent,
-  ModalCloseButton,
-  ModalHeader,
   FormControl,
   FormLabel,
   Input,
-  ModalFooter,
   useDisclosure,
   InputGroup,
   InputRightElement,
@@ -19,13 +11,15 @@ import {
   FormErrorMessage,
   Text,
   useToast,
+  Button,
 } from "@chakra-ui/react";
+import componentMap from "../utils/formMapUtil";
 
 const Register = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [passwordAg, setPasswordAg] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
   const [error, setError] = useState("");
   const [pError, setPError] = useState("");
   const [paError, setPaError] = useState("");
@@ -58,7 +52,7 @@ const Register = () => {
       setPError("Your password must contain at least 8 characters.");
       hasErrors = true;
     }
-    if (password !== passwordAg) {
+    if (password !== passwordConfirm) {
       setPaError("Passwords don't match");
       hasErrors = true;
     }
@@ -82,6 +76,7 @@ const Register = () => {
             username,
             email,
             password,
+            passwordConfirm,
           },
           {
             withCredentials: true,
@@ -104,19 +99,27 @@ const Register = () => {
     setUsername("");
     setEmail("");
     setPassword("");
-    setPasswordAg("");
+    setPasswordConfirm("");
     clearErrors();
   }, [isOpen]);
+
+  const isMobile = window.innerWidth <= 768;
+
   return (
     <>
-      <Button onClick={onOpen}>Open Modal</Button>
-
-      <Modal closeOnOverlayClick={false} size={"sm"} initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Register</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody pb={6}>
+      <componentMap.Button onClick={onOpen}>{isMobile ? "Open Drawer" : "Open Modal"}</componentMap.Button>
+      <componentMap.Component
+        closeOnOverlayClick={!isMobile}
+        size={"sm"}
+        initialFocusRef={initialRef}
+        isOpen={isOpen}
+        onClose={onClose}
+      >
+        <componentMap.Overlay />
+        <componentMap.Content>
+          <componentMap.Header>Register</componentMap.Header>
+          <componentMap.CloseButton />
+          <componentMap.Body pb={6}>
             <FormControl isInvalid={nameError}>
               <FormLabel>Username</FormLabel>
               <Input
@@ -143,9 +146,9 @@ const Register = () => {
                   onChange={(e) => setPassword(e.target.value)}
                 />
                 <InputRightElement width="4.5rem">
-                  <Button h="1.75rem" size="sm" onClick={handleClick}>
+                  <componentMap.Button h="1.75rem" size="sm" onClick={handleClick}>
                     {show ? "Hide" : "Show"}
-                  </Button>
+                  </componentMap.Button>
                 </InputRightElement>
               </InputGroup>
               {!pError ? (
@@ -159,8 +162,8 @@ const Register = () => {
               <Input
                 type={show ? "text" : "password"}
                 placeholder="Password confirm"
-                value={passwordAg}
-                onChange={(e) => setPasswordAg(e.target.value)}
+                value={passwordConfirm}
+                onChange={(e) => setPasswordConfirm(e.target.value)}
               />
 
               <FormErrorMessage ml={1}>{paError}</FormErrorMessage>
@@ -170,16 +173,16 @@ const Register = () => {
                 {error}
               </Text>
             )}
-          </ModalBody>
+          </componentMap.Body>
 
-          <ModalFooter>
+          <componentMap.Footer>
             <Button colorScheme="blue" mr={3} onClick={handleRegister}>
               Register
             </Button>
             <Button onClick={onClose}>Cancel</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+          </componentMap.Footer>
+        </componentMap.Content>
+      </componentMap.Component>
     </>
   );
 };

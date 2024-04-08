@@ -1,47 +1,32 @@
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import PocketBase from "pocketbase";
-import adminLogin from "./adminLogin.js";
 import Api409Error from "../utils/errors/api409Error.js";
 import Api401Error from "../utils/errors/api401Error.js";
 import Api404Error from "../utils/errors/api404Error.js";
 import Api500Error from "../utils/errors/api404Error.js";
 
 const pb = new PocketBase("http://127.0.0.1:8090");
-const users = [];
-
-function generateAccessToken(user) {
-  return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET);
-}
 
 async function loginUserService(username, password) {
-  // const user = users.find((user) => user.name === username);
-
-  const user = await pb.collection("users2").getFirstListItem(`username="${username}"`, {
-    expand: "username,password",
-  });
-
-  if (!user) {
-    throw new Api404Error("User with this username not found.");
+  try {
+    await pb.collection("users").getFirstListItem(`username="${username}"`);
+  } catch (e) {
+    throw new Api404Error("Username not found");
+  }
+  try {
+    await pb.collection("users").authWithPassword(username, password);
+  } catch (e) {
+    throw new Api401Error("Password is invalid");
   }
 
-  const isPasswordValid = await bcrypt.compare(password, user.password);
-  if (!isPasswordValid) {
-    throw new Api401Error("Password is invalid.");
-  }
-
-  const accessToken = generateAccessToken(user);
-  return accessToken;
+  return pb.authStore.isValid;
 }
 
-async function registerUserService(username, email, password) {
-  const hashedPassword = await bcrypt.hash(password, 10);
-  const user = { username: username, email: email, password: hashedPassword };
+async function registerUserService(username, email, password, passwordConfirm) {
+  const user = { username: username, email: email, password: password, passwordConfirm: passwordConfirm };
 
-  await adminLogin(pb);
-
+  //Check if username exists
   try {
-    const existingUser = await pb.collection("users2").getFirstListItem(`username="${username}"`);
+    const existingUser = await pb.collection("users").getFirstListItem(`username="${username}"`);
     if (existingUser) {
       throw new Api409Error("This username already exists.");
     }
@@ -49,8 +34,9 @@ async function registerUserService(username, email, password) {
     handleConflictError(e);
   }
 
+  //Check if username exists
   try {
-    const existingEmail = await pb.collection("users2").getFirstListItem(`email="${email}"`);
+    const existingEmail = await pb.collection("users").getFirstListItem(`email="${email}"`);
     if (existingEmail) {
       throw new Api409Error("This email already exists.");
     }
@@ -58,16 +44,17 @@ async function registerUserService(username, email, password) {
     handleConflictError(e);
   }
 
+  //Create the user
   try {
-    await pb.collection("users2").create({
+    await pb.collection("users").create({
       ...user,
     });
+    await pb.collection("users").authWithPassword(username, password);
   } catch (e) {
     throw new Api500Error("Something went wrong.");
   }
 
-  const accessToken = generateAccessToken(user);
-  return accessToken;
+  return pb.authStore.isValid;
 }
 
 function handleConflictError(e) {
@@ -81,12 +68,21 @@ function handleConflictError(e) {
   }
 }
 
-function authorizeService(req) {
-  const accessToken = req.cookies.access_token;
-  if (!accessToken) {
-    throw new Api401Error("Unauthorized: Access token is missing");
+async function authorizeService() {
+  try {
+    pb.authStore.isValid && (await pb.collection("users").authRefresh());
+  } catch (e) {
+    pb.authStore.clear();
   }
-  return jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+  if (!pb.authStore.isValid) {
+    throw new Api401Error("Unauthorized: User not logged in");
+  }
+
+  return pb.authStore.isValid;
 }
 
-export { loginUserService, registerUserService, authorizeService };
+async function refreshToken() {
+  await pb.collection("users").authRefresh();
+}
+
+export { loginUserService, registerUserService, authorizeService, refreshToken };

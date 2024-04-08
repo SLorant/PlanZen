@@ -6,6 +6,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import RandomRoute from "./components/RandomRoute.tsx";
 import Register from "./pages/Register.tsx";
 import Login from "./pages/Login.tsx";
+import theme from "./theme.js";
 
 const router = createBrowserRouter([
   {
@@ -27,9 +28,8 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <ChakraProvider>
-      <RouterProvider router={router} />
-    </ChakraProvider>
-  </React.StrictMode>
+  /*  <React.StrictMode> */
+  <ChakraProvider theme={theme}>
+    <RouterProvider router={router} />
+  </ChakraProvider>
 );

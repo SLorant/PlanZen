@@ -4,7 +4,6 @@ const User = {
   required: ["password"],
   properties: {
     name: { type: "string" },
-    email: { type: "string" },
     password: { type: "string" },
   },
 };
@@ -14,10 +13,12 @@ const UserExt = {
   required: ["name"],
   required: ["email"],
   required: ["password"],
+  required: ["passwordConfirm"],
   properties: {
     name: { type: "string" },
     email: { type: "string" },
     password: { type: "string" },
+    passwordConfrim: { type: "string" },
   },
 };
 

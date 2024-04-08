@@ -4,6 +4,7 @@ import fastifyCors from "@fastify/cors";
 import { configDotenv } from "dotenv";
 import fastifyCookie from "@fastify/cookie";
 import { authRoutes } from "./routes/authRoutes.js";
+import { miscRoutes } from "./routes/miscRoutes.js";
 
 const app = fastify({ logger: false });
 configDotenv.apply();
@@ -31,6 +32,7 @@ app.register(fastifyCors, {
 // Middleware to check if the user is authenticated
 
 app.register(authRoutes);
+app.register(miscRoutes);
 
 const start = async () => {
   try {

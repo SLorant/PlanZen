@@ -2,37 +2,88 @@ import { useState, useEffect } from "react";
 import "./App.css";
 import { Card, CardBody, CardHeader, Stack, Box, Heading, Text, StackDivider } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [dailyQuote, setQuote] = useState("");
 
-  const [backend, setBackend] = useState({});
-
-  /*   useEffect(() => {
+  useEffect(() => {
     try {
-      fetchData();
+      fetchDailyQuote();
     } catch (e) {
       console.error(e);
     }
   }, []);
 
-  const fetchData = async () => {
-    const res = await fetch("http://localhost:5000/api", {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const js = await res.json();
-    setBackend(js);
-    console.log(js);
-  }; */
+  const fetchQuote = async () => {
+    try {
+      let quote = await fetchNewQuote();
+      while (quote.length > 100) {
+        quote = await fetchNewQuote();
+      }
+      const postQuote = quote.quote;
+      const author = quote.author;
+      await axios.post(
+        "http://localhost:4000/newquote",
+        {
+          postQuote,
+          author,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      setQuote(quote.quote);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchDailyQuote = async () => {
+    try {
+      const response = await axios.get("http://localhost:4000/dailyquote", {
+        withCredentials: true,
+      });
+      const quote = response.data;
+      const date = new Date(quote.updated);
+      const today = new Date();
+      const isNotToday =
+        date.getFullYear() !== today.getFullYear() ||
+        date.getMonth() !== today.getMonth() ||
+        date.getDate() !== today.getDate();
+      if (isNotToday) {
+        fetchQuote();
+      } else {
+        setQuote(quote.quote);
+      }
+      // Get the day of the week (0 for Sunday, 1 for Monday, ..., 6 for Saturday)
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const fetchNewQuote = async () => {
+    try {
+      const res = await fetch("https://api.api-ninjas.com/v1/quotes?category=inspirational", {
+        headers: {
+          "X-Api-Key": import.meta.env.VITE_QUOTES_API_KEY,
+        },
+      });
+      const quotes = await res.json();
+      const quote = quotes[0];
+      console.log(quote);
+      return quote;
+    } catch {
+      setQuote("asd");
+    }
+  };
 
   return (
     <main>
       <h1>Vite + React</h1>
-      <p>{backend?.users?.toString() ?? "Loading.."}</p>
+      {dailyQuote && dailyQuote.toString()}
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
+        <Link to={"/calendar"}>Calendar</Link>
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>

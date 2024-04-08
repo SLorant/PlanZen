@@ -1,7 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 const RandomRoute = () => {
+  const [error, setError] = useState("");
   useEffect(() => {
     handleRegister();
   }, []);
@@ -14,7 +15,7 @@ const RandomRoute = () => {
       console.log(response.data);
       // You can handle success here, like redirecting to another page
     } catch (error) {
-      console.log(error);
+      setError(error?.response?.data);
     }
   };
 
@@ -34,6 +35,7 @@ const RandomRoute = () => {
     <div>
       RandomRoute
       <button onClick={handleLogout}>Logout</button>
+      {error && error}
     </div>
   );
 };

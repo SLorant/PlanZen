@@ -7,7 +7,8 @@ const postLoginOpts = {
     body: User,
     response: {
       500: Message,
-      400: Message,
+      404: Message,
+      401: Message,
       200: Message,
     },
   },
@@ -19,6 +20,7 @@ const postRegisterOpts = {
     body: UserExt,
     response: {
       500: Message,
+      409: Message,
       400: Message,
       200: Message,
     },
