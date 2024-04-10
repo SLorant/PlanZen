@@ -1,6 +1,7 @@
 import { extendTheme } from "@chakra-ui/react";
+import "@fontsource/lato";
+import "@fontsource/nunito";
 
-const primary = "#43e56e";
 const theme = {
   styles: {
     global: (props) => ({
@@ -11,8 +12,8 @@ const theme = {
     }),
   },
   fonts: {
-    heading: '"Avenir Next", sans-serif',
-    body: '"Open Sans", sans-serif',
+    heading: '"Nunito", sans-serif',
+    body: '"Nunito", sans-serif',
   },
   colors: {
     light: {

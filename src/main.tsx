@@ -7,6 +7,7 @@ import RandomRoute from "./components/RandomRoute.tsx";
 import Register from "./pages/Register.tsx";
 import Login from "./pages/Login.tsx";
 import theme from "./theme.js";
+import Calendar2 from "./pages/Calendar.tsx";
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
   {
     path: "/route",
     element: <RandomRoute />,
+  },
+  {
+    path: "/calendar",
+    element: <Calendar2 />,
   },
 ]);
 
