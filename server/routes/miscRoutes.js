@@ -1,7 +1,6 @@
 import { getDailyQuote, postQuote } from "../controllers/miscController.js";
 import Quote from "../models/Quote.js";
 import Message from "../models/Message.js";
-import { loginUser } from "../controllers/authController.js";
 
 const getQuoteOpts = {
   schema: {

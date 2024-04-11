@@ -38,9 +38,9 @@ const registerUser = async (req, reply) => {
 
 const authorize = async (req, reply, done) => {
   try {
-    const user = await authorizeService();
+    const isLoggedIn = await authorizeService();
     //req.user = user;
-    done();
+    return isLoggedIn;
   } catch (e) {
     reply.code(e.status).send(e.name);
   }

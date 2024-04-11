@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Calendar, Views, momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { useState } from "react";
-
+import axios from "axios";
 import "../styles/rbc.css";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
@@ -10,9 +10,12 @@ const DnDCalendar = withDragAndDrop(Calendar);
 import moment from "moment";
 import "moment/dist/locale/en-gb";
 import EventAdder from "../components/EventAdder";
+import LoginCheckUtil from "../components/LoginCheckUtil";
+import { useToast } from "@chakra-ui/react";
 
 const Calendar2 = () => {
   moment.locale("en-GB");
+  const toast = useToast();
 
   const localizer = momentLocalizer(moment); // or globalizeLocalizer
   const events = [
@@ -37,6 +40,27 @@ const Calendar2 = () => {
     },
   ];
 
+  useEffect(() => {
+    try {
+      fetchAllEvents();
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
+
+  const fetchAllEvents = async () => {
+    const result = await LoginCheckUtil(toast);
+    if (result) {
+      try {
+        const event = await axios.get("http://localhost:4000/events", {
+          withCredentials: true,
+        });
+        console.log(event);
+      } catch (e) {
+        console.log(e?.response?.data);
+      }
+    }
+  };
   //getter from db
   const [allEvents, setAllEvents] = useState(events);
 

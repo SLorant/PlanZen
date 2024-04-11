@@ -19,6 +19,8 @@ import {
 } from "@chakra-ui/react";
 import ColorPicker from "./ColorPicker";
 import axios from "axios";
+import Login from "../pages/Login";
+import LoginCheckUtil from "./LoginCheckUtil";
 
 const EventAdder = ({ allEvents, setAllEvents }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -32,6 +34,11 @@ const EventAdder = ({ allEvents, setAllEvents }) => {
   const [nameError, setNameError] = useState("");
   const toast = useToast();
 
+  useEffect(() => {
+    if (newEvent.title) setNameError("");
+    else setNameError("Title required");
+  }, [newEvent]);
+
   async function handleAddEvent() {
     // Combine date and time for start and end dates
     const startDateTime = new Date(newEvent.start);
@@ -39,18 +46,13 @@ const EventAdder = ({ allEvents, setAllEvents }) => {
     startDateTime.setHours(parseInt(startHours));
     startDateTime.setMinutes(parseInt(startMinutes));
 
-    const endDateTime = new Date(newEvent.end);
+    const endDateTime = new Date(multiday ? newEvent.end : newEvent.start);
     const [endHours, endMinutes] = endTime.split(":");
-    endDateTime.setHours(parseInt(endHours));
-    endDateTime.setMinutes(parseInt(endMinutes));
+    endDateTime.setHours(parseInt(multiday ? startHours : endHours));
+    endDateTime.setMinutes(parseInt(multiday ? startMinutes : endMinutes));
 
-    let hasErrors = false;
-    if (!newEvent.title) {
-      setNameError("Title required");
-      hasErrors = true;
-    }
-
-    if (!hasErrors) {
+    if (!nameError) {
+      console.log("Asd");
       try {
         await axios.post(
           "http://localhost:4000/addEvent",
@@ -67,14 +69,14 @@ const EventAdder = ({ allEvents, setAllEvents }) => {
           duration: 3000,
           isClosable: true,
         });
+        console.log(newEvent.color);
+        setNewEvent({ ...newEvent, start: startDateTime, end: endDateTime });
+        setAllEvents([...allEvents, { ...newEvent, start: startDateTime, end: endDateTime }]);
+        onClose();
       } catch (error) {
         setError(error?.response?.data);
       }
     }
-    console.log(newEvent.color);
-    setNewEvent({ ...newEvent, start: startDateTime, end: endDateTime });
-    setAllEvents([...allEvents, { ...newEvent, start: startDateTime, end: endDateTime }]);
-    onClose();
   }
 
   const propConfig = {
@@ -92,9 +94,15 @@ const EventAdder = ({ allEvents, setAllEvents }) => {
     },
   };
 
+  const handleLoginCheck = async () => {
+    const result = await LoginCheckUtil(toast);
+    console.log(result);
+    if (result) onOpen();
+  };
+
   return (
     <>
-      <Button onClick={onOpen}>Open Modal</Button>
+      <Button onClick={handleLoginCheck}>Open Modal</Button>
       <Modal
         backgroundColor={"secondary"}
         closeOnOverlayClick={false}
@@ -113,7 +121,7 @@ const EventAdder = ({ allEvents, setAllEvents }) => {
             }}
           />
           <ModalBody>
-            <FormControl>
+            <FormControl isInvalid={nameError}>
               <FormLabel>Event title</FormLabel>
               <Input
                 focusBorderColor="accent"
@@ -122,7 +130,7 @@ const EventAdder = ({ allEvents, setAllEvents }) => {
                 value={newEvent.title}
                 onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
               />
-              <FormErrorMessage ml={1}></FormErrorMessage>
+              <FormErrorMessage ml={1}>{nameError}</FormErrorMessage>
             </FormControl>
 
             <FormControl mt={4}>
@@ -175,6 +183,11 @@ const EventAdder = ({ allEvents, setAllEvents }) => {
               <FormLabel mb="0">Change event color</FormLabel>
               <ColorPicker setNewEvent={setNewEvent} />
             </FormControl>
+            {error && (
+              <Text mt={2} ml={1} color={"red"}>
+                {error}
+              </Text>
+            )}
             <ModalFooter mt={2}>
               <Button
                 color={"text"}
@@ -199,6 +212,7 @@ const EventAdder = ({ allEvents, setAllEvents }) => {
           </ModalBody>
         </ModalContent>
       </Modal>
+      <Login />
     </>
   );
 };

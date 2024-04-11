@@ -56,6 +56,7 @@ const Login = () => {
           duration: 5000,
           isClosable: true,
         });
+        onClose();
       } catch (error) {
         setError(error?.response?.data);
       }

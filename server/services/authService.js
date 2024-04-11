@@ -1,10 +1,8 @@
-import PocketBase from "pocketbase";
 import Api409Error from "../utils/errors/api409Error.js";
 import Api401Error from "../utils/errors/api401Error.js";
 import Api404Error from "../utils/errors/api404Error.js";
 import Api500Error from "../utils/errors/api404Error.js";
-
-const pb = new PocketBase("http://127.0.0.1:8090");
+import pb from "../database/SingletonDB.js";
 
 async function loginUserService(username, password) {
   try {

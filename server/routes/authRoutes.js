@@ -30,8 +30,8 @@ const postRegisterOpts = {
 
 const authRoutes = (app, options, done) => {
   //Get all
-  app.get("/protected-route", { preHandler: authorize }, async (req, reply) => {
-    reply.send("Protected route accessed successfully!");
+  app.get("/check-logged-in", { preHandler: authorize }, async (req, reply) => {
+    reply.code(200).send(true);
   });
 
   app.delete("/logout", async (req, reply) => {

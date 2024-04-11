@@ -5,6 +5,7 @@ import { configDotenv } from "dotenv";
 import fastifyCookie from "@fastify/cookie";
 import { authRoutes } from "./routes/authRoutes.js";
 import { miscRoutes } from "./routes/miscRoutes.js";
+import { eventRoutes } from "./routes/eventRoutes.js";
 
 const app = fastify({ logger: false });
 configDotenv.apply();
@@ -33,6 +34,7 @@ app.register(fastifyCors, {
 
 app.register(authRoutes);
 app.register(miscRoutes);
+app.register(eventRoutes);
 
 const start = async () => {
   try {
