@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import "./App.css";
-import { Card, CardBody, CardHeader, Stack, Box, Heading, Text, StackDivider } from "@chakra-ui/react";
+import { Card, CardBody, CardHeader, Stack, Box, Heading, Text, StackDivider, theme } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { useColorModeValue, useColorMode, Button } from "@chakra-ui/react";
 
 function App() {
   const [dailyQuote, setQuote] = useState("");
-
+  const { toggleColorMode } = useColorMode();
   useEffect(() => {
     try {
       fetchDailyQuote();
@@ -77,21 +78,30 @@ function App() {
       setQuote("asd");
     }
   };
-
+  const bg = useColorModeValue("var(--light-accent-color)", "red.200");
+  const color = useColorModeValue("white", "gray.800");
   return (
     <main>
       <h1>Vite + React</h1>
+
+      <Box mb={4} bg={bg} color={color}>
+        This box's style will change based on the color mode.
+      </Box>
+      <Button size="sm" onClick={toggleColorMode}>
+        Toggle Mode
+      </Button>
       {dailyQuote && dailyQuote.toString()}
       <div className="card">
         <Link to={"/calendar"}>Calendar</Link>
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
+        <Link to={"/todo"}>Todo</Link>
       </div>
       <Link to={"/register"}>register</Link>
       <Link to={"/login"}>login</Link>
       <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
-      <Card color={"whiteAlpha.800"} backgroundColor="gray.700">
+      <Card color="text" backgroundColor={"primary"}>
         <CardHeader>
           <Heading size="md">Client Report</Heading>
         </CardHeader>

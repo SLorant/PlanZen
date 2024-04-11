@@ -6,8 +6,10 @@ import { ChakraProvider } from "@chakra-ui/react";
 import RandomRoute from "./components/RandomRoute.tsx";
 import Register from "./pages/Register.tsx";
 import Login from "./pages/Login.tsx";
-import theme from "./theme.js";
 import Calendar2 from "./pages/Calendar.tsx";
+import ToDo from "./pages/ToDo.tsx";
+import theme from "./theme.js";
+import { ColorModeScript } from "@chakra-ui/react";
 
 const router = createBrowserRouter([
   {
@@ -30,11 +32,16 @@ const router = createBrowserRouter([
     path: "/calendar",
     element: <Calendar2 />,
   },
+  {
+    path: "/todo",
+    element: <ToDo />,
+  },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   /*  <React.StrictMode> */
   <ChakraProvider theme={theme}>
+    <ColorModeScript initialColorMode={theme.config.initialColorMode} />
     <RouterProvider router={router} />
   </ChakraProvider>
 );

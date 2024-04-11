@@ -81,6 +81,7 @@ const Login = () => {
             <FormControl isInvalid={nameError}>
               <FormLabel>Username</FormLabel>
               <Input
+                _focus={{ borderColor: "accent" }}
                 ref={initialRef}
                 placeholder="Username"
                 value={username}
@@ -93,7 +94,7 @@ const Login = () => {
               <FormLabel>Password</FormLabel>
               <InputGroup>
                 <Input
-                  focusBorderColor="light.accent"
+                  focusBorderColor={"primary"}
                   pr="4.5rem"
                   type={show ? "text" : "password"}
                   placeholder="Enter password"
@@ -116,15 +117,10 @@ const Login = () => {
           </componentMap.Body>
 
           <componentMap.Footer>
-            <Button color={"light.text"} mr={3} onClick={onClose}>
+            <Button color={"text"} mr={3} onClick={onClose}>
               Cancel
             </Button>
-            <Button
-              color={"light.text"}
-              _hover={{ bg: "light.secondary" }}
-              backgroundColor={"light.primary"}
-              onClick={handleLogin}
-            >
+            <Button color={"text"} _hover={{ bg: "secondary" }} backgroundColor={"primary"} onClick={handleLogin}>
               Log in
             </Button>
           </componentMap.Footer>

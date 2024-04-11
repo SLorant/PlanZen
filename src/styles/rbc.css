@@ -79,11 +79,18 @@
   -webkit-box-shadow: none;
 }
 .rbc-event.rbc-selected {
-  background-color: var(--light-accent-color);
-  color: white;
+  background-color: var(--light-secondary-color);
 }
 .rbc-show-more {
   color: var(--light-accent-color);
+}
+
+.rbc-day-slot .rbc-event {
+  border: 1px solid var(--light-text-color);
+}
+.rbc-event:focus,
+.rbc-day-slot .rbc-background-event:focus {
+  outline: none !important;
 }
 /* Mobile responsiveness */
 @media (max-width: 768px) {

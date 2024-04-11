@@ -1,18 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Calendar, Views, momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import "react-datepicker/dist/react-datepicker.css";
 import { useState } from "react";
-import DatePicker from "react-datepicker";
-import { RangeDatepicker } from "chakra-dayzed-datepicker";
-import { SingleDatepicker } from "chakra-dayzed-datepicker";
-import { Button } from "@chakra-ui/react";
-import "./rbc.css";
+
+import "../styles/rbc.css";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 const DnDCalendar = withDragAndDrop(Calendar);
 import moment from "moment";
 import "moment/dist/locale/en-gb";
+import EventAdder from "../components/EventAdder";
 
 const Calendar2 = () => {
   moment.locale("en-GB");
@@ -30,27 +27,7 @@ const Calendar2 = () => {
       title: "Vacation",
       start: new Date(2024, 3, 7),
       end: new Date(2024, 3, 10),
-    },
-    {
-      id: "asd2",
-      title: "Vacation",
-      start: new Date(2024, 3, 7),
-      end: new Date(2024, 3, 10),
-      isAllDay: true,
-    },
-    {
-      id: "asd2",
-      title: "Vacation",
-      start: new Date(2024, 3, 7),
-      end: new Date(2024, 3, 10),
-      isAllDay: true,
-    },
-    {
-      id: "asd2",
-      title: "Vacation",
-      start: new Date(2024, 3, 7),
-      end: new Date(2024, 3, 10),
-      isAllDay: true,
+      color: "#ccc", // Default color
     },
     {
       id: "asd3",
@@ -60,42 +37,11 @@ const Calendar2 = () => {
     },
   ];
 
-  function handleAddEvent() {
-    setAllEvents([...allEvents, newEvent]);
-  }
-
-  const [newEvent, setNewEvent] = useState({ title: "", start: new Date(), end: "" });
+  //getter from db
   const [allEvents, setAllEvents] = useState(events);
-  const [selectedDates, setSelectedDates] = useState<Date[]>([new Date(), new Date()]);
-
-  const propConfig = {
-    dateNavBtnProps: {
-      backgroundColor: "light.primary",
-      variant: "outline",
-    },
-    dayOfMonthBtnProps: {
-      defaultBtnProps: {
-        borderColor: "red.300",
-        _hover: {
-          background: "blue.400",
-        },
-      },
-    },
-  };
 
   const onEventResize = ({ event, start, end, isAllDay }) => {
     const updatedEvent = { ...event, start, end, isAllDay };
-    // Add a class to the dropped event for the animation
-    const eventElements = document.getElementsByClassName(`.rbc-addons-dnd-dragged-event`);
-    console.log(eventElements);
-    if (eventElements.length > 0) {
-      eventElements.forEach((element) => {
-        element.classList.add("event-drop");
-        setTimeout(() => {
-          element.classList.remove("event-drop");
-        }, 500); // Adjust timing according to your animation duration
-      });
-    }
     // Any other logic. If async saving your change, you'll probably
     // do the next line in a `.then()`
     setAllEvents((prevEvents) => {
@@ -106,17 +52,6 @@ const Calendar2 = () => {
 
   const onEventDrop = ({ event, start, end, isAllDay }) => {
     const updatedEvent = { ...event, start, end, isAllDay };
-    // Add a class to the dropped event for the animation
-    const eventElements = document.getElementsByClassName(`.rbc-addons-dnd-drag-preview `);
-    console.log(eventElements);
-    if (eventElements.length > 0) {
-      eventElements.forEach((element) => {
-        element.classList.add("event-drop");
-        setTimeout(() => {
-          element.classList.remove("event-drop");
-        }, 500); // Adjust timing according to your animation duration
-      });
-    }
     // Any other logic. If async saving your change, you'll probably
     // do the next line in a `.then()`
     setAllEvents((prevEvents) => {
@@ -134,6 +69,16 @@ const Calendar2 = () => {
       setHideEventLabels(false); // Show event labels for other views
     }
   };
+
+  const eventStyleGetter = (event) => ({
+    style: {
+      backgroundColor: event.color,
+    },
+  });
+
+  useEffect(() => {
+    console.log(allEvents);
+  }, [allEvents]);
   return (
     <div>
       <div className={hideEventLabels ? "week-view" : ""}>
@@ -145,46 +90,12 @@ const Calendar2 = () => {
           onEventDrop={onEventDrop}
           onEventResize={onEventResize}
           onView={handleViewChange}
-          dateFormat="h t"
-          /* onDragStart={() => {
-          setTimeout(() => {
-            const eventElement = document.querySelector(`.rbc-addons-dnd-drag-preview`);
-            console.log(eventElement);
-            if (eventElement) {
-              eventElement.classList.add("event-dragging");
-            }
-          }, 500);
-        }} */
           resizable
+          eventPropGetter={eventStyleGetter} // Add eventStyleGetter prop
         />
       </div>
       <h2>add new</h2>
-      <div>
-        <input
-          type="text"
-          value={newEvent.title}
-          onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
-        />
-        <DatePicker
-          placeholderText="asd"
-          selected={newEvent.start}
-          onChange={(start) => setNewEvent({ ...newEvent, start })}
-        />
-        <DatePicker
-          placeholderText="asd2"
-          selected={newEvent.end}
-          onChange={(end) => setNewEvent({ ...newEvent, end })}
-        />
-
-        <SingleDatepicker
-          name="date-input"
-          date={newEvent.start}
-          propsConfigs={propConfig}
-          onDateChange={(start) => setNewEvent({ ...newEvent, start })}
-        />
-        <RangeDatepicker selectedDates={selectedDates} onDateChange={setSelectedDates} />
-        <Button onClick={handleAddEvent}>add event</Button>
-      </div>
+      <EventAdder allEvents={allEvents} setAllEvents={setAllEvents} />
     </div>
   );
 };
