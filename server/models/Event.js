@@ -4,6 +4,7 @@ const Event = {
   required: ["start"],
   required: ["end"],
   properties: {
+    id: { type: "string" },
     title: { type: "string" },
     start: { type: "string" },
     end: { type: "string" },

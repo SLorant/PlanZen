@@ -6,19 +6,15 @@ import Api500Error from "../utils/errors/api404Error.js";
 import pb from "../database/SingletonDB.js";
 
 async function getEventsService() {
-  let events = {};
-  console.log(pb.authStore.model.id);
   try {
     const eventList = await pb.collection("events").getList(1, 50, {
       filter: `userID = "${pb.authStore.model.id}"`,
     });
-    console.log(eventList);
+    return eventList;
   } catch (e) {
     console.log(e);
     throw new Api404Error("No events found");
   }
-
-  return quote;
 }
 
 async function addEventService(title, start, end, color, taskId) {
@@ -38,4 +34,21 @@ async function addEventService(title, start, end, color, taskId) {
   return true;
 }
 
-export { getEventsService, addEventService };
+async function updateEventService(id, title, start, end, color) {
+  try {
+    const data = {
+      title: title,
+      start: start,
+      end: end,
+      color: color,
+    };
+    console.log(id);
+    await pb.collection("events").update(`${id}`, data);
+  } catch (e) {
+    console.log(e);
+    throw new Api500Error("Something went wrong.");
+  }
+  return true;
+}
+
+export { getEventsService, addEventService, updateEventService };

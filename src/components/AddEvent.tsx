@@ -16,28 +16,70 @@ import {
   ModalOverlay,
   ModalFooter,
   Switch,
+  Text,
 } from "@chakra-ui/react";
 import ColorPicker from "./ColorPicker";
 import axios from "axios";
 import Login from "../pages/Login";
 import LoginCheckUtil from "./LoginCheckUtil";
 
-const EventAdder = ({ allEvents, setAllEvents }) => {
+const AddEvent = ({ allEvents, setAllEvents, slotEvent, editing }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = useRef(null);
   const [newEvent, setNewEvent] = useState({ title: "", start: new Date(), end: new Date(), color: "#43e56e" });
   const [multiday, setMultiday] = useState(false);
   //const [color, setColor] = useState(false);
-  const [startTime, setStartTime] = useState("10:00");
-  const [endTime, setEndTime] = useState("11:00");
+  /*  const [startTime, setStartTime] = useState(`${() => new Date().getHours()}:00`);
+  const [endTime, setEndTime] = useState(`${() => new Date().getHours()}:00`); */
   const [error, setError] = useState("");
   const [nameError, setNameError] = useState("");
   const toast = useToast();
 
+  const formatTime = (time) => {
+    return time < 10 ? `0${time}` : time.toString();
+  };
+
+  const getCurrentTime = (end = false) => {
+    const date = new Date();
+    const hours = end ? date.getHours() + 1 : date.getHours();
+    const minutes = date.getMinutes();
+
+    return `${formatTime(hours)}:${formatTime(minutes)}`;
+  };
+
+  const [startTime, setStartTime] = useState(getCurrentTime());
+  const [endTime, setEndTime] = useState(getCurrentTime(true));
+
+  const handleSlotEvent = async () => {
+    const result = await LoginCheckUtil(toast, false);
+
+    if (slotEvent && result && slotEvent.start) {
+      const start = new Date(slotEvent.start);
+      const end = new Date(slotEvent.end);
+
+      const startTimeFormatted = `${formatTime(start.getHours())}:${formatTime(start.getMinutes())}`;
+      const endTimeFormatted = `${formatTime(end.getHours())}:${formatTime(end.getMinutes())}`;
+
+      setStartTime(startTimeFormatted);
+      setEndTime(endTimeFormatted);
+      onOpen();
+      if (editing) {
+        setNewEvent({ title: slotEvent.title, start: slotEvent.start, end: slotEvent.end, color: slotEvent.color });
+      } else {
+        setNewEvent({ title: "", start: slotEvent.start, end: slotEvent.end });
+      }
+
+      if (slotEvent.multiday) setMultiday(true);
+    }
+  };
+
   useEffect(() => {
     if (newEvent.title) setNameError("");
-    else setNameError("Title required");
   }, [newEvent]);
+
+  useEffect(() => {
+    handleSlotEvent();
+  }, [slotEvent]);
 
   async function handleAddEvent() {
     // Combine date and time for start and end dates
@@ -81,7 +123,7 @@ const EventAdder = ({ allEvents, setAllEvents }) => {
 
   const propConfig = {
     dateNavBtnProps: {
-      backgroundColor: "primary",
+      colorScheme: "primary",
       variant: "outline",
     },
     dayOfMonthBtnProps: {
@@ -94,17 +136,16 @@ const EventAdder = ({ allEvents, setAllEvents }) => {
     },
   };
 
-  const handleLoginCheck = async () => {
-    const result = await LoginCheckUtil(toast);
-    console.log(result);
+  const handleAddButton = async () => {
+    const result = await LoginCheckUtil(toast, true);
     if (result) onOpen();
   };
 
   return (
     <>
-      <Button onClick={handleLoginCheck}>Open Modal</Button>
+      <Button onClick={handleAddButton}>Open Modal</Button>
       <Modal
-        backgroundColor={"secondary"}
+        colorScheme={"secondary"}
         closeOnOverlayClick={false}
         initialFocusRef={initialRef}
         size={"sm"}
@@ -124,7 +165,8 @@ const EventAdder = ({ allEvents, setAllEvents }) => {
             <FormControl isInvalid={nameError}>
               <FormLabel>Event title</FormLabel>
               <Input
-                focusBorderColor="accent"
+                focusBorderColor="secondary
+                "
                 ref={initialRef}
                 type="text"
                 value={newEvent.title}
@@ -144,12 +186,15 @@ const EventAdder = ({ allEvents, setAllEvents }) => {
               <FormErrorMessage ml={1}></FormErrorMessage>
             </FormControl>
 
-            <FormControl mt={4} display="flex" alignItems="center">
+            <FormControl mt={4} display="flex" alignItems="center" justifyContent={"space-between"}>
               <FormLabel htmlFor="multiday" mb="0">
                 Multi-day event?
               </FormLabel>
               <Switch
+                isChecked={multiday}
                 id="multiday"
+                colorScheme={"primary"}
+                _focusVisible={{ border: "none", boxShadow: "none", outline: "none" }}
                 onChange={() => {
                   setMultiday(!multiday);
                 }}
@@ -179,7 +224,7 @@ const EventAdder = ({ allEvents, setAllEvents }) => {
                 </FormControl>
               </>
             )}
-            <FormControl ml={2} mt={4} display="flex" alignItems="center">
+            <FormControl mt={4} display="flex" alignItems="center" justifyContent={"space-between"}>
               <FormLabel mb="0">Change event color</FormLabel>
               <ColorPicker setNewEvent={setNewEvent} />
             </FormControl>
@@ -188,7 +233,7 @@ const EventAdder = ({ allEvents, setAllEvents }) => {
                 {error}
               </Text>
             )}
-            <ModalFooter mt={2}>
+            <ModalFooter mt={8} paddingInlineEnd={"0"}>
               <Button
                 color={"text"}
                 mr={3}
@@ -203,7 +248,7 @@ const EventAdder = ({ allEvents, setAllEvents }) => {
                 color={"text"}
                 _hover={{ bg: "secondary" }}
                 _focus={{ bg: "secondary" }}
-                backgroundColor={"primary"}
+                colorScheme={"primary"}
                 onClick={handleAddEvent}
               >
                 Add event
@@ -217,4 +262,4 @@ const EventAdder = ({ allEvents, setAllEvents }) => {
   );
 };
 
-export default EventAdder;
+export default AddEvent;

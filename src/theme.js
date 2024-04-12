@@ -3,11 +3,17 @@ import "@fontsource/lato";
 import "@fontsource/nunito";
 
 const colors = {
-  primary: "var(--primary)",
+  primary: {
+    200: "var(--primary)",
+    500: "var(--primary)",
+  },
   secondary: "var(--secondary)",
   accent: "var(--accent)",
   text: "var(--text)",
   bg: "var(--bg)",
+  /*   lime: {
+    500: props.colorMode == "light" ? "#43e56e" : "#19bc8b",
+  }, */
 };
 const overrides = {
   config: {
@@ -23,6 +29,13 @@ const overrides = {
       "html, body": {
         color: props.colorMode === "dark" ? "#e1e1e1" : "#292929",
         background: props.colorMode === "dark" ? "#141f1d" : "#f0f4f3",
+      },
+      "*:focus": {
+        boxShadow: "none !important",
+      },
+
+      "*[data-focus]": {
+        boxShadow: "none !important",
       },
       ":root": {
         "--primary": props.colorMode == "light" ? "#43e56e" : "#19bc8b",

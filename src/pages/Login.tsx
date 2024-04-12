@@ -121,7 +121,7 @@ const Login = () => {
             <Button color={"text"} mr={3} onClick={onClose}>
               Cancel
             </Button>
-            <Button color={"text"} _hover={{ bg: "secondary" }} backgroundColor={"primary"} onClick={handleLogin}>
+            <Button color={"text"} _hover={{ bg: "secondary" }} colorScheme={"primary"} onClick={handleLogin}>
               Log in
             </Button>
           </componentMap.Footer>
