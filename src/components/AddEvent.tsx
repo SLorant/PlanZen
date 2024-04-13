@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from "react";
-import { SingleDatepicker } from "chakra-dayzed-datepicker";
 import {
   Button,
   Modal,
@@ -20,10 +19,10 @@ import {
 } from "@chakra-ui/react";
 import ColorPicker from "./ColorPicker";
 import axios from "axios";
-import Login from "../pages/Login";
 import LoginCheckUtil from "./LoginCheckUtil";
+import DatePicker from "./DatePicker";
 
-const AddEvent = ({ allEvents, setAllEvents, slotEvent, editing }) => {
+const AddEvent = ({ allEvents, setAllEvents, slotEvent, editing, fetchEvents }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = useRef(null);
   const [newEvent, setNewEvent] = useState({ title: "", start: new Date(), end: new Date(), color: "#43e56e" });
@@ -51,11 +50,16 @@ const AddEvent = ({ allEvents, setAllEvents, slotEvent, editing }) => {
   const [endTime, setEndTime] = useState(getCurrentTime(true));
 
   const handleSlotEvent = async () => {
-    const result = await LoginCheckUtil(toast, false);
+    const result = await LoginCheckUtil();
 
     if (slotEvent && result && slotEvent.start) {
       const start = new Date(slotEvent.start);
       const end = new Date(slotEvent.end);
+
+      const isSameDay =
+        start.getFullYear() === end.getFullYear() &&
+        start.getMonth() === end.getMonth() &&
+        start.getDay() === end.getDay();
 
       const startTimeFormatted = `${formatTime(start.getHours())}:${formatTime(start.getMinutes())}`;
       const endTimeFormatted = `${formatTime(end.getHours())}:${formatTime(end.getMinutes())}`;
@@ -64,12 +68,18 @@ const AddEvent = ({ allEvents, setAllEvents, slotEvent, editing }) => {
       setEndTime(endTimeFormatted);
       onOpen();
       if (editing) {
-        setNewEvent({ title: slotEvent.title, start: slotEvent.start, end: slotEvent.end, color: slotEvent.color });
+        setNewEvent({
+          id: slotEvent.id,
+          title: slotEvent.title,
+          start: slotEvent.start,
+          end: slotEvent.end,
+          color: slotEvent.color,
+        });
       } else {
         setNewEvent({ title: "", start: slotEvent.start, end: slotEvent.end });
       }
 
-      if (slotEvent.multiday) setMultiday(true);
+      if (slotEvent.multiday || !isSameDay) setMultiday(true);
     }
   };
 
@@ -78,7 +88,9 @@ const AddEvent = ({ allEvents, setAllEvents, slotEvent, editing }) => {
   }, [newEvent]);
 
   useEffect(() => {
-    handleSlotEvent();
+    if (!editing) {
+      handleSlotEvent();
+    }
   }, [slotEvent]);
 
   async function handleAddEvent() {
@@ -92,58 +104,71 @@ const AddEvent = ({ allEvents, setAllEvents, slotEvent, editing }) => {
     const [endHours, endMinutes] = endTime.split(":");
     endDateTime.setHours(parseInt(multiday ? startHours : endHours));
     endDateTime.setMinutes(parseInt(multiday ? startMinutes : endMinutes));
-
-    if (!nameError) {
-      console.log("Asd");
+    endDateTime.setSeconds(0);
+    if (!newEvent.title) {
+      setNameError("Title required");
+    }
+    console.log(editing);
+    if (newEvent.title) {
       try {
-        await axios.post(
-          "http://localhost:4000/addEvent",
-          { title: newEvent.title, start: startDateTime, end: endDateTime, color: newEvent.color },
-          {
-            withCredentials: true,
-          }
-        );
+        if (editing) {
+          console.log(newEvent.id);
+          await axios.post(
+            "http://localhost:4000/updateEvent",
+            { id: newEvent.id, title: newEvent.title, start: startDateTime, end: endDateTime, color: newEvent.color },
+            {
+              withCredentials: true,
+            }
+          );
+        } else {
+          console.log(newEvent);
+
+          await axios.post(
+            "http://localhost:4000/addEvent",
+            { title: newEvent.title, start: startDateTime, end: endDateTime, color: newEvent.color },
+            {
+              withCredentials: true,
+            }
+          );
+        }
 
         toast({
-          title: "Event added",
+          title: `Event ${editing ? "updated" : "added"}`,
           /* description: "You have successfully logged in.", */
           status: "success",
           duration: 3000,
           isClosable: true,
         });
         console.log(newEvent.color);
-        setNewEvent({ ...newEvent, start: startDateTime, end: endDateTime });
-        setAllEvents([...allEvents, { ...newEvent, start: startDateTime, end: endDateTime }]);
+        if (editing) {
+          setAllEvents((prevEvents) => {
+            const filtered = prevEvents.filter((item) => item.id !== newEvent.id);
+            return [...filtered, { ...newEvent, start: startDateTime, end: endDateTime }];
+          });
+        } else {
+          setNewEvent({ ...newEvent, start: startDateTime, end: endDateTime });
+          fetchEvents();
+        }
+
         onClose();
       } catch (error) {
+        console.log(error);
         setError(error?.response?.data);
       }
     }
   }
 
-  const propConfig = {
-    dateNavBtnProps: {
-      colorScheme: "primary",
-      variant: "outline",
-    },
-    dayOfMonthBtnProps: {
-      defaultBtnProps: {
-        borderColor: "red.300",
-        _hover: {
-          background: "blue.400",
-        },
-      },
-    },
-  };
-
   const handleAddButton = async () => {
-    const result = await LoginCheckUtil(toast, true);
+    const result = await LoginCheckUtil(toast);
+    if (editing) handleSlotEvent();
     if (result) onOpen();
   };
 
   return (
     <>
-      <Button onClick={handleAddButton}>Open Modal</Button>
+      <Button colorScheme="primary" color={"text"} onClick={handleAddButton}>
+        {editing ? "Edit" : "Add"} event
+      </Button>
       <Modal
         colorScheme={"secondary"}
         closeOnOverlayClick={false}
@@ -154,7 +179,7 @@ const AddEvent = ({ allEvents, setAllEvents, slotEvent, editing }) => {
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Add event</ModalHeader>
+          <ModalHeader>{editing ? "Edit" : "Add"} event</ModalHeader>
           <ModalCloseButton
             onClick={() => {
               onClose();
@@ -165,8 +190,7 @@ const AddEvent = ({ allEvents, setAllEvents, slotEvent, editing }) => {
             <FormControl isInvalid={nameError}>
               <FormLabel>Event title</FormLabel>
               <Input
-                focusBorderColor="secondary
-                "
+                _focus={{ borderColor: "accent" }}
                 ref={initialRef}
                 type="text"
                 value={newEvent.title}
@@ -177,12 +201,7 @@ const AddEvent = ({ allEvents, setAllEvents, slotEvent, editing }) => {
 
             <FormControl mt={4}>
               <FormLabel>{multiday ? "Start" : "Event"} date</FormLabel>
-              <SingleDatepicker
-                name="date-input"
-                date={newEvent.start}
-                propsConfigs={propConfig}
-                onDateChange={(start) => setNewEvent({ ...newEvent, start })}
-              />
+              <DatePicker newEvent={newEvent} setNewEvent={setNewEvent} />
               <FormErrorMessage ml={1}></FormErrorMessage>
             </FormControl>
 
@@ -204,29 +223,34 @@ const AddEvent = ({ allEvents, setAllEvents, slotEvent, editing }) => {
             {multiday ? (
               <FormControl mt={4}>
                 <FormLabel>End date</FormLabel>
-                <SingleDatepicker
-                  name="date-input"
-                  date={newEvent.end}
-                  propsConfigs={propConfig}
-                  onDateChange={(end) => setNewEvent({ ...newEvent, end })}
-                />
+                <DatePicker newEvent={newEvent} setNewEvent={setNewEvent} />
                 <FormErrorMessage ml={1}></FormErrorMessage>
               </FormControl>
             ) : (
               <>
                 <FormControl mt={4}>
                   <FormLabel>Start time</FormLabel>
-                  <Input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} />
+                  <Input
+                    type="time"
+                    value={startTime}
+                    onChange={(e) => setStartTime(e.target.value)}
+                    _focus={{ borderColor: "accent" }}
+                  />
                 </FormControl>
                 <FormControl mt={4}>
                   <FormLabel>End time</FormLabel>
-                  <Input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} />
+                  <Input
+                    type="time"
+                    value={endTime}
+                    onChange={(e) => setEndTime(e.target.value)}
+                    _focus={{ borderColor: "accent" }}
+                  />
                 </FormControl>
               </>
             )}
             <FormControl mt={4} display="flex" alignItems="center" justifyContent={"space-between"}>
               <FormLabel mb="0">Change event color</FormLabel>
-              <ColorPicker setNewEvent={setNewEvent} />
+              <ColorPicker newEvent={newEvent} setNewEvent={setNewEvent} />
             </FormControl>
             {error && (
               <Text mt={2} ml={1} color={"red"}>
@@ -257,7 +281,6 @@ const AddEvent = ({ allEvents, setAllEvents, slotEvent, editing }) => {
           </ModalBody>
         </ModalContent>
       </Modal>
-      <Login />
     </>
   );
 };

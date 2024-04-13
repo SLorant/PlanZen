@@ -35,6 +35,7 @@ async function addEventService(title, start, end, color, taskId) {
 }
 
 async function updateEventService(id, title, start, end, color) {
+  console.log(start);
   try {
     const data = {
       title: title,
@@ -42,7 +43,6 @@ async function updateEventService(id, title, start, end, color) {
       end: end,
       color: color,
     };
-    console.log(id);
     await pb.collection("events").update(`${id}`, data);
   } catch (e) {
     console.log(e);
@@ -51,4 +51,16 @@ async function updateEventService(id, title, start, end, color) {
   return true;
 }
 
-export { getEventsService, addEventService, updateEventService };
+async function deleteEventService(id) {
+  try {
+    if (id) {
+      await pb.collection("events").delete(`${id}`);
+    } else return false;
+  } catch (e) {
+    console.log(e);
+    throw new Api500Error("Something went wrong.");
+  }
+  return true;
+}
+
+export { getEventsService, addEventService, updateEventService, deleteEventService };

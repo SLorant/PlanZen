@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Popover,
   PopoverTrigger,
@@ -12,8 +12,8 @@ import {
   SimpleGrid,
 } from "@chakra-ui/react";
 
-function ColorPicker({ setNewEvent }) {
-  const colors = [
+function ColorPicker({ newEvent, setNewEvent }) {
+  /*  const colors = [
     { value: "#43e56e", label: "Default" },
     { value: "#F56565", label: "Red" },
     { value: "#CBD5E0", label: "Gray" },
@@ -25,8 +25,28 @@ function ColorPicker({ setNewEvent }) {
     { value: "#B794F4", label: "Purple" },
     { value: "#F687B3", label: "Pink" },
   ];
+ */
+  const colors = [
+    { value: "#43e56e", label: "Default" },
+    { value: "#FEB2B2", label: "Red" },
+    { value: "#CBD5E0", label: "Gray" },
+    { value: "#9AE6B4", label: "Green" },
+    { value: "#90cdf4", label: "Blue" },
+    { value: "#81E6D9", label: "Teal" },
+    { value: "#FAF089", label: "Yellow" },
+    { value: "#FBD38D", label: "Orange" },
+    { value: "#D6BCFA", label: "Purple" },
+    { value: "#FBB6CE", label: "Pink" },
+  ];
 
   const [color, setColor] = useState(colors[0]);
+
+  useEffect(() => {
+    if (newEvent.color) {
+      const currColor = colors.find((color) => color.value === newEvent.color);
+      setColor(currColor);
+    }
+  }, [newEvent]);
 
   return (
     <Popover variant="picker">

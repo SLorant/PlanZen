@@ -1,4 +1,4 @@
-import { addEventService, getEventsService, updateEventService } from "../services/eventService.js";
+import { addEventService, getEventsService, updateEventService, deleteEventService } from "../services/eventService.js";
 
 const getEvents = async (req, reply) => {
   try {
@@ -11,6 +11,7 @@ const getEvents = async (req, reply) => {
 
 const addEvent = async (req, reply) => {
   const { title, start, end, color, taskId } = req.body;
+  console.log(title);
   try {
     const isSuccess = await addEventService(title, start, end, color, taskId);
     isSuccess ? reply.code(200).send("Success") : reply.code(500).send("Something went wrong.");
@@ -29,4 +30,15 @@ const updateEvent = async (req, reply) => {
   }
 };
 
-export { addEvent, getEvents, updateEvent };
+const deleteEvent = async (req, reply) => {
+  const event = req.body;
+  console.log(event);
+  try {
+    const isSuccess = await deleteEventService(event.id);
+    isSuccess ? reply.code(200).send("Success") : reply.code(500).send("Something went wrong.");
+  } catch (e) {
+    reply.code(e.status).send(e.name);
+  }
+};
+
+export { addEvent, getEvents, updateEvent, deleteEvent };

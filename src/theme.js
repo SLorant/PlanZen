@@ -7,7 +7,10 @@ const colors = {
     200: "var(--primary)",
     500: "var(--primary)",
   },
-  secondary: "var(--secondary)",
+  secondary: {
+    200: "var(--secondary)",
+    500: "var(--secondary)",
+  },
   accent: "var(--accent)",
   text: "var(--text)",
   bg: "var(--bg)",

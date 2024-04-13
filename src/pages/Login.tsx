@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 import componentMap from "../utils/formMapUtil";
 
-const Login = () => {
+const Login = ({ setLoggedIn = null }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -57,6 +57,9 @@ const Login = () => {
           isClosable: true,
         });
         onClose();
+        if (setLoggedIn) {
+          setLoggedIn(true);
+        }
       } catch (error) {
         setError(error?.response?.data);
       }

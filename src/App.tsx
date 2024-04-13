@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import "./App.css";
-import { Card, CardBody, CardHeader, Stack, Box, Heading, Text, StackDivider, theme } from "@chakra-ui/react";
+import { Card, CardBody, CardHeader, Stack, Box, Heading, Text, StackDivider } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useColorModeValue, useColorMode, Button } from "@chakra-ui/react";
+import Wrapper from "./components/Wrapper";
 
 function App() {
   const [dailyQuote, setQuote] = useState("");
@@ -81,7 +82,7 @@ function App() {
   const bg = useColorModeValue("var(--light-accent-color)", "red.200");
   const color = useColorModeValue("white", "gray.800");
   return (
-    <main>
+    <Wrapper>
       <h1>Vite + React</h1>
 
       <Box mb={4} bg={bg} color={color}>
@@ -135,7 +136,7 @@ function App() {
           </Stack>
         </CardBody>
       </Card>
-    </main>
+    </Wrapper>
   );
 }
 

@@ -1,4 +1,4 @@
-import { addEvent, getEvents, updateEvent } from "../controllers/eventController.js";
+import { addEvent, getEvents, updateEvent, deleteEvent } from "../controllers/eventController.js";
 import Message from "../models/Message.js";
 import Event from "../models/Event.js";
 import { authorize } from "../controllers/authController.js";
@@ -50,11 +50,32 @@ const updateEventOpts = {
   handler: updateEvent,
 };
 
+const deleteEventOpts = {
+  schema: {
+    body: {
+      type: "object",
+      properties: {
+        id: { type: "string" },
+      },
+    },
+    response: {
+      500: Message,
+      404: Message,
+      401: Message,
+      200: Message,
+    },
+  },
+  preHandler: authorize,
+  handler: deleteEvent,
+};
+
 const eventRoutes = (app, options, done) => {
   //Get all
   app.get("/events", getEventsOpts);
 
   app.post("/updateEvent", updateEventOpts);
+
+  app.delete("/deleteEvent", deleteEventOpts);
 
   app.post("/addEvent", postEventOpts);
 

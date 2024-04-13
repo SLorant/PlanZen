@@ -1,14 +1,13 @@
 import axios from "axios";
 
-const LoginCheckUtil = async (toast, needToast) => {
+const LoginCheckUtil = async (toast = null) => {
   try {
     const result = await axios.get("http://localhost:4000/check-logged-in", {
       withCredentials: true,
     });
     return result;
   } catch (e) {
-    console.log(e.response.status);
-    if (needToast) {
+    if (toast !== null) {
       if (e.response.status === 401) {
         toast({
           title: "Please log in",

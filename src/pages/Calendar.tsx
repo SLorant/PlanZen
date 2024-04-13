@@ -11,15 +11,19 @@ import moment from "moment";
 import "moment/dist/locale/en-gb";
 import AddEvent from "../components/AddEvent";
 import LoginCheckUtil from "../components/LoginCheckUtil";
-import { useDisclosure, useToast } from "@chakra-ui/react";
+import { useColorMode, useDisclosure } from "@chakra-ui/react";
 import EditEvent from "../components/EditEvent";
+import Wrapper from "../components/Wrapper";
 
 const Calendar2 = () => {
   moment.locale("en-GB");
-  const toast = useToast();
   const [allEvents, setAllEvents] = useState([]);
-  const { onOpen, isOpen, onClose } = useDisclosure();
+  /*   const { onOpen, isOpen, onClose } = useDisclosure(); */
   const localizer = momentLocalizer(moment); // or globalizeLocalizer
+  const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
+  /*   const { isOpen: isAddOpen, onOpen: onAddOpen, onClose: onAddClose } = useDisclosure(); */
+  const [loggedIn, setLoggedIn] = useState(false);
+  const { colorMode } = useColorMode();
 
   useEffect(() => {
     try {
@@ -27,10 +31,10 @@ const Calendar2 = () => {
     } catch (e) {
       console.error(e?.response?.data);
     }
-  }, []);
+  }, [loggedIn]);
 
   const fetchAllEvents = async () => {
-    const result = await LoginCheckUtil(toast, false);
+    const result = await LoginCheckUtil();
     if (result) {
       try {
         const result = await axios.get("http://localhost:4000/events", {
@@ -68,13 +72,6 @@ const Calendar2 = () => {
     }
   };
 
-  const onEventDrop = ({ event, start, end, isAllDay }) => {
-    const updatedEvent = { ...event, start, end, isAllDay };
-    setAllEvents((prevEvents) => {
-      const filtered = prevEvents.filter((item) => item.id !== event.id);
-      return [...filtered, updatedEvent];
-    });
-  };
   const [hideEventLabels, setHideEventLabels] = useState(false);
   const [monthView, setMonthView] = useState(true);
   const handleViewChange = (view) => {
@@ -128,15 +125,17 @@ const Calendar2 = () => {
   const [editedEvent, setEditedEvent] = useState({});
   const handleEditEvent = (eventinfo) => {
     setEditedEvent(eventinfo);
-    onOpen();
+    onEditOpen();
   };
+
   return (
-    <div>
-      <div className={hideEventLabels ? "week-view" : ""}>
+    <Wrapper>
+      <div className={(hideEventLabels ? "week-view" : "", colorMode === "dark" ? "dark" : "")}>
         <DnDCalendar
           localizer={localizer}
           events={allEvents}
           startAccessor="start"
+          views={["month", "week", "day"]}
           endAccessor="end"
           onEventDrop={(slotInfo) => onEventResize(slotInfo)}
           onEventResize={(slotInfo) => onEventResize(slotInfo)}
@@ -149,17 +148,26 @@ const Calendar2 = () => {
           longPressThreshold={100}
         />
       </div>
-      <h2>add new</h2>
-      <AddEvent allEvents={allEvents} setAllEvents={setAllEvents} slotEvent={slotEvent} editing={false} />
+      <AddEvent
+        allEvents={allEvents}
+        setAllEvents={setAllEvents}
+        slotEvent={slotEvent}
+        editing={false}
+        fetchEvents={fetchAllEvents}
+        /*   isOpen={isAddOpen}
+        onOpen={onAddOpen}
+        onClose={onAddClose} */
+      />
       <EditEvent
         allEvents={allEvents}
         setAllEvents={setAllEvents}
         editedEvent={editedEvent}
-        isOpen={isOpen}
-        onOpen={onOpen}
-        onClose={onClose}
+        isOpen={isEditOpen}
+        onOpen={onEditOpen}
+        onClose={onEditClose}
+        fetchEvents={fetchAllEvents}
       />
-    </div>
+    </Wrapper>
   );
 };
 
