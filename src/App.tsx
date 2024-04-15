@@ -1,13 +1,16 @@
 import { useState, useEffect } from "react";
 import "./App.css";
-import { Card, CardBody, CardHeader, Stack, Box, Heading, Text, StackDivider } from "@chakra-ui/react";
+import { Card, CardBody, CardHeader, Heading, Text, VStack, SimpleGrid, CardFooter } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { useColorModeValue, useColorMode, Button } from "@chakra-ui/react";
+import { useColorMode, Button } from "@chakra-ui/react";
 import Wrapper from "./components/Wrapper";
+import SideMenu from "./components/SideMenu";
+import { MoonIcon } from "@chakra-ui/icons";
 
 function App() {
   const [dailyQuote, setQuote] = useState("");
+  const [author, setAuthor] = useState("");
   const { toggleColorMode } = useColorMode();
   useEffect(() => {
     try {
@@ -17,10 +20,10 @@ function App() {
     }
   }, []);
 
-  const fetchQuote = async () => {
+  const addNewQuote = async () => {
     try {
       let quote = await fetchNewQuote();
-      while (quote.length > 100) {
+      while (quote.quote.length > 100) {
         quote = await fetchNewQuote();
       }
       const postQuote = quote.quote;
@@ -36,6 +39,7 @@ function App() {
         }
       );
       setQuote(quote.quote);
+      setAuthor(quote.author);
     } catch (error) {
       console.error(error);
     }
@@ -54,9 +58,10 @@ function App() {
         date.getMonth() !== today.getMonth() ||
         date.getDate() !== today.getDate();
       if (isNotToday) {
-        fetchQuote();
+        addNewQuote();
       } else {
         setQuote(quote.quote);
+        setAuthor(quote.author);
       }
       // Get the day of the week (0 for Sunday, 1 for Monday, ..., 6 for Saturday)
     } catch (e) {
@@ -79,65 +84,103 @@ function App() {
       setQuote("asd");
     }
   };
-  const bg = useColorModeValue("var(--light-accent-color)", "red.200");
-  const color = useColorModeValue("white", "gray.800");
+
   return (
     <Wrapper>
-      <h1>Vite + React</h1>
+      <SideMenu />
+      <Heading mt={[10, 0]} size={"2xl"} textAlign={"center"}>
+        Logo
+      </Heading>
 
-      <Box mb={4} bg={bg} color={color}>
-        This box's style will change based on the color mode.
-      </Box>
-      <Button size="sm" onClick={toggleColorMode}>
-        Toggle Mode
+      <Button
+        position={"absolute"}
+        colorScheme="secondary"
+        textColor={"darktext"}
+        top={4}
+        right={4}
+        size="sm"
+        onClick={toggleColorMode}
+      >
+        <MoonIcon boxSize={4} />
       </Button>
-      {dailyQuote && dailyQuote.toString()}
-      <div className="card">
-        <Link to={"/calendar"}>Calendar</Link>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-        <Link to={"/todo"}>Todo</Link>
-      </div>
-      <Link to={"/register"}>register</Link>
-      <Link to={"/login"}>login</Link>
-      <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
-      <Card color="text" backgroundColor={"primary"}>
-        <CardHeader>
-          <Heading size="md">Client Report</Heading>
-        </CardHeader>
+      {dailyQuote && author && (
+        <>
+          <Heading as={"h2"} mt={10} textAlign={"center"} size={["md", "lg"]} fontWeight={"bold"}>
+            {dailyQuote}
+          </Heading>
 
-        <CardBody>
-          <Stack divider={<StackDivider />} spacing="4">
-            <Box>
-              <Heading size="xs" textTransform="uppercase">
-                Summary
-              </Heading>
-              <Text pt="2" fontSize="sm">
-                View a summary of all your clients over the last month.
-              </Text>
-            </Box>
-            <Box>
-              <Heading size="xs" textTransform="uppercase">
-                Overview
-              </Heading>
-              <Text pt="2" fontSize="sm">
-                Check out the overview of your clients.
-              </Text>
-            </Box>
-            <Box>
-              <Heading size="xs" textTransform="uppercase">
-                Analysis
-              </Heading>
-              <Text pt="2" fontSize="sm">
-                See a detailed analysis of all your business clients.
-              </Text>
-            </Box>
-          </Stack>
-        </CardBody>
-      </Card>
+          <Heading mt={2} textAlign={"center"} size={["sm", "md"]}>
+            &mdash; {author}
+          </Heading>
+        </>
+      )}
+      <VStack className="card" alignItems={"start"} mt={[2, 6]}>
+        <Text textAlign={"start"} fontSize={["xl", "2xl"]}>
+          What do you want to do?
+        </Text>
+        <SimpleGrid
+          width={"100%"}
+          spacing={4}
+          templateColumns={["repeat(auto-fill, minmax(150px, 1fr))", "repeat(auto-fill, minmax(200px, 1fr))"]}
+        >
+          <Card>
+            <CardHeader>
+              <Heading size="md"> Calendar</Heading>
+            </CardHeader>
+            <CardBody>
+              <Text>View a </Text>
+            </CardBody>
+            <CardFooter>
+              <Link to={"/calendar"}>
+                <Button colorScheme="primary" textColor={"text"}>
+                  Calendar
+                </Button>
+              </Link>
+            </CardFooter>
+          </Card>
+          <Card>
+            <CardHeader>
+              <Heading size="md"> Customer dashboard</Heading>
+            </CardHeader>
+            <CardBody>
+              <Text>View a s last month.</Text>
+            </CardBody>
+            <CardFooter>
+              <Button colorScheme="primary">Calendar</Button>
+            </CardFooter>
+          </Card>
+          <Card>
+            <CardHeader>
+              <Heading size="md"> Tasks</Heading>
+            </CardHeader>
+            <CardBody>
+              <Text>5 tasks remaining today</Text>
+            </CardBody>
+            <CardFooter>
+              <Link to={"/tasks"}>
+                <Button colorScheme="primary">See tasks..</Button>
+              </Link>
+            </CardFooter>
+          </Card>
+        </SimpleGrid>
+      </VStack>
+      {/*  <Link to={"/register"}>register</Link>
+      <Link to={"/login"}>login</Link> */}
     </Wrapper>
   );
 }
 
 export default App;
+
+/*   {dailyQuote && author && (
+        <Stack direction="column" spacing={0}>
+          <Heading mt={10} textAlign="end" size="lg">
+            {dailyQuote}
+          </Heading>
+          <Stack direction="row" justifyContent="space-between" alignItems="center">
+            <Text flex="1" mt={2} textAlign="end" size="md">
+              - {author}
+            </Text>
+          </Stack>
+        </Stack>
+      )} */

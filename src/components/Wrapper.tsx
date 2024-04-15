@@ -9,10 +9,14 @@ const Wrapper = (props) => {
       <Container
         backgroundColor={"bg"}
         maxW={"container.lg"}
-        marginBottom={"10vh"}
+        height={["100vh", "auto"]}
+        marginBottom={[0, "10vh"]}
         padding={[0, 30]}
+        /* paddingTop={[0, 5]} */
         boxShadow={["", `5px 5px 10px 3px #${color}`]}
         borderRadius={10}
+        position={"relative"}
+        overflow={"auto"}
       >
         {props.children}
       </Container>

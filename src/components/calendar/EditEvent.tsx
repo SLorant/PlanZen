@@ -12,7 +12,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import AddEvent from "./AddEvent";
-import LoginCheckUtil from "./LoginCheckUtil";
+import LoginCheckUtil from "../../utils/LoginCheckUtil";
 import axios from "axios";
 import { useEffect } from "react";
 

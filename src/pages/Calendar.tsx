@@ -9,11 +9,12 @@ import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 const DnDCalendar = withDragAndDrop(Calendar);
 import moment from "moment";
 import "moment/dist/locale/en-gb";
-import AddEvent from "../components/AddEvent";
-import LoginCheckUtil from "../components/LoginCheckUtil";
-import { useColorMode, useDisclosure } from "@chakra-ui/react";
-import EditEvent from "../components/EditEvent";
+import AddEvent from "../components/calendar/AddEvent";
+import LoginCheckUtil from "../utils/LoginCheckUtil";
+import { Heading, useColorMode, useDisclosure } from "@chakra-ui/react";
+import EditEvent from "../components/calendar/EditEvent";
 import Wrapper from "../components/Wrapper";
+import SideMenu from "../components/SideMenu";
 
 const Calendar2 = () => {
   moment.locale("en-GB");
@@ -22,7 +23,7 @@ const Calendar2 = () => {
   const localizer = momentLocalizer(moment); // or globalizeLocalizer
   const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
   /*   const { isOpen: isAddOpen, onOpen: onAddOpen, onClose: onAddClose } = useDisclosure(); */
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedIn /* setLoggedIn */] = useState(false);
   const { colorMode } = useColorMode();
 
   useEffect(() => {
@@ -41,7 +42,6 @@ const Calendar2 = () => {
           withCredentials: true,
         });
         const events = result?.data.items;
-
         for (const event of events) {
           const startDate = new Date(Date.parse(event.start));
           const endDate = new Date(Date.parse(event.end));
@@ -130,6 +130,10 @@ const Calendar2 = () => {
 
   return (
     <Wrapper>
+      <SideMenu />
+      <Heading textAlign={"center"} mt={[4, 0]} mb={2}>
+        Calendar
+      </Heading>
       <div className={(hideEventLabels ? "week-view" : "", colorMode === "dark" ? "dark" : "")}>
         <DnDCalendar
           localizer={localizer}

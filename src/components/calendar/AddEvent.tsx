@@ -19,10 +19,10 @@ import {
 } from "@chakra-ui/react";
 import ColorPicker from "./ColorPicker";
 import axios from "axios";
-import LoginCheckUtil from "./LoginCheckUtil";
+import LoginCheckUtil from "../../utils/LoginCheckUtil";
 import DatePicker from "./DatePicker";
 
-const AddEvent = ({ allEvents, setAllEvents, slotEvent, editing, fetchEvents }) => {
+const AddEvent = ({ /*  allEvents */ setAllEvents, slotEvent, editing, fetchEvents }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = useRef(null);
   const [newEvent, setNewEvent] = useState({ title: "", start: new Date(), end: new Date(), color: "#43e56e" });

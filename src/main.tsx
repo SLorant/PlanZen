@@ -3,13 +3,13 @@ import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ChakraProvider } from "@chakra-ui/react";
-import RandomRoute from "./components/RandomRoute.tsx";
-import Register from "./pages/Register.tsx";
-import Login from "./pages/Login.tsx";
+import RandomRoute from "./components/auth/Logout.tsx";
+import Register from "./components/auth/Register.tsx";
+import Login from "./components/auth/Login.tsx";
 import Calendar2 from "./pages/Calendar.tsx";
-import ToDo from "./pages/ToDo.tsx";
 import theme from "./theme.js";
 import { ColorModeScript } from "@chakra-ui/react";
+import Tasks from "./pages/Tasks.tsx";
 
 const router = createBrowserRouter([
   {
@@ -33,8 +33,8 @@ const router = createBrowserRouter([
     element: <Calendar2 />,
   },
   {
-    path: "/todo",
-    element: <ToDo />,
+    path: "/tasks",
+    element: <Tasks />,
   },
 ]);
 

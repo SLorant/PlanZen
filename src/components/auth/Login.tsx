@@ -11,8 +11,15 @@ import {
   FormErrorMessage,
   Text,
   useToast,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
 } from "@chakra-ui/react";
-import componentMap from "../utils/formMapUtil";
+import componentMap from "../../utils/formMapUtil";
 
 const Login = ({ setLoggedIn = null }) => {
   const [username, setUsername] = useState("");
@@ -68,20 +75,16 @@ const Login = ({ setLoggedIn = null }) => {
 
   return (
     <>
-      <Button onClick={onOpen}>Open Modal</Button>
+      <Button mt={8} onClick={onOpen} textColor={"darktext"} colorScheme="secondary" w="100%">
+        Login
+      </Button>
 
-      <componentMap.Component
-        closeOnOverlayClick={false}
-        size={"sm"}
-        initialFocusRef={initialRef}
-        isOpen={isOpen}
-        onClose={onClose}
-      >
-        <componentMap.Overlay />
-        <componentMap.Content>
-          <componentMap.Header>Log in</componentMap.Header>
-          <componentMap.CloseButton />
-          <componentMap.Body pb={6}>
+      <Modal closeOnOverlayClick={false} size={"sm"} initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Log in</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody pb={6}>
             <FormControl isInvalid={nameError}>
               <FormLabel>Username</FormLabel>
               <Input
@@ -118,18 +121,18 @@ const Login = ({ setLoggedIn = null }) => {
                 {error}
               </Text>
             )}
-          </componentMap.Body>
+          </ModalBody>
 
-          <componentMap.Footer>
+          <ModalFooter>
             <Button color={"text"} mr={3} onClick={onClose}>
               Cancel
             </Button>
             <Button color={"text"} _hover={{ bg: "secondary" }} colorScheme={"primary"} onClick={handleLogin}>
               Log in
             </Button>
-          </componentMap.Footer>
-        </componentMap.Content>
-      </componentMap.Component>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
   );
 };

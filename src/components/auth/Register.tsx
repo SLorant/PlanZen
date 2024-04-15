@@ -13,7 +13,7 @@ import {
   useToast,
   Button,
 } from "@chakra-ui/react";
-import componentMap from "../utils/formMapUtil";
+import componentMap from "../../utils/formMapUtil";
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -107,7 +107,10 @@ const Register = () => {
 
   return (
     <>
-      <componentMap.Button onClick={onOpen}>{isMobile ? "Open Drawer" : "Open Modal"}</componentMap.Button>
+      <Button mt={8} onClick={onOpen} textColor={"darktext"} colorScheme="secondary" w="100%">
+        Register
+      </Button>
+
       <componentMap.Component
         closeOnOverlayClick={!isMobile}
         size={"sm"}

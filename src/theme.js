@@ -12,8 +12,12 @@ const colors = {
     500: "var(--secondary)",
   },
   accent: "var(--accent)",
-  text: "var(--text)",
+  text: {
+    200: "var(--text)",
+    500: "var(--text)",
+  },
   bg: "var(--bg)",
+  darktext: "var(--darktext)",
   /*   lime: {
     500: props.colorMode == "light" ? "#43e56e" : "#19bc8b",
   }, */
@@ -45,6 +49,7 @@ const overrides = {
         "--secondary": props.colorMode == "light" ? "#9cf971" : "#82d1a6",
         "--accent": props.colorMode == "light" ? "#479467" : "#1e2723",
         "--text": props.colorMode == "light" ? "#292929" : "#e1e1e1",
+        "--darktext": "#292929",
         "--bg": props.colorMode == "light" ? "#f0f4f3" : "#141f1d",
       },
     }),
