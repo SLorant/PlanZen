@@ -1,7 +1,7 @@
 import React from "react";
 import { SingleDatepicker } from "chakra-dayzed-datepicker";
 
-const DatePicker = ({ newEvent, setNewEvent }) => {
+const DatePicker = ({ newEvent, setNewEvent, start }) => {
   const propConfig = {
     dateNavBtnProps: {
       colorScheme: "primary",
@@ -17,14 +17,27 @@ const DatePicker = ({ newEvent, setNewEvent }) => {
     },
   };
   return (
-    <SingleDatepicker
-      id="date"
-      style={{ background: "red" }}
-      name="date-input"
-      date={newEvent.end}
-      propsConfigs={propConfig}
-      onDateChange={(end) => setNewEvent({ ...newEvent, end })}
-    />
+    <>
+      {start ? (
+        <SingleDatepicker
+          id="date"
+          style={{ background: "red" }}
+          name="date-input"
+          date={newEvent.start}
+          propsConfigs={propConfig}
+          onDateChange={(start) => setNewEvent({ ...newEvent, start })}
+        />
+      ) : (
+        <SingleDatepicker
+          id="date"
+          style={{ background: "red" }}
+          name="date-input"
+          date={newEvent.end}
+          propsConfigs={propConfig}
+          onDateChange={(end) => setNewEvent({ ...newEvent, end })}
+        />
+      )}
+    </>
   );
 };
 

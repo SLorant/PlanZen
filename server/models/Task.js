@@ -7,6 +7,7 @@ const Task = {
     description: { type: "string" },
     isRecurring: { type: "boolean" },
     isEvent: { type: "boolean" },
+    isDone: { type: "boolean" },
     start: { type: "string" },
     end: { type: "string" },
     color: { type: "string" },

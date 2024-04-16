@@ -27,7 +27,7 @@ import DatePicker from "./calendar/DatePicker";
 import ColorPicker from "./calendar/ColorPicker";
 import axios from "axios";
 
-const AddTask = () => {
+const AddTask = ({ fetchTasks }) => {
   const formatTime = (time) => {
     return time < 10 ? `0${time}` : time.toString();
   };
@@ -63,7 +63,7 @@ const AddTask = () => {
       const [startHours, startMinutes] = startTime.split(":");
       startDateTime.setHours(parseInt(startHours));
       startDateTime.setMinutes(parseInt(startMinutes));
-
+      console.log(startDateTime);
       const [endHours, endMinutes] = endTime.split(":");
       endDateTime.setHours(parseInt(endHours));
       endDateTime.setMinutes(parseInt(endMinutes));
@@ -74,6 +74,7 @@ const AddTask = () => {
       setNameError("Title required");
     }
     if (newTask.title) {
+      console.log(isEvent);
       try {
         await axios.post(
           "http://localhost:4000/addTask",
@@ -107,7 +108,7 @@ const AddTask = () => {
           setnewTask({ ...newTask, start: startDateTime, end: endDateTime });
           fetchEvents();
         } */
-
+        fetchTasks();
         onClose();
       } catch (error) {
         console.log(error);
@@ -167,8 +168,8 @@ const AddTask = () => {
                 </Tab>
                 <Tab
                   onClick={() => {
-                    setIsSimple(true);
-                    setIsRecurring(false);
+                    setIsSimple(false);
+                    setIsRecurring(true);
                     setIsEvent(false);
                   }}
                 >
@@ -216,7 +217,7 @@ const AddTask = () => {
               <>
                 <FormControl mt={4}>
                   <FormLabel>Date</FormLabel>
-                  <DatePicker newEvent={newTask} setNewEvent={setNewTask} />
+                  <DatePicker newEvent={newTask} setNewEvent={setNewTask} start={true} />
                   <FormErrorMessage ml={1}></FormErrorMessage>
                 </FormControl>
                 <FormControl mt={4}>

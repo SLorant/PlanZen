@@ -8,9 +8,18 @@ const colors = {
     500: "var(--primary)",
   },
   secondary: {
+    50: "var(--secondary)",
+    100: "var(--secondary)",
     200: "var(--secondary)",
+    300: "var(--secondary)",
+    400: "var(--secondary)",
     500: "var(--secondary)",
+    600: "var(--secondary)",
+    700: "var(--secondary)",
+    800: "var(--secondary)",
+    900: "var(--secondary)",
   },
+  secondaryNoScheme: "var(--secondary)",
   accent: "var(--accent)",
   text: {
     200: "var(--text)",

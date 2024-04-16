@@ -1,0 +1,67 @@
+/* .hold-button {
+  position: relative;
+  overflow: hidden; /* Hide overflow content */
+  transition: all 0.25s cubic-bezier(0.55, 0, 0.1, 1);
+}
+
+.progress-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-color: #63b3ed; /* Adjust color as needed */
+  width: 0; /* Initially set to 0 */
+  transition: width 1s linear; /* Smooth transition animation */
+  border-radius: 5px; /* Adjust border radius as needed */
+  z-index: 50; /* Place progress bar behind the button content */
+  transform-origin: left;
+}
+
+.hold-button:active .progress-bar {
+  transform: scale(1);
+  transition: all 2s cubic-bezier(0.55, 0, 0.1, 1);
+}
+
+.confBtn {
+  position: relative;
+  transition: all 0.25s;
+  background: #f44336;
+}
+.confBtn span {
+  position: relative;
+  color: #fff;
+  transition: all 0.25s cubic-bezier(0.55, 0, 0.1, 1);
+}
+.confBtn div {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  background: #b71c1c;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 2s cubic-bezier(0.55, 0, 0.1, 1);
+}
+.confBtn:hover,
+.confBtn:focus {
+  border-color: #b71c1c;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+}
+.confBtn:hover span,
+.confBtn:focus span {
+  color: #fff;
+  text-shadow: 0 0 5px #555;
+}
+.confBtn:active {
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  border-color: #b71c1c;
+}
+.confBtn:active span {
+  text-shadow: 0 2px 8px #333;
+}
+.confBtn:active div {
+  transform: scaleX(1);
+}
+ */

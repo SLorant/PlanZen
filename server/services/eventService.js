@@ -17,6 +17,18 @@ async function getEventsService() {
   }
 }
 
+async function getEventByTaskService(taskID) {
+  try {
+    const event = await pb
+      .collection("events")
+      .getFirstListItem(`userID = "${pb.authStore.model.id}" && taskID = "${taskID}"`);
+    return event;
+  } catch (e) {
+    console.log(e);
+    throw new Api404Error("No events found");
+  }
+}
+
 async function addEventService(title, start, end, color, taskId) {
   try {
     const data = {
@@ -63,4 +75,4 @@ async function deleteEventService(id) {
   return true;
 }
 
-export { getEventsService, addEventService, updateEventService, deleteEventService };
+export { getEventsService, addEventService, updateEventService, deleteEventService, getEventByTaskService };

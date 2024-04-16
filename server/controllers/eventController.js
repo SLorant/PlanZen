@@ -1,9 +1,25 @@
-import { addEventService, getEventsService, updateEventService, deleteEventService } from "../services/eventService.js";
+import {
+  addEventService,
+  getEventsService,
+  updateEventService,
+  deleteEventService,
+  getEventByTaskService,
+} from "../services/eventService.js";
 
 const getEvents = async (req, reply) => {
   try {
     const events = await getEventsService();
     reply.code(200).send(events);
+  } catch (e) {
+    reply.code(e.status).send(e.name);
+  }
+};
+
+const getEventByTask = async (req, reply) => {
+  const { taskID } = req.body;
+  try {
+    const event = await getEventByTaskService(taskID);
+    reply.code(200).send(event);
   } catch (e) {
     reply.code(e.status).send(e.name);
   }
@@ -41,4 +57,4 @@ const deleteEvent = async (req, reply) => {
   }
 };
 
-export { addEvent, getEvents, updateEvent, deleteEvent };
+export { addEvent, getEvents, updateEvent, deleteEvent, getEventByTask };

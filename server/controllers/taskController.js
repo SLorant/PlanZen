@@ -1,9 +1,14 @@
-import { addTaskService, getTasksService, updateTaskService, deleteTaskService } from "../services/taskService.js";
+import {
+  addTaskService,
+  getTasksService,
+  updateTaskService,
+  deleteTaskService,
+  taskDoneService,
+} from "../services/taskService.js";
 
 const getTasks = async (req, reply) => {
   try {
     const tasks = await getTasksService();
-    console.log(tasks);
     reply.code(200).send(tasks);
   } catch (e) {
     reply.code(e.status).send(e.name);
@@ -32,7 +37,6 @@ const updateTask = async (req, reply) => {
 
 const deleteTask = async (req, reply) => {
   const task = req.body;
-  console.log(task);
   try {
     const isSuccess = await deleteTaskService(task.id);
     isSuccess ? reply.code(200).send("Success") : reply.code(500).send("Something went wrong.");
@@ -41,4 +45,14 @@ const deleteTask = async (req, reply) => {
   }
 };
 
-export { addTask, getTasks, updateTask, deleteTask };
+const taskDone = async (req, reply) => {
+  const { id, isDone } = req.body.data;
+  try {
+    const isSuccess = await taskDoneService(id, isDone);
+    isSuccess ? reply.code(200).send("Success") : reply.code(500).send("Something went wrong.");
+  } catch (e) {
+    reply.code(e.status).send(e.name);
+  }
+};
+
+export { addTask, getTasks, updateTask, deleteTask, taskDone };

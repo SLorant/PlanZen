@@ -1,4 +1,4 @@
-import { CalendarIcon, HamburgerIcon, MoonIcon } from "@chakra-ui/icons";
+import { CalendarIcon, EditIcon, HamburgerIcon, MoonIcon } from "@chakra-ui/icons";
 import {
   Drawer,
   DrawerBody,
@@ -25,6 +25,7 @@ const SideMenu = () => {
   return (
     <>
       <Button
+        zIndex={50}
         ref={btnRef}
         position={["fixed", "absolute"]}
         top={4}
@@ -78,7 +79,7 @@ const SideMenu = () => {
 
             <Link to={"/calendar"}>
               <Button
-                mt={8}
+                mt={6}
                 textColor={"darktext"}
                 display="flex"
                 alignItems="center"
@@ -94,9 +95,9 @@ const SideMenu = () => {
               </Button>
             </Link>
 
-            <Link to={"/calendar"}>
+            <Link to={"/tasks"}>
               <Button
-                mt={8}
+                mt={6}
                 textColor={"darktext"}
                 display="flex"
                 alignItems="center"
@@ -108,12 +109,12 @@ const SideMenu = () => {
                 <Box textAlign="center" flex="1">
                   Tasks
                 </Box>
-                <CalendarIcon />
+                <EditIcon strokeWidth={3} />
               </Button>
             </Link>
             <Link to={"/calendar"}>
               <Button
-                mt={8}
+                mt={6}
                 textColor={"darktext"}
                 display="flex"
                 alignItems="center"
@@ -130,7 +131,7 @@ const SideMenu = () => {
             </Link>
             <Link to={"/calendar"}>
               <Button
-                mt={8}
+                mt={6}
                 textColor={"darktext"}
                 display="flex"
                 alignItems="center"
@@ -145,7 +146,7 @@ const SideMenu = () => {
                 <CalendarIcon />
               </Button>
             </Link>
-            <Divider size={20} mt={8} backgroundColor={"secondary"} />
+            <Divider size={20} mt={6} backgroundColor={"secondary"} />
             <Login />
             <Register />
           </DrawerBody>

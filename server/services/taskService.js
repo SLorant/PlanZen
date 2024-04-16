@@ -10,6 +10,7 @@ async function getTasksService() {
   try {
     const taskList = await pb.collection("tasks").getList(1, 50, {
       filter: `userID = "${pb.authStore.model.id}"`,
+      sort: "-created",
     });
 
     return taskList;
@@ -25,11 +26,12 @@ async function addTaskService(name, description, isRecurring, isEvent, start, en
       name: name,
       description: description,
       isRecurring: isRecurring,
+      isEvent: isEvent,
       userID: pb.authStore.model.id,
     };
     const result = await pb.collection("tasks").create(data);
     if (isEvent) {
-      await addEventService(title, start, end, color, result.id);
+      await addEventService(name, start, end, color, result.id);
     }
   } catch (e) {
     console.log(e);
@@ -67,4 +69,17 @@ async function deleteTaskService(id) {
   return true;
 }
 
-export { getTasksService, addTaskService, updateTaskService, deleteTaskService };
+async function taskDoneService(id, isDone) {
+  try {
+    const data = {
+      isDone: isDone,
+    };
+    await pb.collection("tasks").update(`${id}`, data);
+  } catch (e) {
+    console.log(e);
+    throw new Api500Error("Something went wrong.");
+  }
+  return true;
+}
+
+export { getTasksService, addTaskService, updateTaskService, deleteTaskService, taskDoneService };

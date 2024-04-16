@@ -75,7 +75,7 @@ const Login = ({ setLoggedIn = null }) => {
 
   return (
     <>
-      <Button mt={8} onClick={onOpen} textColor={"darktext"} colorScheme="secondary" w="100%">
+      <Button mt={6} onClick={onOpen} textColor={"darktext"} colorScheme="secondary" w="100%">
         Login
       </Button>
 

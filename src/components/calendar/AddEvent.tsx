@@ -201,7 +201,7 @@ const AddEvent = ({ /*  allEvents */ setAllEvents, slotEvent, editing, fetchEven
 
             <FormControl mt={4}>
               <FormLabel>{multiday ? "Start" : "Event"} date</FormLabel>
-              <DatePicker newEvent={newEvent} setNewEvent={setNewEvent} />
+              <DatePicker newEvent={newEvent} setNewEvent={setNewEvent} start={true} />
               <FormErrorMessage ml={1}></FormErrorMessage>
             </FormControl>
 
@@ -223,7 +223,7 @@ const AddEvent = ({ /*  allEvents */ setAllEvents, slotEvent, editing, fetchEven
             {multiday ? (
               <FormControl mt={4}>
                 <FormLabel>End date</FormLabel>
-                <DatePicker newEvent={newEvent} setNewEvent={setNewEvent} />
+                <DatePicker newEvent={newEvent} setNewEvent={setNewEvent} start={false} />
                 <FormErrorMessage ml={1}></FormErrorMessage>
               </FormControl>
             ) : (
