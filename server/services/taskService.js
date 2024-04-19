@@ -4,7 +4,7 @@ import Api401Error from "../utils/errors/api401Error.js";
 import Api404Error from "../utils/errors/api404Error.js";
 import Api500Error from "../utils/errors/api404Error.js";
 import pb from "../database/SingletonDB.js";
-import { addEventService } from "./eventService.js";
+import { addEventService, getEventByTaskService, updateEventService } from "./eventService.js";
 
 async function getTasksService() {
   try {
@@ -40,16 +40,23 @@ async function addTaskService(name, description, isRecurring, isEvent, start, en
   return true;
 }
 
-async function updateTaskService(id, title, start, end, color) {
-  console.log(start);
+async function updateTaskService(id, name, description, isRecurring, isEvent, start, end, color) {
   try {
     const data = {
-      title: title,
-      start: start,
-      end: end,
-      color: color,
+      name: name,
+      description: description,
+      isRecurring: isRecurring,
+      isEvent: isEvent,
     };
-    await pb.collection("tasks").update(`${id}`, data);
+    const result = await pb.collection("tasks").update(`${id}`, data);
+    try {
+      const event = await getEventByTaskService(id);
+      if (event) {
+        await updateEventService(event.id, name, start, end, color);
+      }
+    } catch {
+      await addEventService(name, start, end, color, id);
+    }
   } catch (e) {
     console.log(e);
     throw new Api500Error("Something went wrong.");

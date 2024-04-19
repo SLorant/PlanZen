@@ -1,4 +1,4 @@
-import { loginUserService, registerUserService, authorizeService } from "../services/authService.js";
+import { loginUserService, registerUserService, authorizeService, logoutService } from "../services/authService.js";
 
 const loginUser = async (req, reply) => {
   const { username, password } = req.body;
@@ -46,4 +46,13 @@ const authorize = async (req, reply, done) => {
   }
 };
 
-export { loginUser, registerUser, authorize };
+const logout = async (req, reply, done) => {
+  try {
+    const isSuccess = await logoutService();
+    isSuccess ? reply.code(200).send("Success") : reply.code(500).send("Something went wrong.");
+  } catch (e) {
+    reply.code(e.status).send(e.name);
+  }
+};
+
+export { loginUser, registerUser, authorize, logout };

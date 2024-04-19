@@ -26,9 +26,9 @@ const addTask = async (req, reply) => {
 };
 
 const updateTask = async (req, reply) => {
-  const task = req.body;
+  const { id, name, description, isRecurring, isEvent, start, end, color } = req.body;
   try {
-    const isSuccess = await updateTaskService(task.id, task.title, task.start, task.end, task.color);
+    const isSuccess = await updateTaskService(id, name, description, isRecurring, isEvent, start, end, color);
     isSuccess ? reply.code(200).send("Success") : reply.code(500).send("Something went wrong.");
   } catch (e) {
     reply.code(e.status).send(e.name);

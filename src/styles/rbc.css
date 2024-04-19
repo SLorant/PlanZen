@@ -33,7 +33,14 @@
 .rbc-date-cell {
   border: 1px solid #ccc;
 }
-
+@keyframes an {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
 /* Event styling */
 .rbc-event {
   background-color: var(--light-primary-color);
@@ -41,8 +48,21 @@
   border: none;
   border-radius: 0px;
   padding: 2px 5px;
+  height: 18px;
+  font-size: 12px;
 }
 
+/* .rbc-addons-dnd-dragged-event {
+  opacity: 1 !important;
+  background-color: black !important;
+} */
+/* .rbc-event,
+.rbc-event:not(.rbc-event.rbc-selected),
+.rbc-event:not(.rbc-addons-dnd-dragged-event),
+.rbc-event:not(.rbc-background-event) .rbc-event:not(.rbc-selected.rbc-background-event),
+:not(.week-view) {
+  animation: 0.2s ease-in-out 0s 1 an;
+} */
 /* Event slot styling */
 .rbc-timeslot-group {
   border-bottom: 0px solid #ccc;

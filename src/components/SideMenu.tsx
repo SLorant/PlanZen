@@ -12,16 +12,40 @@ import {
   Box,
   Divider,
   useColorMode,
+  Text,
 } from "@chakra-ui/react";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import Login from "./auth/Login";
 import Register from "./auth/Register";
+import LoginCheckUtil from "../utils/LoginCheckUtil";
 const SideMenu = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef();
   const { toggleColorMode } = useColorMode();
+  const [loggedIn, setLoggedIn] = useState(false);
 
+  useEffect(() => {
+    checkLoggedIn();
+  }, []);
+
+  const checkLoggedIn = async () => {
+    const result = await LoginCheckUtil();
+    if (result) {
+      setLoggedIn(true);
+    }
+  };
+
+  const handleLogout = async () => {
+    setLoggedIn(false);
+    try {
+      await axios.delete("http://localhost:4000/logout", {
+        withCredentials: true,
+      });
+    } catch (e) {
+      console.log(e?.response?.data);
+    }
+  };
   return (
     <>
       <Button
@@ -147,8 +171,17 @@ const SideMenu = () => {
               </Button>
             </Link>
             <Divider size={20} mt={6} backgroundColor={"secondary"} />
-            <Login />
-            <Register />
+            {loggedIn ? (
+              <Box>
+                <Text>You are logged in.</Text>
+                <Button onClick={handleLogout}>Logout</Button>
+              </Box>
+            ) : (
+              <>
+                <Login setLoggedIn={setLoggedIn} />
+                <Register />
+              </>
+            )}
           </DrawerBody>
 
           <DrawerFooter justifyContent={"start"}>

@@ -1,4 +1,4 @@
-import { authorize, loginUser, registerUser } from "../controllers/authController.js";
+import { authorize, loginUser, registerUser, logout } from "../controllers/authController.js";
 import { User, UserExt } from "../models/User.js";
 import Message from "../models/Message.js";
 
@@ -35,7 +35,7 @@ const authRoutes = (app, options, done) => {
   });
 
   app.delete("/logout", async (req, reply) => {
-    reply.clearCookie("access_token").code(204).send("success");
+    await logout();
   });
 
   app.post("/register", postRegisterOpts);

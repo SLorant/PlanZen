@@ -68,7 +68,13 @@ const EditEvent = ({ editedEvent, isOpen, onOpen, onClose, allEvents, setAllEven
           <ModalBody display={"flex"} flexDirection={"column"} alignItems={"center"} gap={8}>
             <Text fontSize={18}>Event title: {editedEvent.title}</Text>
             <Box display={"flex"} justifyContent={"space-around"} width={"100%"}>
-              <AddEvent allEvents={allEvents} setAllEvents={setAllEvents} slotEvent={editedEvent} editing={true} />
+              <AddEvent
+                allEvents={allEvents}
+                setAllEvents={setAllEvents}
+                slotEvent={editedEvent}
+                editing={true}
+                fetchAllEvents={fetchEvents}
+              />
 
               <Button
                 backgroundColor="red.300"

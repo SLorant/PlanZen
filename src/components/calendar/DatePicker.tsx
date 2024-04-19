@@ -1,7 +1,7 @@
 import React from "react";
 import { SingleDatepicker } from "chakra-dayzed-datepicker";
 
-const DatePicker = ({ newEvent, setNewEvent, start }) => {
+const DatePicker = ({ newEvent, setNewEvent, start, recurring }) => {
   const propConfig = {
     dateNavBtnProps: {
       colorScheme: "primary",
@@ -26,6 +26,15 @@ const DatePicker = ({ newEvent, setNewEvent, start }) => {
           date={newEvent.start}
           propsConfigs={propConfig}
           onDateChange={(start) => setNewEvent({ ...newEvent, start })}
+        />
+      ) : recurring ? (
+        <SingleDatepicker
+          id="date"
+          style={{ background: "red" }}
+          name="date-input"
+          date={newEvent.until ?? newEvent.end}
+          propsConfigs={propConfig}
+          onDateChange={(until) => setNewEvent({ ...newEvent, until })}
         />
       ) : (
         <SingleDatepicker

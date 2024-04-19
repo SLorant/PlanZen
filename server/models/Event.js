@@ -9,6 +9,8 @@ const Event = {
     start: { type: "string" },
     end: { type: "string" },
     color: { type: "string" },
+    isRecurring: { type: "boolean" },
+    until: { type: "string" },
     taskId: { type: "string" },
   },
 };

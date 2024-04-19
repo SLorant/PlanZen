@@ -29,13 +29,15 @@ async function getEventByTaskService(taskID) {
   }
 }
 
-async function addEventService(title, start, end, color, taskId) {
+async function addEventService(title, start, end, color, taskId, isRecurring) {
   try {
     const data = {
       title: title,
       start: start,
       end: end,
       color: color,
+      isRecurring: isRecurring,
+      until: isRecurring ? end : null,
       taskID: taskId ?? null,
       userID: pb.authStore.model.id,
     };
@@ -46,14 +48,15 @@ async function addEventService(title, start, end, color, taskId) {
   return true;
 }
 
-async function updateEventService(id, title, start, end, color) {
-  console.log(start);
+async function updateEventService(id, title, start, end, color, isRecurring, until) {
   try {
     const data = {
       title: title,
       start: start,
       end: end,
       color: color,
+      isRecurring: isRecurring,
+      until: isRecurring ? until : null,
     };
     await pb.collection("events").update(`${id}`, data);
   } catch (e) {

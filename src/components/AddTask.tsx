@@ -22,20 +22,25 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import DatePicker from "./calendar/DatePicker";
 import ColorPicker from "./calendar/ColorPicker";
 import axios from "axios";
 
-const AddTask = ({ fetchTasks }) => {
+const AddTask = ({ tasks, fetchTasks, task = null }) => {
   const formatTime = (time) => {
     return time < 10 ? `0${time}` : time.toString();
   };
-  const getCurrentTime = (end = false) => {
-    const date = new Date();
-    const hours = end ? date.getHours() + 1 : date.getHours();
+  const getCurrentTime = (end = false, taskDate = null) => {
+    let date = new Date();
+    let hours;
+    if (taskDate) {
+      date = new Date(taskDate);
+      hours = date.getHours();
+    } else {
+      hours = end ? date.getHours() + 1 : date.getHours();
+    }
     const minutes = date.getMinutes();
-
     return `${formatTime(hours)}:${formatTime(minutes)}`;
   };
 
@@ -43,7 +48,7 @@ const AddTask = ({ fetchTasks }) => {
   const [startTime, setStartTime] = useState(getCurrentTime());
   const [endTime, setEndTime] = useState(getCurrentTime(true));
   const initialRef = useRef(null);
-  const [newTask, setNewTask] = useState({ title: "", description: "", start: new Date(), end: new Date(), color: "" });
+  const [newTask, setNewTask] = useState({ name: "", description: "", start: new Date(), end: new Date(), color: "" });
   const [isEvent, setIsEvent] = useState(false);
   const [isSimple, setIsSimple] = useState(true);
   const [isRecurring, setIsRecurring] = useState(false);
@@ -54,7 +59,29 @@ const AddTask = ({ fetchTasks }) => {
   const [nameError, setNameError] = useState("");
   const toast = useToast();
 
+  useEffect(() => {
+    setIsRecurring(false);
+    setIsSimple(true);
+  }, [tasks]);
+
+  useEffect(() => {
+    if (task) {
+      const tempTask = task;
+
+      tempTask.start = task.start ? new Date(task.start) : new Date();
+      tempTask.end = task.end ? new Date(task.end) : new Date();
+      setNewTask(tempTask);
+      if (task.start && task.end) {
+        setStartTime(getCurrentTime(false, task.start));
+        setEndTime(getCurrentTime(true, task.end));
+      }
+
+      if (task.isEvent) setIsEvent(true);
+    }
+  }, [task]);
+
   async function handleAddTask() {
+    setNameError("");
     // Combine date and time for start and end dates
     const startDateTime = new Date(newTask.start);
     const endDateTime = new Date(newTask.start);
@@ -63,37 +90,59 @@ const AddTask = ({ fetchTasks }) => {
       const [startHours, startMinutes] = startTime.split(":");
       startDateTime.setHours(parseInt(startHours));
       startDateTime.setMinutes(parseInt(startMinutes));
-      console.log(startDateTime);
       const [endHours, endMinutes] = endTime.split(":");
       endDateTime.setHours(parseInt(endHours));
       endDateTime.setMinutes(parseInt(endMinutes));
       endDateTime.setSeconds(0);
     }
 
-    if (!newTask.title) {
-      setNameError("Title required");
+    if (!newTask.name) {
+      setNameError("Name required");
     }
-    if (newTask.title) {
-      console.log(isEvent);
+
+    if (newTask.name.length > 30) {
+      setNameError("Maximum 30 characters");
+    }
+
+    if (newTask.name && !(newTask.name.length > 30)) {
       try {
-        await axios.post(
-          "http://localhost:4000/addTask",
-          {
-            name: newTask.title,
-            description: newTask.description,
-            isRecurring: isRecurring,
-            isEvent: isEvent,
-            start: startDateTime,
-            end: endDateTime,
-            color: newTask.color,
-          },
-          {
-            withCredentials: true,
-          }
-        );
+        if (!task) {
+          await axios.post(
+            "http://localhost:4000/addTask",
+            {
+              name: newTask.name,
+              description: newTask.description,
+              isRecurring: isRecurring,
+              isEvent: isEvent,
+              start: startDateTime,
+              end: endDateTime,
+              color: newTask.color,
+            },
+            {
+              withCredentials: true,
+            }
+          );
+        } else {
+          await axios.post(
+            "http://localhost:4000/updateTask",
+            {
+              id: newTask.id,
+              name: newTask.name,
+              description: newTask.description,
+              isRecurring: isRecurring,
+              isEvent: isEvent,
+              start: startDateTime,
+              end: endDateTime,
+              color: newTask.color,
+            },
+            {
+              withCredentials: true,
+            }
+          );
+        }
 
         toast({
-          title: `Task added`,
+          title: `Task ${task ? "updated" : "added"}`,
           /* description: "You have successfully logged in.", */
           status: "success",
           duration: 3000,
@@ -111,9 +160,8 @@ const AddTask = ({ fetchTasks }) => {
         fetchTasks();
         onClose();
       } catch (error) {
-        console.log(error);
         console.log(error?.response?.data);
-        setError(error?.response?.data);
+        /*  setError(error?.response?.data); */
       }
     }
   }
@@ -121,12 +169,12 @@ const AddTask = ({ fetchTasks }) => {
   return (
     <>
       <Button onClick={onOpen} mt={6}>
-        Add task
+        {task ? "Edit" : "Add"} task
       </Button>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader> Add task</ModalHeader>
+          <ModalHeader> {task ? "Edit" : "Add"} task</ModalHeader>
           <ModalCloseButton
             onClick={() => {
               onClose();
@@ -139,8 +187,8 @@ const AddTask = ({ fetchTasks }) => {
                 _focus={{ borderColor: "accent" }}
                 ref={initialRef}
                 type="text"
-                value={newTask.title}
-                onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
+                value={newTask.name}
+                onChange={(e) => setNewTask({ ...newTask, name: e.target.value })}
               />
               <FormErrorMessage ml={1}>{nameError}</FormErrorMessage>
             </FormControl>
@@ -172,14 +220,22 @@ const AddTask = ({ fetchTasks }) => {
                     setIsRecurring(true);
                     setIsEvent(false);
                   }}
+                  isDisabled={task && task.isEvent}
                 >
                   Recurring task
                 </Tab>
               </TabList>
               <TabIndicator mt="-1.5px" height="2px" bg="accent" borderRadius="1px" />
               <TabPanels>
-                <TabPanel paddingLeft={1}>
-                  <FormControl width={"50%"} mt={0} display="flex" alignItems="center" justifyContent={"space-between"}>
+                <TabPanel /* style={task && task.isEvent && { display: "none" }} */ paddingLeft={1}>
+                  <FormControl
+                    style={task && task.isEvent ? { display: "none" } : { display: "flex" }}
+                    width={"50%"}
+                    mt={0}
+                    display="flex"
+                    alignItems="center"
+                    justifyContent={"space-between"}
+                  >
                     <FormLabel marginLeft={0} htmlFor="isEvent" mb="0">
                       Make it an event?
                     </FormLabel>
@@ -268,7 +324,7 @@ const AddTask = ({ fetchTasks }) => {
                 colorScheme={"primary"}
                 onClick={handleAddTask}
               >
-                Add task
+                {task ? "Update" : "Add"} task
               </Button>
             </ModalFooter>
           </ModalBody>

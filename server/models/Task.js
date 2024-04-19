@@ -11,6 +11,7 @@ const Task = {
     start: { type: "string" },
     end: { type: "string" },
     color: { type: "string" },
+    updated: { type: "string" },
   },
 };
 

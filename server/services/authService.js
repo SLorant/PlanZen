@@ -79,8 +79,16 @@ async function authorizeService() {
   return pb.authStore.isValid;
 }
 
+async function logoutService() {
+  try {
+    if (pb.authStore.isValid) pb.authStore.clear();
+  } catch (e) {
+    throw new Api500Error("Unexpected error occurred.");
+  }
+}
+
 async function refreshToken() {
   await pb.collection("users").authRefresh();
 }
 
-export { loginUserService, registerUserService, authorizeService, refreshToken };
+export { loginUserService, registerUserService, authorizeService, refreshToken, logoutService };
