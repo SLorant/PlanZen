@@ -1,5 +1,5 @@
-import { authorize, loginUser, registerUser, logout } from "../controllers/authController.js";
-import { User, UserExt } from "../models/User.js";
+import { authorize, loginUser, registerUser, logout, getUserInfo } from "../controllers/authController.js";
+import { User, UserExt, UserView } from "../models/User.js";
 import Message from "../models/Message.js";
 
 const postLoginOpts = {
@@ -13,6 +13,19 @@ const postLoginOpts = {
     },
   },
   handler: loginUser,
+};
+
+const getUserOpts = {
+  schema: {
+    response: {
+      500: Message,
+      404: Message,
+      401: Message,
+      200: UserView,
+    },
+  },
+  preHandler: authorize,
+  handler: getUserInfo,
 };
 
 const postRegisterOpts = {
@@ -37,6 +50,8 @@ const authRoutes = (app, options, done) => {
   app.delete("/logout", async (req, reply) => {
     await logout();
   });
+
+  app.get("/userInfo", getUserOpts);
 
   app.post("/register", postRegisterOpts);
 

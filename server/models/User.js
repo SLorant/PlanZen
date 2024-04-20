@@ -8,6 +8,14 @@ const User = {
   },
 };
 
+const UserView = {
+  type: "object",
+  properties: {
+    username: { type: "string" },
+    email: { type: "string" },
+  },
+};
+
 const UserExt = {
   type: "object",
   required: ["name"],
@@ -22,4 +30,4 @@ const UserExt = {
   },
 };
 
-export { User, UserExt };
+export { User, UserExt, UserView };

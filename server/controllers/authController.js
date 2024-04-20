@@ -1,4 +1,10 @@
-import { loginUserService, registerUserService, authorizeService, logoutService } from "../services/authService.js";
+import {
+  loginUserService,
+  registerUserService,
+  authorizeService,
+  logoutService,
+  getUserInfoService,
+} from "../services/authService.js";
 
 const loginUser = async (req, reply) => {
   const { username, password } = req.body;
@@ -6,13 +12,6 @@ const loginUser = async (req, reply) => {
   try {
     const isSuccess = await loginUserService(username, password);
     isSuccess ? reply.code(200).send("Success") : reply.code(500).send("Something went wrong.");
-    /*   reply.setCookie("access_token", accessToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "Lax",
-      maxAge: 30 * 24 * 60 * 60,
-    });
-    reply.send({ accessToken }); */
   } catch (e) {
     reply.code(e.status).send(e.name);
   }
@@ -24,13 +23,15 @@ const registerUser = async (req, reply) => {
   try {
     const isSuccess = await registerUserService(username, email, password, passwordConfirm);
     isSuccess ? reply.code(200).send("Success") : reply.code(500).send("Something went wrong.");
-    /*     .setCookie("access_token", accessToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "Lax",
-        maxAge: 30 * 24 * 60 * 60,
-      })
-      .send({ accessToken }); */
+  } catch (e) {
+    reply.code(e.status).send(e.name);
+  }
+};
+
+const getUserInfo = async (req, reply) => {
+  try {
+    const user = await getUserInfoService();
+    reply.code(200).send(user);
   } catch (e) {
     reply.code(e.status).send(e.name);
   }
@@ -55,4 +56,4 @@ const logout = async (req, reply, done) => {
   }
 };
 
-export { loginUser, registerUser, authorize, logout };
+export { loginUser, registerUser, authorize, logout, getUserInfo };

@@ -55,6 +55,16 @@ async function registerUserService(username, email, password, passwordConfirm) {
   return pb.authStore.isValid;
 }
 
+async function getUserInfoService() {
+  try {
+    const user = await pb.collection("users").getOne(pb.authStore.model.id);
+    return user;
+  } catch (e) {
+    console.log(e);
+    throw new Api404Error("No events found");
+  }
+}
+
 function handleConflictError(e) {
   if (e.status === 404) {
     // User or email not found in db, continue with registration
@@ -91,4 +101,4 @@ async function refreshToken() {
   await pb.collection("users").authRefresh();
 }
 
-export { loginUserService, registerUserService, authorizeService, refreshToken, logoutService };
+export { loginUserService, registerUserService, authorizeService, refreshToken, logoutService, getUserInfoService };
