@@ -1,15 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.tsx";
+import App from "./App.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ChakraProvider } from "@chakra-ui/react";
-import RandomRoute from "./components/auth/Logout.tsx";
-import Register from "./components/auth/Register.tsx";
-import Login from "./components/auth/Login.tsx";
-import Calendar2 from "./pages/Calendar.tsx";
+import RandomRoute from "./components/auth/Logout.jsx";
+import Register from "./components/auth/Register.jsx";
+import Login from "./components/auth/Login.jsx";
+import Calendar2 from "./pages/Calendar.jsx";
 import theme from "./theme.js";
 import { ColorModeScript } from "@chakra-ui/react";
-import Tasks from "./pages/Tasks.tsx";
+import Tasks from "./pages/Tasks.jsx";
 
 const router = createBrowserRouter([
   {
@@ -38,7 +38,7 @@ const router = createBrowserRouter([
   },
 ]);
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
+ReactDOM.createRoot(document.getElementById("root")).render(
   /*  <React.StrictMode> */
   <ChakraProvider theme={theme}>
     <ColorModeScript initialColorMode={theme.config.initialColorMode} />

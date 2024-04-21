@@ -22,16 +22,28 @@ import {
   TabIndicator,
   TabPanels,
   TabPanel,
+  Flex,
 } from "@chakra-ui/react";
 import ColorPicker from "./ColorPicker";
 import axios from "axios";
 import LoginCheckUtil from "../../utils/LoginCheckUtil";
 import DatePicker from "./DatePicker";
 
-const AddEvent = ({ allEvents, setAllEvents, slotEvent, editing, fetchAllEvents }) => {
+const AddEvent = ({
+  allEvents,
+  setAllEvents,
+  slotEvent,
+  editing,
+  fetchAllEvents,
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = useRef(null);
-  const [newEvent, setNewEvent] = useState({ title: "", start: new Date(), end: new Date(), color: "#43e56e" });
+  const [newEvent, setNewEvent] = useState({
+    title: "",
+    start: new Date(),
+    end: new Date(),
+    color: "#43e56e",
+  });
   const [multiday, setMultiday] = useState(false);
   const [isSimple, setIsSimple] = useState(true);
   const [isRecurring, setIsRecurring] = useState(false);
@@ -46,7 +58,12 @@ const AddEvent = ({ allEvents, setAllEvents, slotEvent, editing, fetchAllEvents 
   const toast = useToast();
 
   useEffect(() => {
-    setNewEvent({ title: "", start: new Date(), end: new Date(), color: "#43e56e" });
+    setNewEvent({
+      title: "",
+      start: new Date(),
+      end: new Date(),
+      color: "#43e56e",
+    });
   }, [allEvents]);
 
   const formatTime = (time) => {
@@ -67,7 +84,11 @@ const AddEvent = ({ allEvents, setAllEvents, slotEvent, editing, fetchAllEvents 
   const handleSlotEvent = async () => {
     const result = await LoginCheckUtil();
 
-    if (slotEvent && result && slotEvent.start /*  && slotEvent.slotClicked */) {
+    if (
+      slotEvent &&
+      result &&
+      slotEvent.start /*  && slotEvent.slotClicked */
+    ) {
       console.log(slotEvent);
       const start = new Date(slotEvent.start);
       const end = new Date(slotEvent.end);
@@ -76,13 +97,17 @@ const AddEvent = ({ allEvents, setAllEvents, slotEvent, editing, fetchAllEvents 
         start.getMonth() === end.getMonth() &&
         start.getDay() === end.getDay();
 
-      const startTimeFormatted = `${formatTime(start.getHours())}:${formatTime(start.getMinutes())}`;
+      const startTimeFormatted = `${formatTime(start.getHours())}:${formatTime(
+        start.getMinutes()
+      )}`;
       /* let endTimeFormatted;
       if (isRecurring)
         endTimeFormatted = `${formatTime(new Date(slotEvent.until).getHours())}:${formatTime(
           new Date(slotEvent.until).getMinutes()
         )}`;
-      else  */ const endTimeFormatted = `${formatTime(end.getHours())}:${formatTime(end.getMinutes())}`;
+      else  */ const endTimeFormatted = `${formatTime(
+        end.getHours()
+      )}:${formatTime(end.getMinutes())}`;
 
       setStartTime(startTimeFormatted);
       setEndTime(endTimeFormatted);
@@ -230,9 +255,16 @@ const AddEvent = ({ allEvents, setAllEvents, slotEvent, editing, fetchAllEvents 
   };
 
   return (
-    <>
-      <Button colorScheme="primary" color={"text"} onClick={handleAddButton}>
-        {editing ? "Edit" : "Add"} event
+    <Flex mt={6} justifyContent={"end"} width={"100%"}>
+      <Button
+        fontSize={"3xl"}
+        colorScheme="primary"
+        color={"text"}
+        /*   paddingTop={4} */
+        onClick={handleAddButton}
+        borderRadius={50}
+      >
+        {editing ? "Edit" : "+"}
       </Button>
       <Modal
         colorScheme={"secondary"}
@@ -259,19 +291,27 @@ const AddEvent = ({ allEvents, setAllEvents, slotEvent, editing, fetchAllEvents 
                 ref={initialRef}
                 type="text"
                 value={newEvent.title}
-                onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
+                onChange={(e) =>
+                  setNewEvent({ ...newEvent, title: e.target.value })
+                }
               />
               <FormErrorMessage ml={1}>{nameError}</FormErrorMessage>
             </FormControl>
 
             <FormControl mt={4}>
               <FormLabel>{isSimple ? "Event" : "Start"} date</FormLabel>
-              <DatePicker newEvent={newEvent} setNewEvent={setNewEvent} start={true} />
+              <DatePicker
+                newEvent={newEvent}
+                setNewEvent={setNewEvent}
+                start={true}
+              />
               <FormErrorMessage ml={1}></FormErrorMessage>
             </FormControl>
 
             <Tabs
-              /* defaultIndex={isSimple ? 0 : isRecurring ? 2 : 1}  */ width={"100%"}
+              /* defaultIndex={isSimple ? 0 : isRecurring ? 2 : 1}  */ width={
+                "100%"
+              }
               mt={4}
               variant="unstyled"
               isFitted
@@ -305,7 +345,12 @@ const AddEvent = ({ allEvents, setAllEvents, slotEvent, editing, fetchAllEvents 
                   Recurring
                 </Tab>
               </TabList>
-              <TabIndicator mt="-1.5px" height="2px" bg="accent" borderRadius="1px" />
+              <TabIndicator
+                mt="-1.5px"
+                height="2px"
+                bg="accent"
+                borderRadius="1px"
+              />
               <TabPanels>
                 <TabPanel paddingLeft={1}>
                   <FormControl mt={2} isInvalid={startError}>
@@ -332,12 +377,20 @@ const AddEvent = ({ allEvents, setAllEvents, slotEvent, editing, fetchAllEvents 
                 <TabPanel paddingLeft={1}>
                   <FormControl mt={2}>
                     <FormLabel>End date</FormLabel>
-                    <DatePicker newEvent={newEvent} setNewEvent={setNewEvent} start={false} />
+                    <DatePicker
+                      newEvent={newEvent}
+                      setNewEvent={setNewEvent}
+                      start={false}
+                    />
                     <FormErrorMessage ml={1}></FormErrorMessage>
                   </FormControl>
                 </TabPanel>
                 <TabPanel paddingLeft={1} paddingTop={1}>
-                  <Text fontStyle={"italic"} textAlign={"right"} fontSize={"sm"}>
+                  <Text
+                    fontStyle={"italic"}
+                    textAlign={"right"}
+                    fontSize={"sm"}
+                  >
                     Recurs weekly
                   </Text>
                   <FormControl mt={0} isInvalid={startError}>
@@ -362,7 +415,12 @@ const AddEvent = ({ allEvents, setAllEvents, slotEvent, editing, fetchAllEvents 
                   </FormControl>
                   <FormControl mt={4} isInvalid={untilError}>
                     <FormLabel>Until</FormLabel>
-                    <DatePicker newEvent={newEvent} setNewEvent={setNewEvent} start={false} recurring={isRecurring} />
+                    <DatePicker
+                      newEvent={newEvent}
+                      setNewEvent={setNewEvent}
+                      start={false}
+                      recurring={isRecurring}
+                    />
                     <FormErrorMessage ml={1}>{untilError}</FormErrorMessage>
                   </FormControl>
                 </TabPanel>
@@ -409,7 +467,7 @@ const AddEvent = ({ allEvents, setAllEvents, slotEvent, editing, fetchAllEvents 
           </ModalBody>
         </ModalContent>
       </Modal>
-    </>
+    </Flex>
   );
 };
 

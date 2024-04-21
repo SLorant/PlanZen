@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, useToast } from "@chakra-ui/react";
 import axios from "axios";
-import LoginCheckUtil from "../utils/LoginCheckUtil";
+import LoginCheckUtil from "../../utils/LoginCheckUtil";
 
 const DeleteTask = ({ fetchTasks, taskID }) => {
   const toast = useToast();

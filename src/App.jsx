@@ -1,12 +1,21 @@
 import { useState, useEffect } from "react";
 import "./App.css";
-import { Card, CardBody, CardHeader, Heading, Text, VStack, SimpleGrid, CardFooter } from "@chakra-ui/react";
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  Heading,
+  Text,
+  VStack,
+  SimpleGrid,
+  CardFooter,
+} from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import { useColorMode, Button } from "@chakra-ui/react";
 import Wrapper from "./components/Wrapper";
 import SideMenu from "./components/SideMenu";
 import { MoonIcon } from "@chakra-ui/icons";
+import QuoteAdder from "./components/QuoteAdder";
 
 function App() {
   const [dailyQuote, setQuote] = useState("");
@@ -14,76 +23,11 @@ function App() {
   const { toggleColorMode } = useColorMode();
   useEffect(() => {
     try {
-      fetchDailyQuote();
+      QuoteAdder({ setAuthor, setQuote });
     } catch (e) {
       console.error(e);
     }
   }, []);
-
-  const addNewQuote = async () => {
-    try {
-      let quote = await fetchNewQuote();
-      while (quote.quote.length > 100) {
-        quote = await fetchNewQuote();
-      }
-      const postQuote = quote.quote;
-      const author = quote.author;
-      await axios.post(
-        "http://localhost:4000/newquote",
-        {
-          postQuote,
-          author,
-        },
-        {
-          withCredentials: true,
-        }
-      );
-      setQuote(quote.quote);
-      setAuthor(quote.author);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const fetchDailyQuote = async () => {
-    try {
-      const response = await axios.get("http://localhost:4000/dailyquote", {
-        withCredentials: true,
-      });
-      const quote = response.data;
-      const date = new Date(quote.updated);
-      const today = new Date();
-      const isNotToday =
-        date.getFullYear() !== today.getFullYear() ||
-        date.getMonth() !== today.getMonth() ||
-        date.getDate() !== today.getDate();
-      if (isNotToday) {
-        addNewQuote();
-      } else {
-        setQuote(quote.quote);
-        setAuthor(quote.author);
-      }
-      // Get the day of the week (0 for Sunday, 1 for Monday, ..., 6 for Saturday)
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  const fetchNewQuote = async () => {
-    try {
-      const res = await fetch("https://api.api-ninjas.com/v1/quotes?category=inspirational", {
-        headers: {
-          "X-Api-Key": import.meta.env.VITE_QUOTES_API_KEY,
-        },
-      });
-      const quotes = await res.json();
-      const quote = quotes[0];
-      console.log(quote);
-      return quote;
-    } catch {
-      setQuote("asd");
-    }
-  };
 
   return (
     <Wrapper>
@@ -105,7 +49,13 @@ function App() {
       </Button>
       {dailyQuote && author && (
         <>
-          <Heading as={"h2"} mt={10} textAlign={"center"} size={["md", "lg"]} fontWeight={"bold"}>
+          <Heading
+            as={"h2"}
+            mt={10}
+            textAlign={"center"}
+            size={["md", "lg"]}
+            fontWeight={"bold"}
+          >
             {dailyQuote}
           </Heading>
 
@@ -121,7 +71,10 @@ function App() {
         <SimpleGrid
           width={"100%"}
           spacing={4}
-          templateColumns={["repeat(auto-fill, minmax(150px, 1fr))", "repeat(auto-fill, minmax(200px, 1fr))"]}
+          templateColumns={[
+            "repeat(auto-fill, minmax(150px, 1fr))",
+            "repeat(auto-fill, minmax(200px, 1fr))",
+          ]}
         >
           <Card>
             <CardHeader>
@@ -147,6 +100,19 @@ function App() {
             </CardBody>
             <CardFooter>
               <Button colorScheme="primary">Calendar</Button>
+            </CardFooter>
+          </Card>
+          <Card>
+            <CardHeader>
+              <Heading size="md"> Tasks</Heading>
+            </CardHeader>
+            <CardBody>
+              <Text>5 tasks remaining today</Text>
+            </CardBody>
+            <CardFooter>
+              <Link to={"/tasks"}>
+                <Button colorScheme="primary">See tasks..</Button>
+              </Link>
             </CardFooter>
           </Card>
           <Card>

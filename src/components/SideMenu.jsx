@@ -1,4 +1,9 @@
-import { CalendarIcon, EditIcon, HamburgerIcon, MoonIcon } from "@chakra-ui/icons";
+import {
+  CalendarIcon,
+  EditIcon,
+  HamburgerIcon,
+  MoonIcon,
+} from "@chakra-ui/icons";
 import {
   Drawer,
   DrawerBody,
@@ -19,6 +24,7 @@ import { Link } from "react-router-dom";
 import Login from "./auth/Login";
 import Register from "./auth/Register";
 import LoginCheckUtil from "../utils/LoginCheckUtil";
+import axios from "axios";
 const SideMenu = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef();
@@ -32,7 +38,20 @@ const SideMenu = () => {
   const checkLoggedIn = async () => {
     const result = await LoginCheckUtil();
     if (result) {
+      await getUserInfo();
       setLoggedIn(true);
+    }
+  };
+
+  const getUserInfo = async () => {
+    try {
+      const result = await axios.get("http://localhost:4000/userInfo", {
+        withCredentials: true,
+      });
+      console.log(result);
+    } catch (e) {
+      console.log(e);
+      console.log(e?.response?.data);
     }
   };
 
@@ -52,8 +71,8 @@ const SideMenu = () => {
         zIndex={50}
         ref={btnRef}
         position={["fixed", "absolute"]}
-        top={4}
-        left={4}
+        top={6}
+        left={12}
         textColor={"darktext"}
         colorScheme={"secondary"}
         onClick={onOpen}
@@ -61,7 +80,12 @@ const SideMenu = () => {
       >
         <HamburgerIcon boxSize={5} />
       </Button>
-      <Drawer isOpen={isOpen} placement="left" onClose={onClose} finalFocusRef={btnRef}>
+      <Drawer
+        isOpen={isOpen}
+        placement="left"
+        onClose={onClose}
+        finalFocusRef={btnRef}
+      >
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
@@ -185,7 +209,12 @@ const SideMenu = () => {
           </DrawerBody>
 
           <DrawerFooter justifyContent={"start"}>
-            <Button colorScheme="secondary" textColor={"darktext"} size="sm" onClick={toggleColorMode}>
+            <Button
+              colorScheme="secondary"
+              textColor={"darktext"}
+              size="sm"
+              onClick={toggleColorMode}
+            >
               <MoonIcon boxSize={4} />
             </Button>
           </DrawerFooter>

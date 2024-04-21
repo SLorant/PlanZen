@@ -59,7 +59,7 @@ const overrides = {
         "--accent": props.colorMode == "light" ? "#479467" : "#1e2723",
         "--text": props.colorMode == "light" ? "#292929" : "#e1e1e1",
         "--darktext": "#292929",
-        "--bg": props.colorMode == "light" ? "#f0f4f3" : "#141f1d",
+        "--bg": props.colorMode == "light" ? "#f0f4f3" : "gray.800",
       },
     }),
   },

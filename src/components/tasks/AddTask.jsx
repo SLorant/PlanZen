@@ -23,8 +23,8 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
-import DatePicker from "./calendar/DatePicker";
-import ColorPicker from "./calendar/ColorPicker";
+import DatePicker from "../calendar/DatePicker";
+import ColorPicker from "../calendar/ColorPicker";
 import axios from "axios";
 
 const AddTask = ({ tasks, fetchTasks, task = null }) => {
@@ -48,7 +48,13 @@ const AddTask = ({ tasks, fetchTasks, task = null }) => {
   const [startTime, setStartTime] = useState(getCurrentTime());
   const [endTime, setEndTime] = useState(getCurrentTime(true));
   const initialRef = useRef(null);
-  const [newTask, setNewTask] = useState({ name: "", description: "", start: new Date(), end: new Date(), color: "" });
+  const [newTask, setNewTask] = useState({
+    name: "",
+    description: "",
+    start: new Date(),
+    end: new Date(),
+    color: "",
+  });
   const [isEvent, setIsEvent] = useState(false);
   const [isSimple, setIsSimple] = useState(true);
   const [isRecurring, setIsRecurring] = useState(false);
@@ -169,7 +175,7 @@ const AddTask = ({ tasks, fetchTasks, task = null }) => {
   return (
     <>
       <Button onClick={onOpen} mt={6}>
-        {task ? "Edit" : "Add"} task
+        {task ? "Edit" : "Add"}
       </Button>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
@@ -188,7 +194,9 @@ const AddTask = ({ tasks, fetchTasks, task = null }) => {
                 ref={initialRef}
                 type="text"
                 value={newTask.name}
-                onChange={(e) => setNewTask({ ...newTask, name: e.target.value })}
+                onChange={(e) =>
+                  setNewTask({ ...newTask, name: e.target.value })
+                }
               />
               <FormErrorMessage ml={1}>{nameError}</FormErrorMessage>
             </FormControl>
@@ -200,7 +208,9 @@ const AddTask = ({ tasks, fetchTasks, task = null }) => {
                 _focus={{ borderColor: "accent" }}
                 type="textarea"
                 value={newTask.description}
-                onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
+                onChange={(e) =>
+                  setNewTask({ ...newTask, description: e.target.value })
+                }
               />
             </FormControl>
 
@@ -222,14 +232,27 @@ const AddTask = ({ tasks, fetchTasks, task = null }) => {
                   }}
                   isDisabled={task && task.isEvent}
                 >
-                  Recurring task
+                  Daily task
                 </Tab>
               </TabList>
-              <TabIndicator mt="-1.5px" height="2px" bg="accent" borderRadius="1px" />
+              <TabIndicator
+                mt="-1.5px"
+                height="2px"
+                bg="accent"
+                borderRadius="1px"
+              />
               <TabPanels>
-                <TabPanel /* style={task && task.isEvent && { display: "none" }} */ paddingLeft={1}>
+                <TabPanel
+                  /* style={task && task.isEvent && { display: "none" }} */ paddingLeft={
+                    1
+                  }
+                >
                   <FormControl
-                    style={task && task.isEvent ? { display: "none" } : { display: "flex" }}
+                    style={
+                      task && task.isEvent
+                        ? { display: "none" }
+                        : { display: "flex" }
+                    }
                     width={"50%"}
                     mt={0}
                     display="flex"
@@ -237,21 +260,36 @@ const AddTask = ({ tasks, fetchTasks, task = null }) => {
                     justifyContent={"space-between"}
                   >
                     <FormLabel marginLeft={0} htmlFor="isEvent" mb="0">
-                      Make it an event?
+                      Add to calendar?
                     </FormLabel>
                     <Switch
                       isChecked={isEvent}
                       id="isEvent"
                       colorScheme={"primary"}
-                      _focusVisible={{ border: "none", boxShadow: "none", outline: "none" }}
+                      _focusVisible={{
+                        border: "none",
+                        boxShadow: "none",
+                        outline: "none",
+                      }}
                       onChange={() => {
                         setIsEvent(!isEvent);
                       }}
                     />
                   </FormControl>
                 </TabPanel>
-                <TabPanel display={"flex"} flexDirection={"column"} justifyContent={"end"} alignItems={"end"}>
-                  <FormControl width={"50%"} mt={0} display="flex" alignItems="center" justifyContent={"space-between"}>
+                <TabPanel
+                  display={"flex"}
+                  flexDirection={"column"}
+                  justifyContent={"end"}
+                  alignItems={"end"}
+                >
+                  <FormControl
+                    width={"50%"}
+                    mt={0}
+                    display="flex"
+                    alignItems="center"
+                    justifyContent={"space-between"}
+                  >
                     <FormLabel marginLeft={0} htmlFor="isEvent" mb="0">
                       Make it a habit?
                     </FormLabel>
@@ -259,7 +297,11 @@ const AddTask = ({ tasks, fetchTasks, task = null }) => {
                       isChecked={isEvent}
                       id="isEvent"
                       colorScheme={"primary"}
-                      _focusVisible={{ border: "none", boxShadow: "none", outline: "none" }}
+                      _focusVisible={{
+                        border: "none",
+                        boxShadow: "none",
+                        outline: "none",
+                      }}
                       /* onChange={() => {
                         setIsEvent(!isEvent);
                       }} */
@@ -273,7 +315,11 @@ const AddTask = ({ tasks, fetchTasks, task = null }) => {
               <>
                 <FormControl mt={4}>
                   <FormLabel>Date</FormLabel>
-                  <DatePicker newEvent={newTask} setNewEvent={setNewTask} start={true} />
+                  <DatePicker
+                    newEvent={newTask}
+                    setNewEvent={setNewTask}
+                    start={true}
+                  />
                   <FormErrorMessage ml={1}></FormErrorMessage>
                 </FormControl>
                 <FormControl mt={4}>
@@ -295,7 +341,12 @@ const AddTask = ({ tasks, fetchTasks, task = null }) => {
                   />
                 </FormControl>
 
-                <FormControl mt={4} display="flex" alignItems="center" justifyContent={"space-between"}>
+                <FormControl
+                  mt={4}
+                  display="flex"
+                  alignItems="center"
+                  justifyContent={"space-between"}
+                >
                   <FormLabel mb="0">Event color</FormLabel>
                   <ColorPicker newEvent={newTask} setNewEvent={setNewTask} />
                 </FormControl>

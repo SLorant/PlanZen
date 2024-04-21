@@ -9,11 +9,11 @@
 
   /* Dark mode colors */
   --dark-text-color: #e1e1e1;
-  --dark-bg-color: #141f1d;
+  --dark-bg-color: #1a202c;
   --dark-primary-color: #19bc8b;
   --dark-secondary-color: #82d1a6;
-  --dark-accent-color: #1e2723;
-  --dark-gray: #4b4a4a;
-  --dark-darkgray: #283033;
+  --dark-accent-color: rgba(0, 0, 0, 0.1);
+  --dark-gray: #2d3748;
+  --dark-darkgray: #2d3748;
   --dark-lightgray: #9e9e9e;
 }

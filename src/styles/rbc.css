@@ -24,7 +24,8 @@
 }
 
 .rbc-toolbar {
-  margin-top: 10px !important;
+  margin-top: 20px !important;
+  margin-bottom: 20px !important;
 }
 .rbc-toolbar-label {
   font-size: 24px;
@@ -133,6 +134,7 @@
 }
 .rbc-show-more {
   color: var(--light-accent-color);
+  background: none;
 }
 
 .rbc-day-slot .rbc-event {
@@ -225,6 +227,9 @@
 .dark .rbc-button-link {
   color: var(--dark-text-color);
 }
+.dark .rbc-button-link span {
+  color: var(--light-text-color) !important;
+}
 .dark .rbc-today {
   background-color: var(--dark-darkgray);
 }
@@ -235,7 +240,7 @@
   border-color: var(--dark-gray);
 }
 .dark .rbc-off-range-bg {
-  background-color: var(--light-text-color);
+  background-color: var(--dark-accent-color);
 }
 .dark .rbc-header {
   background-color: var(--dark-secondary-color);
@@ -247,13 +252,17 @@
   color: var(--dark-text-color);
 }
 
+.dark .rbc-event {
+  opacity: 0.9 !important;
+}
+
 .dark .rbc-toolbar button:active,
 .dark .rbc-active,
 .dark .rbc-toolbar button.rbc-active,
 .dark .rbc-toolbar button.rbc-active:focus {
   background-color: var(--dark-primary-color);
   border: none;
-  color: var(--dark-text-color);
+  color: var(--light-text-color);
 }
 
 .dark .rbc-toolbar button:hover {
