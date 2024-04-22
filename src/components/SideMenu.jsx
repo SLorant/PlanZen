@@ -1,9 +1,4 @@
-import {
-  CalendarIcon,
-  EditIcon,
-  HamburgerIcon,
-  MoonIcon,
-} from "@chakra-ui/icons";
+import { CalendarIcon, EditIcon, HamburgerIcon, MoonIcon } from "@chakra-ui/icons";
 import {
   Drawer,
   DrawerBody,
@@ -18,6 +13,7 @@ import {
   Divider,
   useColorMode,
   Text,
+  Flex,
 } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
@@ -30,10 +26,12 @@ const SideMenu = () => {
   const btnRef = useRef();
   const { toggleColorMode } = useColorMode();
   const [loggedIn, setLoggedIn] = useState(false);
+  const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
 
   useEffect(() => {
     checkLoggedIn();
-  }, []);
+  }, [isOpen]);
 
   const checkLoggedIn = async () => {
     const result = await LoginCheckUtil();
@@ -48,7 +46,9 @@ const SideMenu = () => {
       const result = await axios.get("http://localhost:4000/userInfo", {
         withCredentials: true,
       });
-      console.log(result);
+      console.log(result?.data);
+      if (result?.data?.username) setUserName(result?.data?.username);
+      if (result?.data?.email) setEmail(result?.data?.email);
     } catch (e) {
       console.log(e);
       console.log(e?.response?.data);
@@ -80,12 +80,7 @@ const SideMenu = () => {
       >
         <HamburgerIcon boxSize={5} />
       </Button>
-      <Drawer
-        isOpen={isOpen}
-        placement="left"
-        onClose={onClose}
-        finalFocusRef={btnRef}
-      >
+      <Drawer isOpen={isOpen} placement="left" onClose={onClose} finalFocusRef={btnRef}>
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
@@ -196,10 +191,15 @@ const SideMenu = () => {
             </Link>
             <Divider size={20} mt={6} backgroundColor={"secondary"} />
             {loggedIn ? (
-              <Box>
-                <Text>You are logged in.</Text>
-                <Button onClick={handleLogout}>Logout</Button>
-              </Box>
+              <Flex flexDirection={"column"} alignItems={"center"} justifyContent={"center"} mt={6}>
+                <Text textAlign={"center"}>Logged in as {userName}</Text>
+                <Text mt={2} textAlign={"center"}>
+                  Email: {email}
+                </Text>
+                <Button mt={4} onClick={handleLogout}>
+                  Logout
+                </Button>
+              </Flex>
             ) : (
               <>
                 <Login setLoggedIn={setLoggedIn} />
@@ -209,12 +209,7 @@ const SideMenu = () => {
           </DrawerBody>
 
           <DrawerFooter justifyContent={"start"}>
-            <Button
-              colorScheme="secondary"
-              textColor={"darktext"}
-              size="sm"
-              onClick={toggleColorMode}
-            >
+            <Button colorScheme="secondary" textColor={"darktext"} size="sm" onClick={toggleColorMode}>
               <MoonIcon boxSize={4} />
             </Button>
           </DrawerFooter>

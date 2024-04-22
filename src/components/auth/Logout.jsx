@@ -9,12 +9,9 @@ const RandomRoute = () => {
 
   const handleRegister = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:4000/protected-route",
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await axios.get("http://localhost:4000/protected-route", {
+        withCredentials: true,
+      });
       console.log(response.data);
     } catch (error) {
       setError(error?.response?.data);

@@ -14,28 +14,25 @@ import {
   ModalBody,
   ModalOverlay,
   ModalFooter,
-  Switch,
   Text,
-  Tabs,
-  TabList,
-  Tab,
-  TabIndicator,
-  TabPanels,
-  TabPanel,
   Flex,
 } from "@chakra-ui/react";
 import ColorPicker from "./ColorPicker";
 import axios from "axios";
 import LoginCheckUtil from "../../utils/LoginCheckUtil";
 import DatePicker from "./DatePicker";
+import { isSameDay } from "../../utils/TimeUtils";
+import EventTabs from "./EventTabs";
 
-const AddEvent = ({
-  allEvents,
-  setAllEvents,
-  slotEvent,
-  editing,
-  fetchAllEvents,
-}) => {
+const initialErrors = {
+  api: "",
+  name: "",
+  start: "",
+  end: "",
+  until: "",
+};
+
+const AddEvent = ({ allEvents, slotEvent, editing, fetchAllEvents }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = useRef(null);
   const [newEvent, setNewEvent] = useState({
@@ -47,16 +44,10 @@ const AddEvent = ({
   const [multiday, setMultiday] = useState(false);
   const [isSimple, setIsSimple] = useState(true);
   const [isRecurring, setIsRecurring] = useState(false);
-  //const [color, setColor] = useState(false);
-  /*  const [startTime, setStartTime] = useState(`${() => new Date().getHours()}:00`);
-  const [endTime, setEndTime] = useState(`${() => new Date().getHours()}:00`); */
-  const [error, setError] = useState("");
-  const [nameError, setNameError] = useState("");
-  const [startError, setStartError] = useState("");
-  const [endError, setEndError] = useState("");
-  const [untilError, setUntilError] = useState("");
+  const [errors, setErrors] = useState(initialErrors);
   const toast = useToast();
 
+  //Refresh form event when calendar refreshes
   useEffect(() => {
     setNewEvent({
       title: "",
@@ -66,6 +57,7 @@ const AddEvent = ({
     });
   }, [allEvents]);
 
+  //Time formatting shenaningans
   const formatTime = (time) => {
     return time < 10 ? `0${time}` : time.toString();
   };
@@ -81,38 +73,55 @@ const AddEvent = ({
   const [startTime, setStartTime] = useState(getCurrentTime());
   const [endTime, setEndTime] = useState(getCurrentTime(true));
 
-  const handleSlotEvent = async () => {
+  //Check if form data is valid
+  const IsValid = (newEvent, multiday, startTime, endTime) => {
+    const updatedErrors = { ...initialErrors };
+    let valid = true;
+
+    if (!newEvent.title) {
+      updatedErrors.name = "Title required";
+      valid = false;
+    }
+    if (!multiday && !startTime) {
+      updatedErrors.start = "Start time required";
+      valid = false;
+    }
+    if (!multiday && !endTime) {
+      updatedErrors.end = "End time required";
+      valid = false;
+    }
+    if (newEvent.until) {
+      const startDate = newEvent.start;
+      const endDate = newEvent.until;
+
+      const yearsDiff = endDate.getFullYear() - startDate.getFullYear();
+      const monthsDiff = endDate.getMonth() - startDate.getMonth();
+
+      const totalMonthsDiff = yearsDiff * 12 + monthsDiff;
+      if (totalMonthsDiff > 12) {
+        updatedErrors.until = "Time distance too big";
+        valid = false;
+      }
+    }
+
+    setErrors(updatedErrors);
+    return valid;
+  };
+
+  //Clicking on existing event, or spare slot executes this
+  const handleSlotClick = async () => {
     const result = await LoginCheckUtil();
 
-    if (
-      slotEvent &&
-      result &&
-      slotEvent.start /*  && slotEvent.slotClicked */
-    ) {
-      console.log(slotEvent);
+    if (slotEvent && result) {
+      //Date formatting
       const start = new Date(slotEvent.start);
       const end = new Date(slotEvent.end);
-      const isSameDay =
-        start.getFullYear() === end.getFullYear() &&
-        start.getMonth() === end.getMonth() &&
-        start.getDay() === end.getDay();
+      setStartTime(`${formatTime(start.getHours())}:${formatTime(start.getMinutes())}`);
+      setEndTime(`${formatTime(end.getHours())}:${formatTime(end.getMinutes())}`);
 
-      const startTimeFormatted = `${formatTime(start.getHours())}:${formatTime(
-        start.getMinutes()
-      )}`;
-      /* let endTimeFormatted;
-      if (isRecurring)
-        endTimeFormatted = `${formatTime(new Date(slotEvent.until).getHours())}:${formatTime(
-          new Date(slotEvent.until).getMinutes()
-        )}`;
-      else  */ const endTimeFormatted = `${formatTime(
-        end.getHours()
-      )}:${formatTime(end.getMinutes())}`;
-
-      setStartTime(startTimeFormatted);
-      setEndTime(endTimeFormatted);
+      //Open modal
       onOpen();
-      console.log(slotEvent);
+
       if (editing) {
         setNewEvent({
           id: slotEvent.id,
@@ -122,21 +131,18 @@ const AddEvent = ({
           until: slotEvent.until ? new Date(slotEvent.until) : slotEvent.start,
           color: slotEvent.color,
         });
+        if (slotEvent.until) setIsRecurring(true);
       } else {
         setNewEvent({ title: "", start: slotEvent.start, end: slotEvent.end });
       }
-
-      if (slotEvent.multiday || !isSameDay) setMultiday(true);
+      console.log(slotEvent.multiday || !isSameDay(start, end));
+      if (slotEvent.multiday || !isSameDay(start, end)) setMultiday(true);
     }
   };
 
   useEffect(() => {
-    if (newEvent.title) setNameError("");
-  }, [newEvent]);
-
-  useEffect(() => {
-    if (!editing) {
-      handleSlotEvent();
+    if (!editing && !slotEvent.new) {
+      handleSlotClick();
     }
   }, [slotEvent]);
 
@@ -152,40 +158,8 @@ const AddEvent = ({
     endDateTime.setHours(parseInt(multiday ? startHours : endHours));
     endDateTime.setMinutes(parseInt(multiday ? startMinutes : endMinutes));
     endDateTime.setSeconds(0);
-    let hasErrors = false;
-    if (!newEvent.title) {
-      setNameError("Title required");
-      hasErrors = true;
-    }
-    if (!multiday && !startTime) {
-      setStartError("Start time required");
-      hasErrors = true;
-    }
-    if (!multiday && !endTime) {
-      setEndError("End time required");
-      hasErrors = true;
-    }
-    if (newEvent.until) {
-      const startDate = newEvent.start;
-      const endDate = newEvent.until;
 
-      const yearsDiff = endDate.getFullYear() - startDate.getFullYear();
-      const monthsDiff = endDate.getMonth() - startDate.getMonth();
-
-      const totalMonthsDiff = yearsDiff * 12 + monthsDiff;
-      if (totalMonthsDiff > 12) {
-        setUntilError("Time distance too big");
-        hasErrors = true;
-      }
-    }
-
-    console.log(editing);
-    if (!hasErrors) {
-      /*    if (editing && isRecurring) {
-        newEvent.until = 
- 
-        console.log(rule.all());
-      } */
+    if (IsValid(newEvent, multiday, startTime, endTime)) {
       try {
         if (editing) {
           console.log(isRecurring);
@@ -222,35 +196,25 @@ const AddEvent = ({
 
         toast({
           title: `Event ${editing ? "updated" : "added"}`,
-          /* description: "You have successfully logged in.", */
           status: "success",
           duration: 3000,
           isClosable: true,
         });
-        console.log(newEvent.color);
-        if (editing) {
-          /*  setAllEvents((prevEvents) => {
-            console.log(prevEvents.filter((item) => item.id !== newEvent.id));
-            const filtered = prevEvents.filter((item) => item.id !== newEvent.id);
-            return [...filtered, { ...newEvent, start: startDateTime, end: endDateTime }];
-          }); */
-        } else {
-          setNewEvent({ ...newEvent, start: startDateTime, end: endDateTime });
-          //fetchEvents();
-        }
-
+        //Close and refresh
         onClose();
         fetchAllEvents();
       } catch (error) {
-        console.log(error);
-        setError(error?.response?.data);
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          api: error?.response?.data,
+        }));
       }
     }
   }
 
   const handleAddButton = async () => {
     const result = await LoginCheckUtil(toast);
-    if (editing) handleSlotEvent();
+    if (editing && result) handleSlotClick();
     if (result) onOpen();
   };
 
@@ -284,148 +248,40 @@ const AddEvent = ({
             }}
           />
           <ModalBody>
-            <FormControl isInvalid={nameError}>
+            <FormControl isInvalid={errors.name}>
               <FormLabel>Event title</FormLabel>
               <Input
                 _focus={{ borderColor: "accent" }}
                 ref={initialRef}
                 type="text"
                 value={newEvent.title}
-                onChange={(e) =>
-                  setNewEvent({ ...newEvent, title: e.target.value })
-                }
+                onChange={(e) => setNewEvent({ ...newEvent, title: e.target.value })}
               />
-              <FormErrorMessage ml={1}>{nameError}</FormErrorMessage>
+              <FormErrorMessage ml={1}>{errors.name}</FormErrorMessage>
             </FormControl>
 
             <FormControl mt={4}>
               <FormLabel>{isSimple ? "Event" : "Start"} date</FormLabel>
-              <DatePicker
-                newEvent={newEvent}
-                setNewEvent={setNewEvent}
-                start={true}
-              />
+              <DatePicker newEvent={newEvent} setNewEvent={setNewEvent} start={true} />
               <FormErrorMessage ml={1}></FormErrorMessage>
             </FormControl>
 
-            <Tabs
-              /* defaultIndex={isSimple ? 0 : isRecurring ? 2 : 1}  */ width={
-                "100%"
-              }
-              mt={4}
-              variant="unstyled"
-              isFitted
-            >
-              <TabList>
-                <Tab
-                  onClick={() => {
-                    setIsSimple(true);
-                    setMultiday(false);
-                    setIsRecurring(false);
-                  }}
-                >
-                  One-time
-                </Tab>
-                <Tab
-                  onClick={() => {
-                    setMultiday(true);
-                    setIsRecurring(false);
-                    setIsSimple(false);
-                  }}
-                >
-                  Multi-day
-                </Tab>
-                <Tab
-                  onClick={() => {
-                    setIsRecurring(true);
-                    setIsSimple(false);
-                    setMultiday(false);
-                  }}
-                >
-                  Recurring
-                </Tab>
-              </TabList>
-              <TabIndicator
-                mt="-1.5px"
-                height="2px"
-                bg="accent"
-                borderRadius="1px"
-              />
-              <TabPanels>
-                <TabPanel paddingLeft={1}>
-                  <FormControl mt={2} isInvalid={startError}>
-                    <FormLabel>Start time</FormLabel>
-                    <Input
-                      type="time"
-                      value={startTime}
-                      onChange={(e) => setStartTime(e.target.value)}
-                      _focus={{ borderColor: "accent" }}
-                    />
-                    <FormErrorMessage ml={1}>{startError}</FormErrorMessage>
-                  </FormControl>
-                  <FormControl mt={4} isInvalid={endError}>
-                    <FormLabel>End time</FormLabel>
-                    <Input
-                      type="time"
-                      value={endTime}
-                      onChange={(e) => setEndTime(e.target.value)}
-                      _focus={{ borderColor: "accent" }}
-                    />
-                    <FormErrorMessage ml={1}>{endError}</FormErrorMessage>
-                  </FormControl>
-                </TabPanel>
-                <TabPanel paddingLeft={1}>
-                  <FormControl mt={2}>
-                    <FormLabel>End date</FormLabel>
-                    <DatePicker
-                      newEvent={newEvent}
-                      setNewEvent={setNewEvent}
-                      start={false}
-                    />
-                    <FormErrorMessage ml={1}></FormErrorMessage>
-                  </FormControl>
-                </TabPanel>
-                <TabPanel paddingLeft={1} paddingTop={1}>
-                  <Text
-                    fontStyle={"italic"}
-                    textAlign={"right"}
-                    fontSize={"sm"}
-                  >
-                    Recurs weekly
-                  </Text>
-                  <FormControl mt={0} isInvalid={startError}>
-                    <FormLabel>Start time</FormLabel>
-                    <Input
-                      type="time"
-                      value={startTime}
-                      onChange={(e) => setStartTime(e.target.value)}
-                      _focus={{ borderColor: "accent" }}
-                    />
-                    <FormErrorMessage ml={1}>{startError}</FormErrorMessage>
-                  </FormControl>
-                  <FormControl mt={4} isInvalid={endError}>
-                    <FormLabel>End time</FormLabel>
-                    <Input
-                      type="time"
-                      value={endTime}
-                      onChange={(e) => setEndTime(e.target.value)}
-                      _focus={{ borderColor: "accent" }}
-                    />
-                    <FormErrorMessage ml={1}>{endError}</FormErrorMessage>
-                  </FormControl>
-                  <FormControl mt={4} isInvalid={untilError}>
-                    <FormLabel>Until</FormLabel>
-                    <DatePicker
-                      newEvent={newEvent}
-                      setNewEvent={setNewEvent}
-                      start={false}
-                      recurring={isRecurring}
-                    />
-                    <FormErrorMessage ml={1}>{untilError}</FormErrorMessage>
-                  </FormControl>
-                </TabPanel>
-              </TabPanels>
-            </Tabs>
+            <EventTabs
+              {...{
+                multiday,
+                setMultiday,
+                isRecurring,
+                setIsSimple,
+                setIsRecurring,
+                errors,
+                startTime,
+                endTime,
+                newEvent,
+                setNewEvent,
+                setStartTime,
+                setEndTime,
+              }}
+            />
 
             <FormControl
               paddingLeft={1}
@@ -438,9 +294,9 @@ const AddEvent = ({
               <FormLabel mb="0">Change event color</FormLabel>
               <ColorPicker newEvent={newEvent} setNewEvent={setNewEvent} />
             </FormControl>
-            {error && (
+            {errors.api && (
               <Text mt={2} ml={1} color={"red"}>
-                {error}
+                {errors.api}
               </Text>
             )}
             <ModalFooter mt={8} paddingInlineEnd={"0"}>

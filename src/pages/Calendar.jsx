@@ -166,6 +166,7 @@ const Calendar2 = () => {
     slotClicked: false,
     start: new Date(),
     end: new Date(),
+    new: true,
   }); // State variable to control modal visibility
 
   const handleSelectSlot = (slotInfo) => {
@@ -182,6 +183,7 @@ const Calendar2 = () => {
       start: slotInfo.start,
       end: end,
       multiday: !isSameDay,
+      new: false,
     }); // Open AddEvent modal when slot is selected
   };
 

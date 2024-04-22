@@ -194,9 +194,7 @@ const AddTask = ({ tasks, fetchTasks, task = null }) => {
                 ref={initialRef}
                 type="text"
                 value={newTask.name}
-                onChange={(e) =>
-                  setNewTask({ ...newTask, name: e.target.value })
-                }
+                onChange={(e) => setNewTask({ ...newTask, name: e.target.value })}
               />
               <FormErrorMessage ml={1}>{nameError}</FormErrorMessage>
             </FormControl>
@@ -208,9 +206,7 @@ const AddTask = ({ tasks, fetchTasks, task = null }) => {
                 _focus={{ borderColor: "accent" }}
                 type="textarea"
                 value={newTask.description}
-                onChange={(e) =>
-                  setNewTask({ ...newTask, description: e.target.value })
-                }
+                onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
               />
             </FormControl>
 
@@ -235,24 +231,11 @@ const AddTask = ({ tasks, fetchTasks, task = null }) => {
                   Daily task
                 </Tab>
               </TabList>
-              <TabIndicator
-                mt="-1.5px"
-                height="2px"
-                bg="accent"
-                borderRadius="1px"
-              />
+              <TabIndicator mt="-1.5px" height="2px" bg="accent" borderRadius="1px" />
               <TabPanels>
-                <TabPanel
-                  /* style={task && task.isEvent && { display: "none" }} */ paddingLeft={
-                    1
-                  }
-                >
+                <TabPanel /* style={task && task.isEvent && { display: "none" }} */ paddingLeft={1}>
                   <FormControl
-                    style={
-                      task && task.isEvent
-                        ? { display: "none" }
-                        : { display: "flex" }
-                    }
+                    style={task && task.isEvent ? { display: "none" } : { display: "flex" }}
                     width={"50%"}
                     mt={0}
                     display="flex"
@@ -277,19 +260,8 @@ const AddTask = ({ tasks, fetchTasks, task = null }) => {
                     />
                   </FormControl>
                 </TabPanel>
-                <TabPanel
-                  display={"flex"}
-                  flexDirection={"column"}
-                  justifyContent={"end"}
-                  alignItems={"end"}
-                >
-                  <FormControl
-                    width={"50%"}
-                    mt={0}
-                    display="flex"
-                    alignItems="center"
-                    justifyContent={"space-between"}
-                  >
+                <TabPanel display={"flex"} flexDirection={"column"} justifyContent={"end"} alignItems={"end"}>
+                  <FormControl width={"50%"} mt={0} display="flex" alignItems="center" justifyContent={"space-between"}>
                     <FormLabel marginLeft={0} htmlFor="isEvent" mb="0">
                       Make it a habit?
                     </FormLabel>
@@ -315,11 +287,7 @@ const AddTask = ({ tasks, fetchTasks, task = null }) => {
               <>
                 <FormControl mt={4}>
                   <FormLabel>Date</FormLabel>
-                  <DatePicker
-                    newEvent={newTask}
-                    setNewEvent={setNewTask}
-                    start={true}
-                  />
+                  <DatePicker newEvent={newTask} setNewEvent={setNewTask} start={true} />
                   <FormErrorMessage ml={1}></FormErrorMessage>
                 </FormControl>
                 <FormControl mt={4}>
@@ -341,12 +309,7 @@ const AddTask = ({ tasks, fetchTasks, task = null }) => {
                   />
                 </FormControl>
 
-                <FormControl
-                  mt={4}
-                  display="flex"
-                  alignItems="center"
-                  justifyContent={"space-between"}
-                >
+                <FormControl mt={4} display="flex" alignItems="center" justifyContent={"space-between"}>
                   <FormLabel mb="0">Event color</FormLabel>
                   <ColorPicker newEvent={newTask} setNewEvent={setNewTask} />
                 </FormControl>

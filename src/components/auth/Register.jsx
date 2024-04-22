@@ -109,13 +109,7 @@ const Register = () => {
 
   return (
     <>
-      <Button
-        mt={6}
-        onClick={onOpen}
-        textColor={"darktext"}
-        colorScheme="secondary"
-        w="100%"
-      >
+      <Button mt={6} onClick={onOpen} textColor={"darktext"} colorScheme="secondary" w="100%">
         Register
       </Button>
 
@@ -143,12 +137,7 @@ const Register = () => {
             </FormControl>
             <FormControl mt={4} isInvalid={emailError}>
               <FormLabel>Email</FormLabel>
-              <Input
-                placeholder="Email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
+              <Input placeholder="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
               <FormErrorMessage ml={1}>{emailError}</FormErrorMessage>
             </FormControl>
             <FormControl mt={4} isInvalid={pError || paError}>
@@ -162,11 +151,7 @@ const Register = () => {
                   onChange={(e) => setPassword(e.target.value)}
                 />
                 <InputRightElement width="4.5rem">
-                  <componentMap.Button
-                    h="1.75rem"
-                    size="sm"
-                    onClick={handleClick}
-                  >
+                  <componentMap.Button h="1.75rem" size="sm" onClick={handleClick}>
                     {show ? "Hide" : "Show"}
                   </componentMap.Button>
                 </InputRightElement>

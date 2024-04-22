@@ -74,23 +74,11 @@ const Login = ({ setLoggedIn = null }) => {
 
   return (
     <>
-      <Button
-        mt={6}
-        onClick={onOpen}
-        textColor={"darktext"}
-        colorScheme="secondary"
-        w="100%"
-      >
+      <Button mt={6} onClick={onOpen} textColor={"darktext"} colorScheme="secondary" w="100%">
         Login
       </Button>
 
-      <Modal
-        closeOnOverlayClick={false}
-        size={"sm"}
-        initialFocusRef={initialRef}
-        isOpen={isOpen}
-        onClose={onClose}
-      >
+      <Modal closeOnOverlayClick={false} size={"sm"} initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Log in</ModalHeader>
@@ -112,6 +100,8 @@ const Login = ({ setLoggedIn = null }) => {
               <FormLabel>Password</FormLabel>
               <InputGroup>
                 <Input
+                  /*  _focus={{ backgroundColor: "#ccc" }} */
+                  backgroundColor={"text"}
                   focusBorderColor={"primary"}
                   pr="4.5rem"
                   type={show ? "text" : "password"}
@@ -138,12 +128,7 @@ const Login = ({ setLoggedIn = null }) => {
             <Button color={"text"} mr={3} onClick={onClose}>
               Cancel
             </Button>
-            <Button
-              color={"text"}
-              _hover={{ bg: "secondary" }}
-              colorScheme={"primary"}
-              onClick={handleLogin}
-            >
+            <Button color={"text"} _hover={{ bg: "secondary" }} colorScheme={"primary"} onClick={handleLogin}>
               Log in
             </Button>
           </ModalFooter>

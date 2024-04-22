@@ -14,12 +14,7 @@ import {
 import React, { useEffect, useState } from "react";
 import Wrapper from "../components/Wrapper";
 import SideMenu from "../components/SideMenu";
-import {
-  AddIcon,
-  ArrowDownIcon,
-  CheckIcon,
-  ExternalLinkIcon,
-} from "@chakra-ui/icons";
+import { AddIcon, ArrowDownIcon, CheckIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import AddTask from "../components/tasks/AddTask";
 import LoginCheckUtil from "../utils/LoginCheckUtil";
 import axios from "axios";
@@ -74,15 +69,9 @@ const Tasks = () => {
             const yesterday = moment().subtract(1, "days");
             // Compare task start date with today and tomorrow
 
-            if (
-              !moment(task.start).isBefore(moment(), "day") &&
-              !moment(task.start).isAfter(moment(), "day")
-            ) {
+            if (!moment(task.start).isBefore(moment(), "day") && !moment(task.start).isAfter(moment(), "day")) {
               task.day = "Today";
-            } else if (
-              !moment(task.start).isBefore(tomorrow, "day") &&
-              !moment(task.start).isAfter(tomorrow, "day")
-            ) {
+            } else if (!moment(task.start).isBefore(tomorrow, "day") && !moment(task.start).isAfter(tomorrow, "day")) {
               task.day = "Tomorrow";
             } else if (
               !moment(task.start).isBefore(yesterday, "day") &&
@@ -221,7 +210,7 @@ const Tasks = () => {
         {allTasks &&
           allTasks.map((task, index) => (
             <ScaleFade initialScale={0.9} in={fadeStates[task.id]} key={index}>
-              <Card mt={6} backgroundColor={task.isDone ? "bg" : "gray.700"}>
+              <Card mt={6} backgroundColor={task.isDone ? "bg" : "cardbg"}>
                 <CardBody padding={4}>
                   {task.isDone && (
                     <Box
@@ -263,46 +252,22 @@ const Tasks = () => {
                   )}
 
                   <Box /*  opacity={task.isDone ? "1" : "1"} */>
-                    <Flex
-                      justifyContent={"space-between"}
-                      alignItems={"center"}
-                    >
+                    <Flex justifyContent={"space-between"} alignItems={"center"}>
                       <Button
                         variant={"unstyled"}
                         fontWeight={"normal"}
-                        textDecorationLine={`${
-                          task.isDone ? "line-through" : ""
-                        }`}
-                        fontSize={
-                          task.name.length < 10
-                            ? "xl"
-                            : task.name.length < 25
-                            ? "lg"
-                            : "md"
-                        }
+                        textDecorationLine={`${task.isDone ? "line-through" : ""}`}
+                        fontSize={task.name.length < 10 ? "xl" : task.name.length < 25 ? "lg" : "md"}
                         onClick={() => toggleCollapse(index)}
                       >
-                        <Text
-                          textAlign={"left"}
-                          whiteSpace={
-                            "collapse"
-                          } /* style={{ whiteSpace: "wrap" }} */
-                        >
+                        <Text textAlign={"left"} whiteSpace={"collapse"} /* style={{ whiteSpace: "wrap" }} */>
                           {task.name}
                         </Text>
                       </Button>
 
                       {!task.isDone && (
-                        <Flex
-                          justifyContent={"end"}
-                          alignItems={"center"}
-                          gap={3}
-                        >
-                          <Button
-                            size={"sm"}
-                            onClick={() => toggleCollapse(index)}
-                            padding={"7px"}
-                          >
+                        <Flex justifyContent={"end"} alignItems={"center"} gap={3}>
+                          <Button size={"sm"} onClick={() => toggleCollapse(index)} padding={"7px"}>
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               class="icon icon-tabler icon-tabler-arrow-down"
@@ -315,11 +280,7 @@ const Tasks = () => {
                               stroke-linecap="round"
                               stroke-linejoin="round"
                             >
-                              <path
-                                stroke="none"
-                                d="M0 0h24v24H0z"
-                                fill="none"
-                              />
+                              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                               <path d="M12 5l0 14" />
                               <path d="M18 13l-6 6" />
                               <path d="M6 13l6 6" />
@@ -344,11 +305,7 @@ const Tasks = () => {
                               stroke-linecap="round"
                               stroke-linejoin="round"
                             >
-                              <path
-                                stroke="none"
-                                d="M0 0h24v24H0z"
-                                fill="none"
-                              />
+                              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                               <path d="M5 12l5 5l10 -10" />
                             </svg>
                           </Button>
@@ -362,21 +319,9 @@ const Tasks = () => {
                           /* exit: { delay: 1 }, */ enter: { duration: 0.3 },
                         }}
                       >
-                        <Box
-                          p="20px"
-                          color="text"
-                          mt="4"
-                          backgroundColor={"gray.800"}
-                          rounded="md"
-                          shadow="md"
-                        >
+                        <Box p="20px" color="text" mt="4" backgroundColor={"gray.800"} rounded="md" shadow="md">
                           {task.start && task.end && task.day && (
-                            <Text
-                              opacity={0.7}
-                              color={"text"}
-                              mb={2}
-                              fontSize={["sm", "md"]}
-                            >
+                            <Text opacity={0.7} color={"text"} mb={2} fontSize={["sm", "md"]}>
                               {task.day} {task.startTime}-{task.endTime}
                             </Text>
                           )}
@@ -393,17 +338,8 @@ const Tasks = () => {
                               </Link>
                             </Box>
                           )}
-                          <AddTask
-                            tasks={allTasks}
-                            fetchTasks={fetchAllTasks}
-                            task={task}
-                          />
-                          {task?.isRecurring && (
-                            <DeleteTask
-                              fetchTasks={fetchAllTasks}
-                              taskID={task.id}
-                            />
-                          )}
+                          <AddTask tasks={allTasks} fetchTasks={fetchAllTasks} task={task} />
+                          {task?.isRecurring && <DeleteTask fetchTasks={fetchAllTasks} taskID={task.id} />}
                         </Flex>
                       </Collapse>
                     </Box>

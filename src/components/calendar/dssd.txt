@@ -1,0 +1,26 @@
+   let valid = false;
+    if (!newEvent.title) {
+      setNameError("Title required");
+      valid = true;
+    }
+    if (!multiday && !startTime) {
+      setStartError("Start time required");
+      valid = true;
+    }
+    if (!multiday && !endTime) {
+      setEndError("End time required");
+      valid = true;
+    }
+    if (newEvent.until) {
+      const startDate = newEvent.start;
+      const endDate = newEvent.until;
+
+      const yearsDiff = endDate.getFullYear() - startDate.getFullYear();
+      const monthsDiff = endDate.getMonth() - startDate.getMonth();
+
+      const totalMonthsDiff = yearsDiff * 12 + monthsDiff;
+      if (totalMonthsDiff > 12) {
+        setUntilError("Time distance too big");
+        valid = true;
+      }
+    }

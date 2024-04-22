@@ -26,6 +26,7 @@ const colors = {
     500: "var(--text)",
   },
   bg: "var(--bg)",
+  cardbg: "var(--cardbg)",
   darktext: "var(--darktext)",
   /*   lime: {
     500: props.colorMode == "light" ? "#43e56e" : "#19bc8b",
@@ -60,6 +61,7 @@ const overrides = {
         "--text": props.colorMode == "light" ? "#292929" : "#e1e1e1",
         "--darktext": "#292929",
         "--bg": props.colorMode == "light" ? "#f0f4f3" : "gray.800",
+        "--cardbg": props.colorMode == "light" ? "white" : "#2D3748",
       },
     }),
   },
