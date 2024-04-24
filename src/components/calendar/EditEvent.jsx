@@ -14,22 +14,9 @@ import {
 import AddEvent from "./AddEvent";
 import LoginCheckUtil from "../../utils/LoginCheckUtil";
 import axios from "axios";
-import { useEffect } from "react";
 
-const EditEvent = ({
-  editedEvent,
-  isOpen,
-  onOpen,
-  onClose,
-  allEvents,
-  setAllEvents,
-  fetchEvents,
-}) => {
-  const {
-    isOpen: isDeleteOpen,
-    onOpen: onDeleteOpen,
-    onClose: onDeleteClose,
-  } = useDisclosure();
+const EditEvent = ({ editedEvent, isOpen, onOpen, onClose, allEvents, setAllEvents, fetchEvents }) => {
+  const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
   const toast = useToast();
 
   /*   useEffect(() => {
@@ -77,18 +64,9 @@ const EditEvent = ({
               onClose();
             }}
           />
-          <ModalBody
-            display={"flex"}
-            flexDirection={"column"}
-            alignItems={"center"}
-            gap={8}
-          >
+          <ModalBody display={"flex"} flexDirection={"column"} alignItems={"center"} gap={8}>
             {/*  <Text fontSize={18}>Event title: {editedEvent.title}</Text> */}
-            <Box
-              display={"flex"}
-              justifyContent={"space-around"}
-              width={"100%"}
-            >
+            <Box mb={6} display={"flex"} justifyContent={"space-around"} placeItems={"center"} width={"100%"}>
               <AddEvent
                 allEvents={allEvents}
                 setAllEvents={setAllEvents}
@@ -100,6 +78,7 @@ const EditEvent = ({
               <Button
                 backgroundColor="red.300"
                 onClick={onDeleteOpen}
+                color={"darktext"}
                 _hover={{
                   background: "red.200",
                 }}
@@ -107,23 +86,10 @@ const EditEvent = ({
                 Delete event
               </Button>
             </Box>
-            <Button
-              colorScheme="secondary"
-              color={"text"}
-              width={"200px"}
-              mb={6}
-            >
-              See related task
-            </Button>
           </ModalBody>
         </ModalContent>
       </Modal>
-      <Modal
-        size={"md"}
-        isOpen={isDeleteOpen}
-        onOpen={onDeleteOpen}
-        onClose={onDeleteClose}
-      >
+      <Modal size={"md"} isOpen={isDeleteOpen} onOpen={onDeleteOpen} onClose={onDeleteClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Delete event</ModalHeader>
@@ -132,22 +98,10 @@ const EditEvent = ({
               onDeleteClose();
             }}
           />
-          <ModalBody
-            display={"flex"}
-            flexDirection={"column"}
-            alignItems={"center"}
-            gap={8}
-          >
-            <Text fontSize="18px">
-              Are you sure you want to delete the event?
-            </Text>
+          <ModalBody display={"flex"} flexDirection={"column"} alignItems={"center"} gap={8}>
+            <Text fontSize="18px">Are you sure you want to delete the event?</Text>
 
-            <Box
-              display={"flex"}
-              justifyContent={"space-around"}
-              width={"50%"}
-              mb={6}
-            >
+            <Box display={"flex"} justifyContent={"space-around"} width={"50%"} mb={6}>
               <Button onClick={onDeleteClose}>No</Button>
 
               <Button

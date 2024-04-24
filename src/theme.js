@@ -60,7 +60,7 @@ const overrides = {
         "--accent": props.colorMode == "light" ? "#479467" : "#1e2723",
         "--text": props.colorMode == "light" ? "#292929" : "#e1e1e1",
         "--darktext": "#292929",
-        "--bg": props.colorMode == "light" ? "#f0f4f3" : "gray.800",
+        "--bg": props.colorMode == "light" ? "#f0f4f3" : "#1A202C",
         "--cardbg": props.colorMode == "light" ? "white" : "#2D3748",
       },
     }),

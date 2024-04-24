@@ -72,7 +72,7 @@ const SideMenu = () => {
         ref={btnRef}
         position={["fixed", "absolute"]}
         top={6}
-        left={12}
+        left={[6, "30px"]}
         textColor={"darktext"}
         colorScheme={"secondary"}
         onClick={onOpen}
@@ -155,6 +155,23 @@ const SideMenu = () => {
                 <EditIcon strokeWidth={3} />
               </Button>
             </Link>
+            <Link to={"/meditation"}>
+              <Button
+                mt={6}
+                textColor={"darktext"}
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
+                colorScheme="secondary"
+                onClick={onClose}
+                w="100%"
+              >
+                <Box textAlign="center" flex="1">
+                  Meditation
+                </Box>
+                <CalendarIcon />
+              </Button>
+            </Link>
             <Link to={"/calendar"}>
               <Button
                 mt={6}
@@ -172,23 +189,7 @@ const SideMenu = () => {
                 <CalendarIcon />
               </Button>
             </Link>
-            <Link to={"/calendar"}>
-              <Button
-                mt={6}
-                textColor={"darktext"}
-                display="flex"
-                alignItems="center"
-                justifyContent="space-between"
-                colorScheme="secondary"
-                onClick={onClose}
-                w="100%"
-              >
-                <Box textAlign="center" flex="1">
-                  Meditation
-                </Box>
-                <CalendarIcon />
-              </Button>
-            </Link>
+
             <Divider size={20} mt={6} backgroundColor={"secondary"} />
             {loggedIn ? (
               <Flex flexDirection={"column"} alignItems={"center"} justifyContent={"center"} mt={6}>

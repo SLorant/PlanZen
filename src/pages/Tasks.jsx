@@ -10,6 +10,7 @@ import {
   useDisclosure,
   ScaleFade,
   useToast,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import Wrapper from "../components/Wrapper";
@@ -21,6 +22,8 @@ import axios from "axios";
 import moment from "moment";
 import { Link } from "react-router-dom";
 import DeleteTask from "../components/tasks/DeleteTask";
+import { color } from "framer-motion";
+import ArrowIcon from "../assets/icons/ArrowIcon";
 
 const Tasks = () => {
   /*  const { isOpen, onToggle } = useDisclosure({ defaultIsOpen: true }); */
@@ -157,60 +160,28 @@ const Tasks = () => {
       }, {})
     );
     fetchAllTasks();
-    /*  setAllTasks((prevTasks) => {
-      const index = prevTasks.findIndex((item) => item.id === task.id);
-
-      if (index === -1) {
-        // Task not found, return previous tasks
-        return prevTasks;
-      }
-      const updatedTask = prevTasks[index];
-
-      if (!updated.isDone) {
-        // Create a new array with the updated task at the same index
-        const updatedTasks = [
-          ...prevTasks.slice(0, index), // Items before the updated task
-          updated, // Updated task
-          ...prevTasks.slice(index + 1), // Items after the updated task
-        ];
-
-        return updatedTasks;
-      } else {
-        const updatedTasks = prevTasks.filter((item, idx) => idx !== index);
-
-        // Add the task to the end of the array
-        updatedTasks.push({ ...updatedTask, isDone: updated.isDone });
-
-        return updatedTasks;
-      }
-    }); */
-    /*    fetchAllTasks(); */
-    /*    await deleteTask(task.id);
-      setFadeStates((prevStates) => ({
-        ...prevStates,
-        [task.id]: false,
-      }));
-
-      await new Promise((resolve) => setTimeout(resolve, 300)); // Adjust the delay as needed
-
-      setAllTasks((prevTasks) => {
-        const filtered = prevTasks.filter((item) => item.id !== task.id);
-        return [...filtered];
-      }); */
   };
 
+  const color2 = useColorModeValue("#eee", "gray.900");
   return (
     <Wrapper>
       <SideMenu />
-      <Heading textAlign={"center"} mt={4}>
+      <Heading mb={12} textAlign={"center"} mt={[6, 0]}>
         Tasks
       </Heading>
       <AddTask tasks={allTasks} fetchTasks={fetchAllTasks} />
-      <Box padding={6} maxHeight={["auto", "40vh"]} overflow={"scroll"}>
+      <Flex
+        flexDirection={"column"}
+        gap={6}
+        padding={[6, 0]}
+        paddingTop={0}
+        maxHeight={["auto", "40vh"]}
+        overflow={"scroll"}
+      >
         {allTasks &&
           allTasks.map((task, index) => (
             <ScaleFade initialScale={0.9} in={fadeStates[task.id]} key={index}>
-              <Card mt={6} backgroundColor={task.isDone ? "bg" : "cardbg"}>
+              <Card marginRight={[0, 2]} backgroundColor={task.isDone ? color2 : "cardbg"}>
                 <CardBody padding={4}>
                   {task.isDone && (
                     <Box
@@ -267,24 +238,13 @@ const Tasks = () => {
 
                       {!task.isDone && (
                         <Flex justifyContent={"end"} alignItems={"center"} gap={3}>
-                          <Button size={"sm"} onClick={() => toggleCollapse(index)} padding={"7px"}>
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              class="icon icon-tabler icon-tabler-arrow-down"
-                              width="20"
-                              height="20"
-                              viewBox="0 0 24 24"
-                              stroke-width="2"
-                              stroke="#000000"
-                              fill="none"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            >
-                              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                              <path d="M12 5l0 14" />
-                              <path d="M18 13l-6 6" />
-                              <path d="M6 13l6 6" />
-                            </svg>
+                          <Button
+                            colorScheme="secondary"
+                            size={"sm"}
+                            onClick={() => toggleCollapse(index)}
+                            padding={"7px"}
+                          >
+                            <ArrowIcon />
                           </Button>
                           <Button
                             size={"sm"}
@@ -312,43 +272,40 @@ const Tasks = () => {
                         </Flex>
                       )}
                     </Flex>
-                    <Box>
-                      <Collapse
-                        in={collapseStates[index]}
-                        transition={{
-                          /* exit: { delay: 1 }, */ enter: { duration: 0.3 },
-                        }}
-                      >
-                        <Box p="20px" color="text" mt="4" backgroundColor={"gray.800"} rounded="md" shadow="md">
-                          {task.start && task.end && task.day && (
-                            <Text opacity={0.7} color={"text"} mb={2} fontSize={["sm", "md"]}>
-                              {task.day} {task.startTime}-{task.endTime}
-                            </Text>
-                          )}
-                          <Text>{task.description}</Text>
-                        </Box>
-                        <Flex alignItems={"center"} gap={6}>
-                          {task.isEvent && (
-                            <Box mt={6}>
-                              <Link to="/calendar">
-                                <Button>
-                                  Calendar
-                                  <ExternalLinkIcon mx="5px" />
-                                </Button>
-                              </Link>
-                            </Box>
-                          )}
-                          <AddTask tasks={allTasks} fetchTasks={fetchAllTasks} task={task} />
-                          {task?.isRecurring && <DeleteTask fetchTasks={fetchAllTasks} taskID={task.id} />}
-                        </Flex>
-                      </Collapse>
-                    </Box>
+                    <Collapse
+                      in={collapseStates[index]}
+                      transition={{
+                        /* exit: { delay: 1 }, */ enter: { duration: 0.3 },
+                      }}
+                    >
+                      <Box p="20px" color="text" mt="4" backgroundColor={"bg"} rounded="md" shadow="md">
+                        {task.start && task.end && task.day && (
+                          <Text opacity={0.7} color={"text"} mb={2} fontSize={["sm", "md"]}>
+                            {task.day} {task.startTime}-{task.endTime}
+                          </Text>
+                        )}
+                        <Text>{task.description}</Text>
+                      </Box>
+                      <Flex alignItems={"center"} gap={6}>
+                        {task.isEvent && (
+                          <Box mt={6}>
+                            <Link to="/calendar">
+                              <Button>
+                                Calendar
+                                <ExternalLinkIcon mx="5px" />
+                              </Button>
+                            </Link>
+                          </Box>
+                        )}
+                        <AddTask tasks={allTasks} fetchTasks={fetchAllTasks} task={task} />
+                      </Flex>
+                    </Collapse>
                   </Box>
                 </CardBody>
               </Card>
             </ScaleFade>
           ))}
-      </Box>
+      </Flex>
     </Wrapper>
   );
 };

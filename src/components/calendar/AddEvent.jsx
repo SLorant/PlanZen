@@ -23,6 +23,7 @@ import LoginCheckUtil from "../../utils/LoginCheckUtil";
 import DatePicker from "./DatePicker";
 import { isSameDay } from "../../utils/TimeUtils";
 import EventTabs from "./EventTabs";
+import PlusIcon from "../../assets/icons/PlusIcon";
 
 const initialErrors = {
   api: "",
@@ -110,7 +111,7 @@ const AddEvent = ({ allEvents, slotEvent, editing, fetchAllEvents }) => {
 
   //Clicking on existing event, or spare slot executes this
   const handleSlotClick = async () => {
-    const result = await LoginCheckUtil();
+    const result = await LoginCheckUtil(toast, "to add an event");
 
     if (slotEvent && result) {
       //Date formatting
@@ -213,23 +214,36 @@ const AddEvent = ({ allEvents, slotEvent, editing, fetchAllEvents }) => {
   }
 
   const handleAddButton = async () => {
-    const result = await LoginCheckUtil(toast);
+    const result = await LoginCheckUtil(toast, "to add an event");
     if (editing && result) handleSlotClick();
     if (result) onOpen();
   };
 
   return (
-    <Flex mt={6} justifyContent={"end"} width={"100%"}>
-      <Button
-        fontSize={"3xl"}
-        colorScheme="primary"
-        color={"text"}
-        /*   paddingTop={4} */
-        onClick={handleAddButton}
-        borderRadius={50}
-      >
-        {editing ? "Edit" : "+"}
-      </Button>
+    <Flex>
+      {editing ? (
+        <Button color={"darktext"} fontSize={"md"} colorScheme="primary" onClick={handleAddButton}>
+          Edit
+        </Button>
+      ) : (
+        <Button
+          zIndex={50}
+          position={["fixed", "absolute"]}
+          top={["auto", 6]}
+          bottom={[10, "auto"]}
+          right={[10, "34px"]}
+          textColor={"darktext"}
+          colorScheme={"primary"}
+          borderRadius={[20, 8]}
+          onClick={onOpen}
+          height={[16, 10]}
+          width={[16, "auto"]}
+          padding={[3]}
+          _hover={{ backgroundColor: "secondary.500" }}
+        >
+          <PlusIcon />
+        </Button>
+      )}
       <Modal
         colorScheme={"secondary"}
         closeOnOverlayClick={false}

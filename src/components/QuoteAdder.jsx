@@ -4,7 +4,7 @@ const QuoteAdder = ({ setAuthor, setQuote }) => {
   const addNewQuote = async () => {
     try {
       let quote = await fetchNewQuote();
-      while (quote.quote.length > 100) {
+      while (quote.quote.length > 80) {
         quote = await fetchNewQuote();
       }
       const postQuote = quote.quote;
@@ -44,7 +44,6 @@ const QuoteAdder = ({ setAuthor, setQuote }) => {
         setQuote(quote.quote);
         setAuthor(quote.author);
       }
-      // Get the day of the week (0 for Sunday, 1 for Monday, ..., 6 for Saturday)
     } catch (e) {
       console.log(e);
     }
@@ -52,14 +51,11 @@ const QuoteAdder = ({ setAuthor, setQuote }) => {
 
   const fetchNewQuote = async () => {
     try {
-      const res = await fetch(
-        "https://api.api-ninjas.com/v1/quotes?category=inspirational",
-        {
-          headers: {
-            "X-Api-Key": import.meta.env.VITE_QUOTES_API_KEY,
-          },
-        }
-      );
+      const res = await fetch("https://api.api-ninjas.com/v1/quotes?category=inspirational", {
+        headers: {
+          "X-Api-Key": import.meta.env.VITE_QUOTES_API_KEY,
+        },
+      });
       const quotes = await res.json();
       const quote = quotes[0];
       console.log(quote);

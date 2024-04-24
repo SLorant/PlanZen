@@ -196,7 +196,7 @@ const Calendar2 = () => {
   return (
     <Wrapper>
       <SideMenu />
-      <Heading textAlign={"center"} mt={[4, 0]} mb={2}>
+      <Heading textAlign={"center"} mt={[7, 0]} mb={2}>
         Calendar
       </Heading>
       <div className={(hideEventLabels ? "week-view" : "", colorMode === "dark" ? "dark" : "")}>

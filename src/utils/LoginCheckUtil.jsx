@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const LoginCheckUtil = async (toast = null) => {
+const LoginCheckUtil = async (toast = null, message = "") => {
   try {
     const result = await axios.get("http://localhost:4000/check-logged-in", {
       withCredentials: true,
@@ -11,7 +11,7 @@ const LoginCheckUtil = async (toast = null) => {
       if (e.response.status === 401) {
         toast({
           title: "Please log in",
-          description: "You have to log in first to do this.",
+          description: message ? `You have to log in first ${message}` : "You have to log in first to do this.",
           status: "error",
           duration: 5000,
           isClosable: true,

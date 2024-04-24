@@ -10,6 +10,7 @@ import Calendar2 from "./pages/Calendar.jsx";
 import theme from "./theme.js";
 import { ColorModeScript } from "@chakra-ui/react";
 import Tasks from "./pages/Tasks.jsx";
+import Meditation from "./pages/Meditation.jsx";
 
 const router = createBrowserRouter([
   {
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
   {
     path: "/tasks",
     element: <Tasks />,
+  },
+  {
+    path: "/meditation",
+    element: <Meditation />,
   },
 ]);
 

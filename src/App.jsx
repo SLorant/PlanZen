@@ -1,15 +1,6 @@
 import { useState, useEffect } from "react";
 import "./App.css";
-import {
-  Card,
-  CardBody,
-  CardHeader,
-  Heading,
-  Text,
-  VStack,
-  SimpleGrid,
-  CardFooter,
-} from "@chakra-ui/react";
+import { Card, CardBody, CardHeader, Heading, Text, VStack, SimpleGrid, CardFooter, Box, Flex } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { useColorMode, Button } from "@chakra-ui/react";
 import Wrapper from "./components/Wrapper";
@@ -32,56 +23,48 @@ function App() {
   return (
     <Wrapper>
       <SideMenu />
-      <Heading mt={[10, 0]} size={"2xl"} textAlign={"center"}>
-        Logo
+      <Heading mt={[10, 0]} as={"h1"} size={"2xl"} textAlign={"center"}>
+        PlanZen
       </Heading>
 
       <Button
         position={"absolute"}
         colorScheme="secondary"
         textColor={"darktext"}
-        top={4}
-        right={4}
+        top={6}
+        right={[6, "30px"]}
         size="sm"
+        height={"40px"}
+        width={"44px"}
         onClick={toggleColorMode}
       >
-        <MoonIcon boxSize={4} />
+        <MoonIcon boxSize={5} />
       </Button>
       {dailyQuote && author && (
-        <>
-          <Heading
-            as={"h2"}
-            mt={10}
-            textAlign={"center"}
-            size={["md", "lg"]}
-            fontWeight={"bold"}
-          >
+        <Flex justifyContent={"center"} placeItems={"center"}>
+          <Box width={"max-content"} mt={10} textAlign={"center"} fontSize={["md", "2xl"]} fontWeight={"bold"}>
             {dailyQuote}
-          </Heading>
-
-          <Heading mt={2} textAlign={"center"} size={["sm", "md"]}>
-            &mdash; {author}
-          </Heading>
-        </>
+            <Heading mt={0} textAlign={"end"} size={["sm", "sm"]}>
+              &mdash; {author}
+            </Heading>
+          </Box>
+        </Flex>
       )}
       <VStack className="card" alignItems={"start"} mt={[2, 6]}>
         <Text textAlign={"start"} fontSize={["xl", "2xl"]}>
-          What do you want to do?
+          What are you up to today?
         </Text>
         <SimpleGrid
           width={"100%"}
           spacing={4}
-          templateColumns={[
-            "repeat(auto-fill, minmax(150px, 1fr))",
-            "repeat(auto-fill, minmax(200px, 1fr))",
-          ]}
+          templateColumns={["repeat(auto-fill, minmax(150px, 1fr))", "repeat(auto-fill, minmax(200px, 1fr))"]}
         >
           <Card>
             <CardHeader>
               <Heading size="md"> Calendar</Heading>
             </CardHeader>
             <CardBody>
-              <Text>View a </Text>
+              <Text>Check upcoming events or plan your schedule</Text>
             </CardBody>
             <CardFooter>
               <Link to={"/calendar"}>
@@ -93,7 +76,7 @@ function App() {
           </Card>
           <Card>
             <CardHeader>
-              <Heading size="md"> Customer dashboard</Heading>
+              <Heading size="md"> Tasks</Heading>
             </CardHeader>
             <CardBody>
               <Text>View a s last month.</Text>
@@ -104,7 +87,7 @@ function App() {
           </Card>
           <Card>
             <CardHeader>
-              <Heading size="md"> Tasks</Heading>
+              <Heading size="md"> Meditation</Heading>
             </CardHeader>
             <CardBody>
               <Text>5 tasks remaining today</Text>
@@ -117,10 +100,10 @@ function App() {
           </Card>
           <Card>
             <CardHeader>
-              <Heading size="md"> Tasks</Heading>
+              <Heading size="md"> Habit tracker</Heading>
             </CardHeader>
             <CardBody>
-              <Text>5 tasks remaining today</Text>
+              <Text>Habit tracker</Text>
             </CardBody>
             <CardFooter>
               <Link to={"/tasks"}>

@@ -26,6 +26,7 @@ import React, { useEffect, useRef, useState } from "react";
 import DatePicker from "../calendar/DatePicker";
 import ColorPicker from "../calendar/ColorPicker";
 import axios from "axios";
+import PlusIcon from "../../assets/icons/PlusIcon";
 
 const AddTask = ({ tasks, fetchTasks, task = null }) => {
   const formatTime = (time) => {
@@ -58,9 +59,6 @@ const AddTask = ({ tasks, fetchTasks, task = null }) => {
   const [isEvent, setIsEvent] = useState(false);
   const [isSimple, setIsSimple] = useState(true);
   const [isRecurring, setIsRecurring] = useState(false);
-  //const [color, setColor] = useState(false);
-  /*  const [startTime, setStartTime] = useState(`${() => new Date().getHours()}:00`);
-  const [endTime, setEndTime] = useState(`${() => new Date().getHours()}:00`); */
   const [error, setError] = useState("");
   const [nameError, setNameError] = useState("");
   const toast = useToast();
@@ -149,34 +147,44 @@ const AddTask = ({ tasks, fetchTasks, task = null }) => {
 
         toast({
           title: `Task ${task ? "updated" : "added"}`,
-          /* description: "You have successfully logged in.", */
           status: "success",
           duration: 3000,
           isClosable: true,
         });
-        /*  if (editing) {
-          setAllEvents((prevEvents) => {
-            const filtered = prevEvents.filter((item) => item.id !== newTask.id);
-            return [...filtered, { ...newTask, start: startDateTime, end: endDateTime }];
-          });
-        } else {
-          setnewTask({ ...newTask, start: startDateTime, end: endDateTime });
-          fetchEvents();
-        } */
+
         fetchTasks();
         onClose();
       } catch (error) {
-        console.log(error?.response?.data);
-        /*  setError(error?.response?.data); */
+        setError(error?.response?.data);
       }
     }
   }
 
   return (
     <>
-      <Button onClick={onOpen} mt={6}>
-        {task ? "Edit" : "Add"}
-      </Button>
+      {task ? (
+        <Button mt={6} color={"darktext"} fontSize={"md"} colorScheme="primary" onClick={onOpen}>
+          Edit
+        </Button>
+      ) : (
+        <Button
+          zIndex={50}
+          position={["fixed", "absolute"]}
+          top={["auto", 6]}
+          bottom={[10, "auto"]}
+          right={[10, "34px"]}
+          textColor={"darktext"}
+          colorScheme={"primary"}
+          borderRadius={[20, 8]}
+          onClick={onOpen}
+          height={[16, 10]}
+          width={[16, "auto"]}
+          padding={[3]}
+          _hover={{ backgroundColor: "secondary.500" }}
+        >
+          <PlusIcon />
+        </Button>
+      )}
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
@@ -242,7 +250,7 @@ const AddTask = ({ tasks, fetchTasks, task = null }) => {
                     alignItems="center"
                     justifyContent={"space-between"}
                   >
-                    <FormLabel marginLeft={0} htmlFor="isEvent" mb="0">
+                    <FormLabel fontSize={"sm"} marginLeft={0} htmlFor="isEvent" mb="0">
                       Add to calendar?
                     </FormLabel>
                     <Switch

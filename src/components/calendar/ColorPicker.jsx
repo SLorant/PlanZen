@@ -13,19 +13,6 @@ import {
 } from "@chakra-ui/react";
 
 function ColorPicker({ newEvent, setNewEvent }) {
-  /*  const colors = [
-    { value: "#43e56e", label: "Default" },
-    { value: "#F56565", label: "Red" },
-    { value: "#CBD5E0", label: "Gray" },
-    { value: "#68D391", label: "Green" },
-    { value: "#63b3ed", label: "Blue" },
-    { value: "#4FD1C5", label: "Teal" },
-    { value: "#F6E05E", label: "Yellow" },
-    { value: "#F6AD55", label: "Orange" },
-    { value: "#B794F4", label: "Purple" },
-    { value: "#F687B3", label: "Pink" },
-  ];
- */
   const colors = [
     { value: "#43e56e", label: "Default" },
     { value: "#FEB2B2", label: "Red" },
