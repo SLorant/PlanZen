@@ -27,6 +27,7 @@ import DatePicker from "../calendar/DatePicker";
 import ColorPicker from "../calendar/ColorPicker";
 import axios from "axios";
 import PlusIcon from "../../assets/icons/PlusIcon";
+import LoginCheckUtil from "../../utils/LoginCheckUtil";
 
 const AddTask = ({ tasks, fetchTasks, task = null }) => {
   const formatTime = (time) => {
@@ -64,6 +65,13 @@ const AddTask = ({ tasks, fetchTasks, task = null }) => {
   const toast = useToast();
 
   useEffect(() => {
+    setNewTask({
+      name: "",
+      description: "",
+      start: new Date(),
+      end: new Date(),
+      color: "",
+    });
     setIsRecurring(false);
     setIsSimple(true);
   }, [tasks]);
@@ -160,10 +168,15 @@ const AddTask = ({ tasks, fetchTasks, task = null }) => {
     }
   }
 
+  const handleAddButton = async () => {
+    const result = await LoginCheckUtil(toast, "to add an event");
+    if (result) onOpen();
+  };
+
   return (
     <>
       {task ? (
-        <Button mt={6} color={"darktext"} fontSize={"md"} colorScheme="primary" onClick={onOpen}>
+        <Button mt={6} color={"darktext"} fontSize={"md"} colorScheme="primary" onClick={handleAddButton}>
           Edit
         </Button>
       ) : (
@@ -176,7 +189,7 @@ const AddTask = ({ tasks, fetchTasks, task = null }) => {
           textColor={"darktext"}
           colorScheme={"primary"}
           borderRadius={[20, 8]}
-          onClick={onOpen}
+          onClick={handleAddButton}
           height={[16, 10]}
           width={[16, "auto"]}
           padding={[3]}

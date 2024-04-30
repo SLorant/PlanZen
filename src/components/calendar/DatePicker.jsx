@@ -1,18 +1,23 @@
 import React from "react";
 import { SingleDatepicker } from "chakra-dayzed-datepicker";
+import { useColorModeValue } from "@chakra-ui/react";
 
 const DatePicker = ({ newEvent, setNewEvent, start, recurring }) => {
+  const color = useColorModeValue("gray.200", "gray.600");
   const propConfig = {
     dateNavBtnProps: {
-      colorScheme: "primary",
-      variant: "outline",
+      background: color,
     },
     dayOfMonthBtnProps: {
       defaultBtnProps: {
-        borderColor: "red.300",
         _hover: {
-          background: "blue.400",
+          background: "var(--secondary)",
+          color: "var(--darktext)",
         },
+      },
+      selectedBtnProps: {
+        background: "var(--primary)",
+        color: "var(--darktext)",
       },
     },
   };

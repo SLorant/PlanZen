@@ -7,36 +7,32 @@ import {
   Flex,
   Heading,
   Text,
-  useDisclosure,
   ScaleFade,
-  useToast,
   useColorModeValue,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Wrapper from "../components/Wrapper";
 import SideMenu from "../components/SideMenu";
-import { AddIcon, ArrowDownIcon, CheckIcon, ExternalLinkIcon } from "@chakra-ui/icons";
+import { ExternalLinkIcon } from "@chakra-ui/icons";
 import AddTask from "../components/tasks/AddTask";
 import LoginCheckUtil from "../utils/LoginCheckUtil";
 import axios from "axios";
 import moment from "moment";
 import { Link } from "react-router-dom";
 import DeleteTask from "../components/tasks/DeleteTask";
-import { color } from "framer-motion";
 import ArrowIcon from "../assets/icons/ArrowIcon";
+import { AuthContext } from "../utils/AuthContext";
 
 const Tasks = () => {
-  /*  const { isOpen, onToggle } = useDisclosure({ defaultIsOpen: true }); */
-
   const [allTasks, setAllTasks] = useState([]);
-  const [loggedIn /* setLoggedIn */] = useState(false);
   const [collapseStates, setCollapseStates] = useState([]);
   const [fadeStates, setFadeStates] = useState({});
-  const toast = useToast();
+  const { loggedIn } = useContext(AuthContext);
+  const taskbg = useColorModeValue("#eee", "gray.900");
 
   useEffect(() => {
     try {
-      fetchAllTasks();
+      if (loggedIn) fetchAllTasks();
     } catch (e) {
       console.error(e?.response?.data);
     }
@@ -49,10 +45,10 @@ const Tasks = () => {
         const result = await axios.get("http://localhost:4000/tasks", {
           withCredentials: true,
         });
-
         const tasks = result?.data.items;
-        console.log(tasks);
+
         for (const task of tasks) {
+          //If task is an event too, get the corresponding event from db
           if (task.isEvent && task.id) {
             const event = await axios.post(
               "http://localhost:4000/getEventByTask",
@@ -61,17 +57,16 @@ const Tasks = () => {
                 withCredentials: true,
               }
             );
+            //Set task properties based on the event
             task.start = event?.data?.start;
             task.end = event?.data?.end;
             task.color = event?.data?.color;
-            /*   console.log(moment(task.start).isBefore());
-            console.log(moment(task.start).isBefore(moment(), "day")); */
+
+            //Check if today, yesterday, or tomorrow
             const startDate = moment(event?.data?.start);
             const endDate = moment(event?.data?.end);
             const tomorrow = moment().add(1, "days");
             const yesterday = moment().subtract(1, "days");
-            // Compare task start date with today and tomorrow
-
             if (!moment(task.start).isBefore(moment(), "day") && !moment(task.start).isAfter(moment(), "day")) {
               task.day = "Today";
             } else if (!moment(task.start).isBefore(tomorrow, "day") && !moment(task.start).isAfter(tomorrow, "day")) {
@@ -82,22 +77,24 @@ const Tasks = () => {
             ) {
               task.day = "Yesterday";
             }
+            //Date formatting
             task.startTime = startDate.format("HH:mm");
             task.endTime = endDate.format("HH:mm");
           }
         }
-        // Sort tasks based on the isDone status
+        // Tasks that are done have to displayed last
         const sortedTasks = tasks.sort((a, b) => {
-          // Tasks that are not done should appear before tasks that are done
+          // Sorting
           if (a.isDone === false && b.isDone === true) {
-            return -1; // a should come before b
+            return -1;
           } else if (a.isDone === true && b.isDone === false) {
-            return 1; // b should come before a
+            return 1;
           } else {
             return 0; // Leave order unchanged
           }
         });
         // Partition tasks into two groups: done and not done
+        // Then order them based on the edit date, the newest can be seen first
         const doneTasks = sortedTasks
           .filter((task) => task.isDone)
           .sort((a, b) => new Date(b.updated) - new Date(a.updated));
@@ -109,7 +106,7 @@ const Tasks = () => {
         const finalSortedTasks = notDoneTasks.concat(doneTasks);
 
         setAllTasks(finalSortedTasks);
-        /*  setFadeStates(new Array(tasks.length).fill(true)); */
+        //Animation
         setFadeStates(
           tasks.reduce((acc, task) => {
             acc[task.id] = true;
@@ -162,7 +159,6 @@ const Tasks = () => {
     fetchAllTasks();
   };
 
-  const color2 = useColorModeValue("#eee", "gray.900");
   return (
     <Wrapper>
       <SideMenu />
@@ -170,6 +166,7 @@ const Tasks = () => {
         Tasks
       </Heading>
       <AddTask tasks={allTasks} fetchTasks={fetchAllTasks} />
+      {loggedIn === false && <Text>Log in to see your tasks!</Text>}
       <Flex
         flexDirection={"column"}
         gap={6}
@@ -181,7 +178,7 @@ const Tasks = () => {
         {allTasks &&
           allTasks.map((task, index) => (
             <ScaleFade initialScale={0.9} in={fadeStates[task.id]} key={index}>
-              <Card marginRight={[0, 2]} backgroundColor={task.isDone ? color2 : "cardbg"}>
+              <Card marginRight={[0, 2]} backgroundColor={task.isDone ? taskbg : "cardbg"}>
                 <CardBody padding={4}>
                   {task.isDone && (
                     <Box

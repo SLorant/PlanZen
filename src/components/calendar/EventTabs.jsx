@@ -56,7 +56,7 @@ const EventTabs = ({
             setMultiday(false);
           }}
         >
-          Recurring
+          Weekly
         </Tab>
       </TabList>
       <TabIndicator mt="-1.5px" height="2px" bg="accent" borderRadius="1px" />
@@ -91,10 +91,10 @@ const EventTabs = ({
           </FormControl>
         </TabPanel>
         <TabPanel paddingLeft={1} paddingTop={1}>
-          <Text fontStyle={"italic"} textAlign={"right"} fontSize={"sm"}>
+          {/*          <Text fontStyle={"italic"} textAlign={"right"} fontSize={"sm"}>
             Recurs weekly
-          </Text>
-          <FormControl mt={0} isInvalid={errors.start}>
+          </Text> */}
+          <FormControl mt={4} isInvalid={errors.start}>
             <FormLabel>Start time</FormLabel>
             <Input
               type="time"

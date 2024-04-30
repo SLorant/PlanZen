@@ -235,7 +235,7 @@ const AddEvent = ({ allEvents, slotEvent, editing, fetchAllEvents }) => {
           textColor={"darktext"}
           colorScheme={"primary"}
           borderRadius={[20, 8]}
-          onClick={onOpen}
+          onClick={handleAddButton}
           height={[16, 10]}
           width={[16, "auto"]}
           padding={[3]}

@@ -30,6 +30,7 @@
     "dotenv": "^16.4.5",
     "fastify": "^4.26.2",
     "jsonwebtoken": "^9.0.2",
+    "moment": "^2.30.1",
     "pocketbase": "^0.21.1"
   }
 }

@@ -128,6 +128,7 @@ const Register = () => {
             <FormControl isInvalid={nameError}>
               <FormLabel>Username</FormLabel>
               <Input
+                _focus={{ borderColor: "accent" }}
                 ref={initialRef}
                 placeholder="Username"
                 value={username}
@@ -137,13 +138,20 @@ const Register = () => {
             </FormControl>
             <FormControl mt={4} isInvalid={emailError}>
               <FormLabel>Email</FormLabel>
-              <Input placeholder="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+              <Input
+                _focus={{ borderColor: "accent" }}
+                placeholder="Email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
               <FormErrorMessage ml={1}>{emailError}</FormErrorMessage>
             </FormControl>
             <FormControl mt={4} isInvalid={pError || paError}>
               <FormLabel>Password</FormLabel>
               <InputGroup>
                 <Input
+                  _focus={{ borderColor: "accent" }}
                   pr="4.5rem"
                   type={show ? "text" : "password"}
                   placeholder="Password"
@@ -165,6 +173,7 @@ const Register = () => {
             <FormControl mt={4} isInvalid={paError}>
               <FormLabel>Password again</FormLabel>
               <Input
+                _focus={{ borderColor: "accent" }}
                 type={show ? "text" : "password"}
                 placeholder="Password confirm"
                 value={passwordConfirm}
@@ -181,10 +190,17 @@ const Register = () => {
           </componentMap.Body>
 
           <componentMap.Footer>
-            <Button colorScheme="blue" mr={3} onClick={handleRegister}>
+            <Button color={"text"} mr={3} onClick={onClose}>
+              Cancel
+            </Button>
+            <Button
+              _hover={{ backgroundColor: "secondary.500" }}
+              color={"text"}
+              colorScheme={"primary"}
+              onClick={handleRegister}
+            >
               Register
             </Button>
-            <Button onClick={onClose}>Cancel</Button>
           </componentMap.Footer>
         </componentMap.Content>
       </componentMap.Component>

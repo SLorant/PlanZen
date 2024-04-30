@@ -27,7 +27,6 @@ const getEventByTask = async (req, reply) => {
 
 const addEvent = async (req, reply) => {
   const { title, start, end, color, isRecurring, taskId } = req.body;
-  console.log(isRecurring);
   try {
     const isSuccess = await addEventService(title, start, end, color, taskId, isRecurring);
     isSuccess ? reply.code(200).send("Success") : reply.code(500).send("Something went wrong.");
@@ -56,7 +55,6 @@ const updateEvent = async (req, reply) => {
 
 const deleteEvent = async (req, reply) => {
   const event = req.body;
-  console.log(event);
   try {
     const isSuccess = await deleteEventService(event.id);
     isSuccess ? reply.code(200).send("Success") : reply.code(500).send("Something went wrong.");

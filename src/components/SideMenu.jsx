@@ -15,26 +15,33 @@ import {
   Text,
   Flex,
 } from "@chakra-ui/react";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import Login from "./auth/Login";
 import Register from "./auth/Register";
 import LoginCheckUtil from "../utils/LoginCheckUtil";
 import axios from "axios";
+import { AuthContext } from "../utils/AuthContext";
 const SideMenu = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef();
   const { toggleColorMode } = useColorMode();
-  const [loggedIn, setLoggedIn] = useState(false);
+  const { loggedIn, setLoggedIn } = useContext(AuthContext);
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
+  const [initial, setInitial] = useState(true);
 
   useEffect(() => {
-    checkLoggedIn();
+    if (isOpen || initial) {
+      console.log("start");
+      checkLoggedIn();
+      setInitial(false);
+    }
   }, [isOpen]);
 
   const checkLoggedIn = async () => {
     const result = await LoginCheckUtil();
+    console.log(result);
     if (result) {
       await getUserInfo();
       setLoggedIn(true);

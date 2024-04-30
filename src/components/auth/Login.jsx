@@ -102,7 +102,7 @@ const Login = ({ setLoggedIn = null }) => {
                 <Input
                   /*  _focus={{ backgroundColor: "#ccc" }} */
                   backgroundColor={"text"}
-                  focusBorderColor={"primary"}
+                  _focus={{ borderColor: "accent" }}
                   pr="4.5rem"
                   type={show ? "text" : "password"}
                   placeholder="Enter password"
@@ -128,7 +128,12 @@ const Login = ({ setLoggedIn = null }) => {
             <Button color={"text"} mr={3} onClick={onClose}>
               Cancel
             </Button>
-            <Button color={"text"} _hover={{ bg: "secondary" }} colorScheme={"primary"} onClick={handleLogin}>
+            <Button
+              _hover={{ backgroundColor: "secondary.500" }}
+              color={"text"}
+              colorScheme={"primary"}
+              onClick={handleLogin}
+            >
               Log in
             </Button>
           </ModalFooter>

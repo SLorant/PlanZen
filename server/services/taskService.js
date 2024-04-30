@@ -4,14 +4,30 @@ import Api401Error from "../utils/errors/api401Error.js";
 import Api404Error from "../utils/errors/api404Error.js";
 import Api500Error from "../utils/errors/api404Error.js";
 import pb from "../database/SingletonDB.js";
+import moment from "moment";
 import { addEventService, getEventByTaskService, updateEventService } from "./eventService.js";
 
 async function getTasksService() {
   try {
+    const user = await pb.collection("users").getFirstListItem(`id="${pb.authStore.model.id}"`);
+
     const taskList = await pb.collection("tasks").getList(1, 50, {
       filter: `userID = "${pb.authStore.model.id}"`,
       sort: "-created",
     });
+    if (user.lastTaskFetch) {
+      if (moment(user.lastTaskFetch).isBefore(moment(), "day")) {
+        taskList.items.map((item) => {
+          if (item.isRecurring) {
+            item.isDone = false;
+          }
+        });
+      }
+    }
+    const data = {
+      lastTaskFetch: moment(),
+    };
+    await pb.collection("users").update(`${pb.authStore.model.id}`, data);
 
     return taskList;
   } catch (e) {

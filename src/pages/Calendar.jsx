@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { Calendar, Views, momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { useState } from "react";
@@ -16,6 +16,7 @@ import EditEvent from "../components/calendar/EditEvent";
 import Wrapper from "../components/Wrapper";
 import SideMenu from "../components/SideMenu";
 import { RRule } from "rrule";
+import { AuthContext } from "../utils/AuthContext";
 
 const Calendar2 = () => {
   moment.locale("en-GB");
@@ -24,12 +25,14 @@ const Calendar2 = () => {
   const localizer = momentLocalizer(moment); // or globalizeLocalizer
   const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
   /*   const { isOpen: isAddOpen, onOpen: onAddOpen, onClose: onAddClose } = useDisclosure(); */
-  const [loggedIn /* setLoggedIn */] = useState(false);
+  const { loggedIn } = useContext(AuthContext);
   const { colorMode } = useColorMode();
 
   useEffect(() => {
     try {
-      fetchAllEvents();
+      // const loginResult = loginCheck();
+      if (loggedIn) fetchAllEvents();
+      else setAllEvents([]);
     } catch (e) {
       console.error(e?.response?.data);
     }

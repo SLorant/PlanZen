@@ -5,6 +5,7 @@ const LoginCheckUtil = async (toast = null, message = "") => {
     const result = await axios.get("http://localhost:4000/check-logged-in", {
       withCredentials: true,
     });
+    console.log(result);
     return result;
   } catch (e) {
     if (toast !== null) {
@@ -26,6 +27,7 @@ const LoginCheckUtil = async (toast = null, message = "") => {
         });
       }
     }
+    return false;
   }
 };
 
