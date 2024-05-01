@@ -176,7 +176,7 @@ const AddEvent = ({ allEvents, slotEvent, editing, fetchAllEvents }) => {
               until: newEvent.until,
             },
             {
-              withCredentials: true,
+              withCredentials: false,
             }
           );
         } else {
@@ -190,7 +190,7 @@ const AddEvent = ({ allEvents, slotEvent, editing, fetchAllEvents }) => {
               isRecurring: isRecurring,
             },
             {
-              withCredentials: true,
+              withCredentials: false,
             }
           );
         }

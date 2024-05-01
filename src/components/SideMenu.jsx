@@ -49,7 +49,7 @@ const SideMenu = () => {
   const getUserInfo = async () => {
     try {
       const result = await axios.get(`${import.meta.env.VITE_LIVE_SERVER}/userInfo`, {
-        withCredentials: true,
+        withCredentials: false,
       });
       if (result?.data?.username) setUserName(result?.data?.username);
       if (result?.data?.email) setEmail(result?.data?.email);
@@ -62,7 +62,7 @@ const SideMenu = () => {
     setLoggedIn(false);
     try {
       await axios.delete(`${import.meta.env.VITE_LIVE_SERVER}/logout`, {
-        withCredentials: true,
+        withCredentials: false,
       });
     } catch (e) {
       console.log(e?.response?.data);

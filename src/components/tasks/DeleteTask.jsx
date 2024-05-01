@@ -15,7 +15,7 @@ const DeleteTask = ({ fetchTasks, taskID }) => {
             data: { id: taskID },
           },
           {
-            withCredentials: true,
+            withCredentials: false,
           }
         );
         console.log(result);

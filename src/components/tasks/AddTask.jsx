@@ -133,7 +133,7 @@ const AddTask = ({ tasks, fetchTasks, task = null }) => {
               color: newTask.color,
             },
             {
-              withCredentials: true,
+              withCredentials: false,
             }
           );
         } else {
@@ -150,7 +150,7 @@ const AddTask = ({ tasks, fetchTasks, task = null }) => {
               color: newTask.color,
             },
             {
-              withCredentials: true,
+              withCredentials: false,
             }
           );
         }

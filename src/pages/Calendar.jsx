@@ -56,7 +56,7 @@ const Calendar2 = () => {
     if (result) {
       try {
         const result = await axios.get(`${import.meta.env.VITE_LIVE_SERVER}/events`, {
-          withCredentials: true,
+          withCredentials: false,
         });
         const events = result?.data.items;
         const recEvents = [];
@@ -133,7 +133,7 @@ const Calendar2 = () => {
     });
     try {
       await axios.post(`${import.meta.env.VITE_LIVE_SERVER}/updateEvent`, updatedEvent, {
-        withCredentials: true,
+        withCredentials: false,
       });
     } catch (e) {
       console.log(e?.response?.data);

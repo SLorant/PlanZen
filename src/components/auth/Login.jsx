@@ -52,7 +52,7 @@ const Login = ({ setLoggedIn = null }) => {
             password,
           },
           {
-            withCredentials: true,
+            withCredentials: false,
           }
         );
         toast({

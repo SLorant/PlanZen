@@ -29,7 +29,7 @@ const EditEvent = ({ editedEvent, isOpen, onOpen, onClose, allEvents, setAllEven
             data: { id: editedEvent.id },
           },
           {
-            withCredentials: true,
+            withCredentials: false,
           }
         );
         if (result) {

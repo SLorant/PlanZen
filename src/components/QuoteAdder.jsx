@@ -18,7 +18,7 @@ const QuoteAdder = ({ setAuthor, setQuote }) => {
           author,
         },
         {
-          withCredentials: true,
+          withCredentials: false,
         }
       );
       setQuote(quote.quote);
@@ -32,7 +32,7 @@ const QuoteAdder = ({ setAuthor, setQuote }) => {
   const fetchDailyQuote = async () => {
     try {
       const response = await axios.get(`${import.meta.env.VITE_LIVE_SERVER}/dailyquote`, {
-        withCredentials: true,
+        withCredentials: false,
       });
       const quote = response.data;
       //Check if quote was uploaded today or not

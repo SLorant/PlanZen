@@ -3,7 +3,7 @@ import axios from "axios";
 const LoginCheckUtil = async (toast = null, message = "") => {
   try {
     const result = await axios.get(`${import.meta.env.VITE_LIVE_SERVER}/check-logged-in`, {
-      withCredentials: true,
+      withCredentials: false,
     });
     return result;
   } catch (e) {

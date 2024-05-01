@@ -44,7 +44,7 @@ const Tasks = () => {
     if (loginResult) {
       try {
         const result = await axios.get(`${import.meta.env.VITE_LIVE_SERVER}/tasks`, {
-          withCredentials: true,
+          withCredentials: false,
         });
         const tasks = result?.data.items;
 
@@ -55,7 +55,7 @@ const Tasks = () => {
               `${import.meta.env.VITE_LIVE_SERVER}/getEventByTask`,
               { taskID: task.id },
               {
-                withCredentials: true,
+                withCredentials: false,
               }
             );
             //Set task properties based on the event
@@ -139,7 +139,7 @@ const Tasks = () => {
             data: { id: taskID, isDone: isDone },
           },
           {
-            withCredentials: true,
+            withCredentials: false,
           }
         );
       } catch (e) {

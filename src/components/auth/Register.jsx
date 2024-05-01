@@ -86,7 +86,7 @@ const Register = () => {
             passwordConfirm,
           },
           {
-            withCredentials: true,
+            withCredentials: false,
           }
         );
         toast({
