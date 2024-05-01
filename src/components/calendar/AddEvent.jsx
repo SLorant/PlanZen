@@ -165,7 +165,7 @@ const AddEvent = ({ allEvents, slotEvent, editing, fetchAllEvents }) => {
       try {
         if (editing) {
           await axios.post(
-            "http://localhost:4000/updateEvent",
+            `${import.meta.env.VITE_LIVE_SERVER}/updateEvent`,
             {
               id: newEvent.id,
               title: newEvent.title,
@@ -181,7 +181,7 @@ const AddEvent = ({ allEvents, slotEvent, editing, fetchAllEvents }) => {
           );
         } else {
           await axios.post(
-            "http://localhost:4000/addEvent",
+            `${import.meta.env.VITE_LIVE_SERVER}/addEvent`,
             {
               title: newEvent.title,
               start: startDateTime,

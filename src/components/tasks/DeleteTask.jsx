@@ -10,7 +10,7 @@ const DeleteTask = ({ fetchTasks, taskID }) => {
     if (result && taskID) {
       try {
         const result = await axios.delete(
-          "http://localhost:4000/deleteTask",
+          `${import.meta.env.VITE_LIVE_SERVER}deleteTask`,
           {
             data: { id: taskID },
           },

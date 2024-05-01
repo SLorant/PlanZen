@@ -78,7 +78,7 @@ const Register = () => {
     if (!hasErrors) {
       try {
         await axios.post(
-          "http://localhost:4000/register",
+          `${import.meta.env.VITE_LIVE_SERVER}/register`,
           {
             username,
             email,

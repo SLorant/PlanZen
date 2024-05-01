@@ -55,7 +55,7 @@ const Calendar2 = () => {
     const result = await LoginCheckUtil();
     if (result) {
       try {
-        const result = await axios.get("http://localhost:4000/events", {
+        const result = await axios.get(`${import.meta.env.VITE_LIVE_SERVER}/events`, {
           withCredentials: true,
         });
         const events = result?.data.items;
@@ -132,7 +132,7 @@ const Calendar2 = () => {
       }
     });
     try {
-      await axios.post("http://localhost:4000/updateEvent", updatedEvent, {
+      await axios.post(`${import.meta.env.VITE_LIVE_SERVER}/updateEvent`, updatedEvent, {
         withCredentials: true,
       });
     } catch (e) {

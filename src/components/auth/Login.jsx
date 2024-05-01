@@ -46,7 +46,7 @@ const Login = ({ setLoggedIn = null }) => {
     if (!hasErrors) {
       try {
         await axios.post(
-          "http://localhost:4000/login",
+          `${import.meta.env.VITE_LIVE_SERVER}/login`,
           {
             username,
             password,

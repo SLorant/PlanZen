@@ -10,8 +10,9 @@ const QuoteAdder = ({ setAuthor, setQuote }) => {
       }
       const postQuote = quote.quote;
       const author = quote.author;
+
       await axios.post(
-        "http://localhost:4000/newquote",
+        `${import.meta.env.VITE_LIVE_SERVER}/newquote`,
         {
           postQuote,
           author,
@@ -30,7 +31,7 @@ const QuoteAdder = ({ setAuthor, setQuote }) => {
   //Fetch quote from db
   const fetchDailyQuote = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/dailyquote", {
+      const response = await axios.get(`${import.meta.env.VITE_LIVE_SERVER}/dailyquote`, {
         withCredentials: true,
       });
       const quote = response.data;
@@ -48,6 +49,7 @@ const QuoteAdder = ({ setAuthor, setQuote }) => {
         setAuthor(quote.author);
       }
     } catch (e) {
+      console.log(import.meta.env.VITE_LIVE_SERVER);
       console.log(e);
     }
   };

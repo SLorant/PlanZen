@@ -2,7 +2,7 @@ import axios from "axios";
 
 const LoginCheckUtil = async (toast = null, message = "") => {
   try {
-    const result = await axios.get("http://localhost:4000/check-logged-in", {
+    const result = await axios.get(`${import.meta.env.VITE_LIVE_SERVER}/check-logged-in`, {
       withCredentials: true,
     });
     return result;

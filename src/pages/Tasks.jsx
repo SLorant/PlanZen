@@ -43,7 +43,7 @@ const Tasks = () => {
     const loginResult = await LoginCheckUtil();
     if (loginResult) {
       try {
-        const result = await axios.get("http://localhost:4000/tasks", {
+        const result = await axios.get(`${import.meta.env.VITE_LIVE_SERVER}/tasks`, {
           withCredentials: true,
         });
         const tasks = result?.data.items;
@@ -52,7 +52,7 @@ const Tasks = () => {
           //If task is an event too, get the corresponding event from db
           if (task.isEvent && task.id) {
             const event = await axios.post(
-              "http://localhost:4000/getEventByTask",
+              `${import.meta.env.VITE_LIVE_SERVER}/getEventByTask`,
               { taskID: task.id },
               {
                 withCredentials: true,
@@ -134,7 +134,7 @@ const Tasks = () => {
     if (result && taskID) {
       try {
         await axios.post(
-          "http://localhost:4000/taskDone",
+          `${import.meta.env.VITE_LIVE_SERVER}/taskDone`,
           {
             data: { id: taskID, isDone: isDone },
           },

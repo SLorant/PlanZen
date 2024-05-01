@@ -9,7 +9,7 @@ const RandomRoute = () => {
 
   const handleRegister = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/protected-route", {
+      const response = await axios.get(`${import.meta.env.VITE_LIVE_SERVER}/protected-route`, {
         withCredentials: true,
       });
       console.log(response.data);
@@ -20,7 +20,7 @@ const RandomRoute = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await axios.delete("http://localhost:4000/logout", {
+      const response = await axios.delete(`${import.meta.env.VITE_LIVE_SERVER}`, {
         withCredentials: true,
       });
       console.log(response.data);

@@ -122,7 +122,7 @@ const AddTask = ({ tasks, fetchTasks, task = null }) => {
       try {
         if (!task) {
           await axios.post(
-            "http://localhost:4000/addTask",
+            `${import.meta.env.VITE_LIVE_SERVER}/addTask`,
             {
               name: newTask.name,
               description: newTask.description,
@@ -138,7 +138,7 @@ const AddTask = ({ tasks, fetchTasks, task = null }) => {
           );
         } else {
           await axios.post(
-            "http://localhost:4000/updateTask",
+            `${import.meta.env.VITE_LIVE_SERVER}/updateTask`,
             {
               id: newTask.id,
               name: newTask.name,
