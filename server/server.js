@@ -2,7 +2,6 @@ import fastify from "fastify";
 import fastifySwagger from "@fastify/swagger";
 import fastifyCors from "@fastify/cors";
 import { configDotenv } from "dotenv";
-import fastifyCookie from "@fastify/cookie";
 import { authRoutes } from "./routes/authRoutes.js";
 import { miscRoutes } from "./routes/miscRoutes.js";
 import { eventRoutes } from "./routes/eventRoutes.js";
@@ -10,7 +9,8 @@ import { taskRoutes } from "./routes/taskRoutes.js";
 
 const app = fastify({ logger: false });
 configDotenv.apply();
-const PORT = process.env.PORT || 4000;
+const port = process.env.PORT || 4000;
+const host = "RENDER" in process.env ? `0.0.0.0` : `localhost`;
 
 app.register(fastifySwagger, {
   exposeRoute: true,
@@ -20,14 +20,8 @@ app.register(fastifySwagger, {
   },
 });
 
-app.register(fastifyCookie, {
-  secret: process.env.ACCESS_TOKEN_SECRET,
-  hook: "onRequest",
-  parseOptions: {},
-});
-
 app.register(fastifyCors, {
-  origin: "http://localhost:5173",
+  origin: "https://plan-zen.web.app/",
   credentials: true,
 });
 
@@ -38,7 +32,7 @@ app.register(taskRoutes);
 
 const start = async () => {
   try {
-    await app.listen({ port: PORT });
+    app.listen({ host: host, port: port });
     console.log("Server started");
   } catch (error) {
     app.log.error(error);
