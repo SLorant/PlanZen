@@ -21,7 +21,7 @@ app.register(fastifySwagger, {
 });
 
 app.register(fastifyCors, {
-  origin: "RENDER" in process.env ? `https://plan-zen.web.app/` : `http://localhost:5173`,
+  origin: "*",
   credentials: true,
 });
 
