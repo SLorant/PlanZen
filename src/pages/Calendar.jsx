@@ -21,16 +21,29 @@ import { AuthContext } from "../utils/AuthContext";
 const Calendar2 = () => {
   moment.locale("en-GB");
   const [allEvents, setAllEvents] = useState([]);
-  /*   const { onOpen, isOpen, onClose } = useDisclosure(); */
-  const localizer = momentLocalizer(moment); // or globalizeLocalizer
+  const localizer = momentLocalizer(moment);
   const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
-  /*   const { isOpen: isAddOpen, onOpen: onAddOpen, onClose: onAddClose } = useDisclosure(); */
   const { loggedIn } = useContext(AuthContext);
   const { colorMode } = useColorMode();
+  const [slotEvent, setSlotEvent] = useState({
+    slotClicked: false,
+    start: new Date(),
+    end: new Date(),
+    new: true,
+  });
+  const [weekView, setWeekView] = useState(false);
+  const [monthView, setMonthView] = useState(true);
+  const [dayView, setDayView] = useState(true);
+  const [fetchNew, setFetchNew] = useState(false);
+
+  useEffect(() => {
+    if (fetchNew) {
+      fetchAllEvents();
+    }
+  }, [fetchNew]);
 
   useEffect(() => {
     try {
-      // const loginResult = loginCheck();
       if (loggedIn) fetchAllEvents();
       else setAllEvents([]);
     } catch (e) {
@@ -47,6 +60,7 @@ const Calendar2 = () => {
         });
         const events = result?.data.items;
         const recEvents = [];
+        //Recurring weekly events need to be added more times to the calendar (until the end date)
         for (const event of events) {
           const startDate = new Date(Date.parse(event.start));
           const endDate = new Date(Date.parse(event.end));
@@ -57,7 +71,6 @@ const Calendar2 = () => {
               dtstart: startDate,
               until: until ?? endDate,
             });
-            console.log(endDate);
             for (const one of occurences.all()) {
               const recEvent = { ...event }; // Create a new object for each occurrence
 
@@ -79,24 +92,20 @@ const Calendar2 = () => {
             recEvents.push(event);
           }
         }
-
-        // events.push(...recEvents);
-        console.log(recEvents);
         setFetchNew(false);
         setAllEvents(recEvents);
       } catch (e) {
-        console.log(e);
         console.log(e?.response?.data);
       }
     }
   };
-  //getter from db
-  const [fetchNew, setFetchNew] = useState(false);
 
   const onEventResize = async ({ event, start, end }) => {
     const updatedEvent = { ...event, start, end };
-
-    if ((event.isRecurring && hideEventLabels) || dayView) {
+    //If event is recurring, and we are on week/day view, when the user moves an event
+    //the corresponding event dates should update too. Without this feature, if the user
+    // moves a recurring date that is not the first one, the new date would become the first
+    if ((event.isRecurring && weekView) || dayView) {
       const events = allEvents.filter((item) => item.id === event.id);
       const oldestEvent = events.reduce((oldest, current) => {
         const oldestStartDate = new Date(oldest.start);
@@ -131,15 +140,11 @@ const Calendar2 = () => {
     }
   };
 
-  const [hideEventLabels, setHideEventLabels] = useState(false);
-  const [monthView, setMonthView] = useState(true);
-  const [dayView, setDayView] = useState(true);
   const handleViewChange = (view) => {
-    console.log(view);
     if (view === Views.WEEK) {
-      setHideEventLabels(true); // Hide event labels when week view is selected
+      setWeekView(true);
     } else {
-      setHideEventLabels(false); // Show event labels for other views
+      setWeekView(false);
     }
     if (view === Views.MONTH) {
       setMonthView(true);
@@ -153,25 +158,7 @@ const Calendar2 = () => {
     }
   };
 
-  const eventStyleGetter = (event) => ({
-    style: {
-      backgroundColor: event.color,
-    },
-  });
-
-  useEffect(() => {
-    if (fetchNew) {
-      fetchAllEvents();
-    }
-  }, [fetchNew]);
-
-  const [slotEvent, setSlotEvent] = useState({
-    slotClicked: false,
-    start: new Date(),
-    end: new Date(),
-    new: true,
-  }); // State variable to control modal visibility
-
+  //Empty slot - new event
   const handleSelectSlot = (slotInfo) => {
     const start = slotInfo.start;
     const end = monthView ? new Date(slotInfo.end.getTime() - 86400000) : slotInfo.end;
@@ -180,14 +167,13 @@ const Calendar2 = () => {
       start.getMonth() === end.getMonth() &&
       start.getDay() === end.getDay();
 
-    console.log(isSameDay);
     setSlotEvent({
       slotClicked: true,
       start: slotInfo.start,
       end: end,
       multiday: !isSameDay,
       new: false,
-    }); // Open AddEvent modal when slot is selected
+    });
   };
 
   const [editedEvent, setEditedEvent] = useState({});
@@ -196,13 +182,19 @@ const Calendar2 = () => {
     onEditOpen();
   };
 
+  const eventStyleGetter = (event) => ({
+    style: {
+      backgroundColor: event.color,
+    },
+  });
+
   return (
     <Wrapper>
       <SideMenu />
       <Heading textAlign={"center"} mt={[7, 0]} mb={2}>
         Calendar
       </Heading>
-      <div className={(hideEventLabels ? "week-view" : "", colorMode === "dark" ? "dark" : "")}>
+      <div className={(weekView ? "week-view" : "", colorMode === "dark" ? "dark" : "")}>
         <DnDCalendar
           localizer={localizer}
           events={allEvents}
@@ -214,9 +206,9 @@ const Calendar2 = () => {
           onView={handleViewChange}
           resizable
           selectable
-          eventPropGetter={eventStyleGetter} // Add eventStyleGetter prop
+          eventPropGetter={eventStyleGetter}
           onSelectEvent={(eventInfo) => handleEditEvent(eventInfo)}
-          onSelectSlot={handleSelectSlot} // Call handleSelectSlot function when slot is selected
+          onSelectSlot={handleSelectSlot}
           longPressThreshold={100}
         />
       </div>
@@ -226,9 +218,6 @@ const Calendar2 = () => {
         slotEvent={slotEvent}
         editing={false}
         fetchAllEvents={fetchAllEvents}
-        /*   isOpen={isAddOpen}
-        onOpen={onAddOpen}
-        onClose={onAddClose} */
       />
       <EditEvent
         allEvents={allEvents}

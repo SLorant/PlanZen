@@ -30,6 +30,7 @@ import PlusIcon from "../../assets/icons/PlusIcon";
 import LoginCheckUtil from "../../utils/LoginCheckUtil";
 
 const AddTask = ({ tasks, fetchTasks, task = null }) => {
+  //Time formatting
   const formatTime = (time) => {
     return time < 10 ? `0${time}` : time.toString();
   };
@@ -64,6 +65,7 @@ const AddTask = ({ tasks, fetchTasks, task = null }) => {
   const [nameError, setNameError] = useState("");
   const toast = useToast();
 
+  //Reset when tasks are freshly fetched
   useEffect(() => {
     setNewTask({
       name: "",

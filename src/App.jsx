@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import "./App.css";
 import { Card, CardBody, CardHeader, Heading, Text, VStack, SimpleGrid, CardFooter, Box, Flex } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
@@ -7,23 +7,35 @@ import Wrapper from "./components/Wrapper";
 import SideMenu from "./components/SideMenu";
 import { MoonIcon } from "@chakra-ui/icons";
 import QuoteAdder from "./components/QuoteAdder";
+import LoginCheckUtil from "./utils/LoginCheckUtil";
+import { AuthContext } from "./utils/AuthContext";
 
 function App() {
   const [dailyQuote, setQuote] = useState("");
   const [author, setAuthor] = useState("");
   const { toggleColorMode } = useColorMode();
+  const { setLoggedIn } = useContext(AuthContext);
+
   useEffect(() => {
     try {
+      checkLoggedIn();
       QuoteAdder({ setAuthor, setQuote });
     } catch (e) {
       console.error(e);
     }
   }, []);
 
+  const checkLoggedIn = async () => {
+    const result = await LoginCheckUtil();
+    if (result) {
+      setLoggedIn(true);
+    }
+  };
+
   return (
     <Wrapper>
       <SideMenu />
-      <Heading mt={[10, 0]} as={"h1"} size={"2xl"} textAlign={"center"}>
+      <Heading mt={[7, 0]} as={"h1"} size={"2xl"} textAlign={"center"}>
         PlanZen
       </Heading>
 
@@ -42,9 +54,9 @@ function App() {
       </Button>
       {dailyQuote && author && (
         <Flex justifyContent={"center"} placeItems={"center"}>
-          <Box width={"max-content"} mt={10} textAlign={"center"} fontSize={["md", "2xl"]} fontWeight={"bold"}>
+          <Box width={"max-content"} mt={10} textAlign={"center"} fontSize={["lg", "2xl"]} fontWeight={"bold"}>
             {dailyQuote}
-            <Heading mt={0} textAlign={"end"} size={["sm", "sm"]}>
+            <Heading mt={0} textAlign={"end"} size={["xs", "sm"]}>
               &mdash; {author}
             </Heading>
           </Box>
@@ -64,11 +76,11 @@ function App() {
               <Heading size="md"> Calendar</Heading>
             </CardHeader>
             <CardBody>
-              <Text>Check upcoming events or plan your schedule</Text>
+              <Text>See upcoming events or plan your schedule</Text>
             </CardBody>
             <CardFooter>
               <Link to={"/calendar"}>
-                <Button colorScheme="primary" textColor={"text"}>
+                <Button _hover={{ backgroundColor: "secondary.500" }} colorScheme="primary" textColor={"darktext"}>
                   Calendar
                 </Button>
               </Link>
@@ -79,10 +91,14 @@ function App() {
               <Heading size="md"> Tasks</Heading>
             </CardHeader>
             <CardBody>
-              <Text>View a s last month.</Text>
+              <Text>Don't forget your daily tasks</Text>
             </CardBody>
             <CardFooter>
-              <Button colorScheme="primary">Calendar</Button>
+              <Link to={"/tasks"}>
+                <Button _hover={{ backgroundColor: "secondary.500" }} textColor={"darktext"} colorScheme="primary">
+                  View tasks
+                </Button>
+              </Link>
             </CardFooter>
           </Card>
           <Card>
@@ -90,24 +106,33 @@ function App() {
               <Heading size="md"> Meditation</Heading>
             </CardHeader>
             <CardBody>
-              <Text>5 tasks remaining today</Text>
+              <Text>Relax. You need it.</Text>
             </CardBody>
             <CardFooter>
-              <Link to={"/tasks"}>
-                <Button colorScheme="primary">See tasks..</Button>
+              <Link to={"/meditation"}>
+                <Button _hover={{ backgroundColor: "secondary.500" }} textColor={"darktext"} colorScheme="primary">
+                  Meditate
+                </Button>
               </Link>
             </CardFooter>
           </Card>
           <Card>
             <CardHeader>
-              <Heading size="md"> Habit tracker</Heading>
+              <Heading size="md"> Habit tracker [WIP]</Heading>
             </CardHeader>
             <CardBody>
-              <Text>Habit tracker</Text>
+              <Text>Habit tracker </Text>
             </CardBody>
             <CardFooter>
               <Link to={"/tasks"}>
-                <Button colorScheme="primary">See tasks..</Button>
+                <Button
+                  _hover={{ backgroundColor: "secondary.500" }}
+                  textColor={"darktext"}
+                  isDisabled={true}
+                  colorScheme="primary"
+                >
+                  Check habits
+                </Button>
               </Link>
             </CardFooter>
           </Card>

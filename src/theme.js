@@ -28,9 +28,6 @@ const colors = {
   bg: "var(--bg)",
   cardbg: "var(--cardbg)",
   darktext: "var(--darktext)",
-  /*   lime: {
-    500: props.colorMode == "light" ? "#43e56e" : "#19bc8b",
-  }, */
 };
 const overrides = {
   config: {

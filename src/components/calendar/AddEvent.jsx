@@ -40,6 +40,7 @@ const AddEvent = ({ allEvents, slotEvent, editing, fetchAllEvents }) => {
     title: "",
     start: new Date(),
     end: new Date(),
+    until: new Date(),
     color: "#43e56e",
   });
   const [multiday, setMultiday] = useState(false);
@@ -136,7 +137,6 @@ const AddEvent = ({ allEvents, slotEvent, editing, fetchAllEvents }) => {
       } else {
         setNewEvent({ title: "", start: slotEvent.start, end: slotEvent.end });
       }
-      console.log(slotEvent.multiday || !isSameDay(start, end));
       if (slotEvent.multiday || !isSameDay(start, end)) setMultiday(true);
     }
   };
@@ -154,7 +154,8 @@ const AddEvent = ({ allEvents, slotEvent, editing, fetchAllEvents }) => {
     startDateTime.setHours(parseInt(startHours));
     startDateTime.setMinutes(parseInt(startMinutes));
 
-    const endDateTime = new Date(isSimple ? newEvent.start : newEvent.end);
+    let endDateTime = new Date(isSimple ? newEvent.start : newEvent.end);
+    if (isRecurring) endDateTime = newEvent.until;
     const [endHours, endMinutes] = endTime.split(":");
     endDateTime.setHours(parseInt(multiday ? startHours : endHours));
     endDateTime.setMinutes(parseInt(multiday ? startMinutes : endMinutes));
@@ -163,7 +164,6 @@ const AddEvent = ({ allEvents, slotEvent, editing, fetchAllEvents }) => {
     if (IsValid(newEvent, multiday, startTime, endTime)) {
       try {
         if (editing) {
-          console.log(isRecurring);
           await axios.post(
             "http://localhost:4000/updateEvent",
             {

@@ -32,6 +32,7 @@ const Tasks = () => {
 
   useEffect(() => {
     try {
+      console.log(loggedIn);
       if (loggedIn) fetchAllTasks();
     } catch (e) {
       console.error(e?.response?.data);
@@ -167,6 +168,7 @@ const Tasks = () => {
       </Heading>
       <AddTask tasks={allTasks} fetchTasks={fetchAllTasks} />
       {loggedIn === false && <Text>Log in to see your tasks!</Text>}
+      {loggedIn && allTasks.length < 1 && <Text>Loading...</Text>}
       <Flex
         flexDirection={"column"}
         gap={6}
@@ -201,15 +203,15 @@ const Tasks = () => {
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          class="icon icon-tabler icon-tabler-reload"
+                          className="icon icon-tabler icon-tabler-reload"
                           width="20"
                           height="20"
                           viewBox="0 0 24 24"
-                          stroke-width="2"
+                          strokeWidth="2"
                           stroke="#000000"
                           fill="none"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
                         >
                           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                           <path d="M19.933 13.041a8 8 0 1 1 -9.925 -8.788c3.899 -1 7.935 1.007 9.425 4.747" />
@@ -252,15 +254,15 @@ const Tasks = () => {
                           >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
-                              class="icon icon-tabler icon-tabler-check"
+                              className="icon icon-tabler icon-tabler-check"
                               width="20"
                               height="20"
                               viewBox="0 0 24 24"
-                              stroke-width="2"
+                              strokeWidth="2"
                               stroke="#000000"
                               fill="none"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
                             >
                               <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                               <path d="M5 12l5 5l10 -10" />

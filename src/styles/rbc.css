@@ -2,13 +2,14 @@
 @import url("@fontsource/nunito");
 
 /* Custom styling for react-big-calendar */
+
+/* -----Calendar and cells----- */
 .rbc-calendar {
   height: 500px;
   color: var(--light-text-color);
   font-family: "Nunito", "sans-serif";
 }
 
-/* Header styling */
 .rbc-header {
   background-color: var(--light-secondary-color);
   color: var(--light-text-color);
@@ -23,53 +24,14 @@
   font-size: 18px;
 }
 
-.rbc-toolbar {
-  margin-top: 20px !important;
-  margin-bottom: 20px !important;
-}
-.rbc-toolbar-label {
-  font-size: 24px;
-}
-/* Day cell styling */
 .rbc-date-cell {
   border: 1px solid #ccc;
 }
-@keyframes an {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-/* Event styling */
-.rbc-event {
-  background-color: var(--light-primary-color);
-  color: var(--light-text-color);
-  border: none;
-  border-radius: 0px;
-  padding: 2px 5px;
-  height: 20px;
-  font-size: 14px;
-}
 
-/* .rbc-addons-dnd-dragged-event {
-  opacity: 1 !important;
-  background-color: black !important;
-} */
-/* .rbc-event,
-.rbc-event:not(.rbc-event.rbc-selected),
-.rbc-event:not(.rbc-addons-dnd-dragged-event),
-.rbc-event:not(.rbc-background-event) .rbc-event:not(.rbc-selected.rbc-background-event),
-:not(.week-view) {
-  animation: 0.2s ease-in-out 0s 1 an;
-} */
-/* Event slot styling */
 .rbc-timeslot-group {
   border-bottom: 0px solid #ccc;
 }
 
-/* Today button styling */
 .rbc-time-column.rbc-today,
 .rbc-day-bg.rbc-today {
   background-color: white;
@@ -81,16 +43,59 @@
   justify-content: center;
   place-items: center;
 }
-/* .rbc-event-continues-after {
-  border-radius: 10px 0px 0px 10px;
+.rbc-month-row {
+  border: var(--light-secondary-color);
 }
-.rbc-event-continues-prior {
-  border-radius: 0px 10px 10px 0px;
-} */
 
+.rbc-month-view {
+  border: none;
+}
+.rbc-show-more {
+  color: var(--light-accent-color);
+  background: none;
+}
 .rbc-slot-selection {
   background-color: var(--light-primary-color);
   color: var(--light-text-color);
+}
+/* ---------- */
+
+/* -----Events----- */
+
+.rbc-event {
+  background-color: var(--light-primary-color);
+  color: var(--light-text-color);
+  border: none;
+  border-radius: 0px;
+  padding: 2px 5px;
+  height: 20px;
+  font-size: 14px;
+}
+
+.rbc-event.rbc-selected {
+  background-color: var(--light-secondary-color);
+}
+
+.rbc-day-slot .rbc-event {
+  border: none;
+}
+.rbc-event:focus,
+.rbc-day-slot .rbc-background-event:focus {
+  outline: none !important;
+}
+
+.rbc-addons-dnd-drag-preview {
+  background-color: var(--light-secondary-color) !important;
+}
+/* ---------- */
+
+/* -----Toolbar----- */
+.rbc-toolbar {
+  margin-top: 20px !important;
+  margin-bottom: 20px !important;
+}
+.rbc-toolbar-label {
+  font-size: 24px;
 }
 
 .rbc-btn-group {
@@ -104,11 +109,6 @@
 .rbc-btn-group:first-child button:hover {
   background-color: var(--light-secondary-color);
 }
-
-/* .rbc-toolbar button:active:focus {
-  background-color: inherit;
-  border-color: #ccc;
-} */
 
 .rbc-btn-group button {
   border: 1px solid;
@@ -135,34 +135,11 @@
   background-color: var(--light-primary-color);
   border-color: inherit;
 }
-.rbc-event.rbc-selected {
-  background-color: var(--light-secondary-color);
-}
-.rbc-show-more {
-  color: var(--light-accent-color);
-  background: none;
-}
 
-.rbc-day-slot .rbc-event {
-  border: none;
-}
-.rbc-event:focus,
-.rbc-day-slot .rbc-background-event:focus {
-  outline: none !important;
-}
-.rbc-month-row {
-  border: var(--light-secondary-color);
-}
+/* ---------- */
 
-/* .rbc-day-bg:last-child {
-  border-right: 1px solid black;
-  border-radius: 5px;
-} */
-.rbc-month-view {
-  border: none;
-}
+/* -----Mobile----- */
 
-/* Mobile responsiveness */
 @media (max-width: 768px) {
   .rbc-calendar {
     width: 100vw;
@@ -280,11 +257,9 @@
   }
 }
 
-.rbc-addons-dnd-drag-preview {
-  background-color: var(--light-secondary-color) !important;
-}
+/* ---------- */
 
-/* Dark mode */
+/* -----Dark mode----- */
 .dark .rbc-calendar {
   background-color: var(--dark-bg-color);
 }
@@ -358,5 +333,10 @@
   background-color: var(--dark-primary-color);
   color: var(--dark-text-color);
 }
-
+.dark .rbc-toolbar .rbc-btn-group:first-child button:nth-child(2):after {
+  color: var(--dark-text-color);
+}
+.dark .rbc-toolbar .rbc-btn-group:first-child button:nth-child(3):after {
+  color: var(--dark-text-color);
+}
 /* ---------- */

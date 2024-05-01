@@ -12,8 +12,14 @@ import {
   Text,
   useToast,
   Button,
+  ModalOverlay,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
 } from "@chakra-ui/react";
-import componentMap from "../../utils/formMapUtil";
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -113,18 +119,12 @@ const Register = () => {
         Register
       </Button>
 
-      <componentMap.Component
-        closeOnOverlayClick={!isMobile}
-        size={"sm"}
-        initialFocusRef={initialRef}
-        isOpen={isOpen}
-        onClose={onClose}
-      >
-        <componentMap.Overlay />
-        <componentMap.Content>
-          <componentMap.Header>Register</componentMap.Header>
-          <componentMap.CloseButton />
-          <componentMap.Body pb={6}>
+      <Modal closeOnOverlayClick={!isMobile} size={"sm"} initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Register</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody pb={6}>
             <FormControl isInvalid={nameError}>
               <FormLabel>Username</FormLabel>
               <Input
@@ -159,9 +159,9 @@ const Register = () => {
                   onChange={(e) => setPassword(e.target.value)}
                 />
                 <InputRightElement width="4.5rem">
-                  <componentMap.Button h="1.75rem" size="sm" onClick={handleClick}>
+                  <Button h="1.75rem" size="sm" onClick={handleClick}>
                     {show ? "Hide" : "Show"}
-                  </componentMap.Button>
+                  </Button>
                 </InputRightElement>
               </InputGroup>
               {!pError ? (
@@ -187,9 +187,9 @@ const Register = () => {
                 {error}
               </Text>
             )}
-          </componentMap.Body>
+          </ModalBody>
 
-          <componentMap.Footer>
+          <ModalFooter>
             <Button color={"text"} mr={3} onClick={onClose}>
               Cancel
             </Button>
@@ -201,9 +201,9 @@ const Register = () => {
             >
               Register
             </Button>
-          </componentMap.Footer>
-        </componentMap.Content>
-      </componentMap.Component>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
   );
 };

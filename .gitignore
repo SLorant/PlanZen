@@ -25,8 +25,13 @@ dist-ssr
 
 authServerRefreshTokens.js
 server/.env
+server/serverold.js
 server/pocketbase
 adminLogin.js
 regtemp.tsx
 authServiceOld.js
 unused.txt
+
+.firebaserc
+firebase.json
+.firebase

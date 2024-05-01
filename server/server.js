@@ -1,11 +1,16 @@
 import fastify from "fastify";
 import fastifySwagger from "@fastify/swagger";
 import fastifyCors from "@fastify/cors";
-import jwt from "jsonwebtoken";
 import { configDotenv } from "dotenv";
+import fastifyCookie from "@fastify/cookie";
+import { authRoutes } from "./routes/authRoutes.js";
+import { miscRoutes } from "./routes/miscRoutes.js";
+import { eventRoutes } from "./routes/eventRoutes.js";
+import { taskRoutes } from "./routes/taskRoutes.js";
 
-const app = fastify({ logger: true });
+const app = fastify({ logger: false });
 configDotenv.apply();
+const PORT = 4000;
 
 app.register(fastifySwagger, {
   exposeRoute: true,
@@ -15,72 +20,28 @@ app.register(fastifySwagger, {
   },
 });
 
-const authenticateToken = (req, reply) => {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1];
-  if (token == null) return reply.code(401).send(true);
+app.register(fastifyCookie, {
+  secret: process.env.ACCESS_TOKEN_SECRET,
+  hook: "onRequest",
+  parseOptions: {},
+});
 
-  // eslint-disable-next-line no-undef
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-    if (err) return reply.code(403).send(err);
-    req.user = user;
-    reply.send(posts.filter((post) => post.username === req.user.name));
-  });
-};
+app.register(fastifyCors, {
+  origin: "http://localhost:5173",
+  credentials: true,
+});
 
-const posts = [
-  {
-    username: "Vki",
-    title: "Post 1",
-  },
-  {
-    username: "Masodik",
-    title: "Post 2",
-  },
-];
-
-const updateItemOpts = {
-  schema: {
-    response: {
-      200: {
-        type: "array",
-        items: {
-          type: "object",
-          properties: {
-            username: { type: "string" },
-            title: { type: "string" },
-          },
-        },
-      },
-      401: { type: "boolean" },
-      403: { type: "string" },
-    },
-  },
-  handler: authenticateToken,
-};
-
-const itemRoutes = (app, options, done) => {
-  //Get all
-  app.get("/users", async (req, reply) => {
-    reply.send({ users: ["user1", "user2", "user3"] });
-  });
-
-  app.get("/posts", updateItemOpts);
-
-  done();
-};
-
-app.register(itemRoutes, {});
-app.register(fastifyCors);
-const PORT = 5000;
+app.register(authRoutes);
+app.register(miscRoutes);
+app.register(eventRoutes);
+app.register(taskRoutes);
 
 const start = async () => {
   try {
     await app.listen({ port: PORT });
-    console.log("Server sstarted");
+    console.log("Server started");
   } catch (error) {
     app.log.error(error);
-    // eslint-disable-next-line no-undef
     process.exit(1);
   }
 };

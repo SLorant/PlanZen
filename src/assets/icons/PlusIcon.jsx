@@ -3,15 +3,15 @@ const PlusIcon = () => {
   return isMobile ? (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      class="icon icon-tabler icon-tabler-plus"
+      className="icon icon-tabler icon-tabler-plus"
       width="32"
       height="32"
       viewBox="0 0 24 24"
-      stroke-width="1.5"
+      strokeWidth="2"
       stroke="#2c3e50"
       fill="none"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     >
       <path stroke="none" d="M0 0h24v24H0z" fill="none" />
       <path d="M12 5l0 14" />
@@ -20,15 +20,15 @@ const PlusIcon = () => {
   ) : (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      class="icon icon-tabler icon-tabler-plus"
+      className="icon icon-tabler icon-tabler-plus"
       width="20"
       height="20"
       viewBox="0 0 24 24"
-      stroke-width="2.5"
+      strokeWidth="2.5"
       stroke="#2c3e50"
       fill="none"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     >
       <path stroke="none" d="M0 0h24v24H0z" fill="none" />
       <path d="M12 5l0 14" />

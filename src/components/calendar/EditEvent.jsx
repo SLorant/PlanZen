@@ -19,10 +19,6 @@ const EditEvent = ({ editedEvent, isOpen, onOpen, onClose, allEvents, setAllEven
   const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
   const toast = useToast();
 
-  /*   useEffect(() => {
-    onClose();
-  }, [allEvents, onClose]); */
-
   const deleteEvent = async () => {
     const result = await LoginCheckUtil();
     if (result && editedEvent.id) {

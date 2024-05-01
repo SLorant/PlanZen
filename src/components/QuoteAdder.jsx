@@ -1,6 +1,7 @@
 import axios from "axios";
 
 const QuoteAdder = ({ setAuthor, setQuote }) => {
+  //Fetch new quote from api
   const addNewQuote = async () => {
     try {
       let quote = await fetchNewQuote();
@@ -26,12 +27,14 @@ const QuoteAdder = ({ setAuthor, setQuote }) => {
     }
   };
 
+  //Fetch quote from db
   const fetchDailyQuote = async () => {
     try {
       const response = await axios.get("http://localhost:4000/dailyquote", {
         withCredentials: true,
       });
       const quote = response.data;
+      //Check if quote was uploaded today or not
       const date = new Date(quote.updated);
       const today = new Date();
       const isNotToday =
@@ -49,6 +52,7 @@ const QuoteAdder = ({ setAuthor, setQuote }) => {
     }
   };
 
+  //Fetch new quote from api
   const fetchNewQuote = async () => {
     try {
       const res = await fetch("https://api.api-ninjas.com/v1/quotes?category=inspirational", {
@@ -61,7 +65,8 @@ const QuoteAdder = ({ setAuthor, setQuote }) => {
       console.log(quote);
       return quote;
     } catch {
-      setQuote("asd");
+      setQuote("A wizard is never late, nor is he early, he arrives precisely when he means to");
+      setAuthor("Gandalf");
     }
   };
 

@@ -4,7 +4,6 @@ import {
   FormLabel,
   Input,
   FormErrorMessage,
-  Text,
   Tabs,
   TabList,
   Tab,
@@ -91,9 +90,6 @@ const EventTabs = ({
           </FormControl>
         </TabPanel>
         <TabPanel paddingLeft={1} paddingTop={1}>
-          {/*          <Text fontStyle={"italic"} textAlign={"right"} fontSize={"sm"}>
-            Recurs weekly
-          </Text> */}
           <FormControl mt={4} isInvalid={errors.start}>
             <FormLabel>Start time</FormLabel>
             <Input
