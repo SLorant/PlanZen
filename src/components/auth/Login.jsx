@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import axios from "axios";
 import {
   Button,
@@ -19,6 +19,10 @@ import {
   ModalBody,
   ModalFooter,
 } from "@chakra-ui/react";
+import PocketBase from "pocketbase";
+import { usePocket } from "../../contexts/PocketContext";
+
+//const pb = new PocketBase("http://127.0.0.1:8090");
 
 const Login = ({ setLoggedIn = null }) => {
   const [username, setUsername] = useState("");
@@ -31,6 +35,8 @@ const Login = ({ setLoggedIn = null }) => {
   const handleClick = () => setShow(!show);
   const initialRef = React.useRef(null);
   const toast = useToast();
+
+  const { login } = usePocket();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -45,8 +51,11 @@ const Login = ({ setLoggedIn = null }) => {
     }
     if (!hasErrors) {
       try {
-        await axios.post(
-          `${import.meta.env.VITE_LIVE_SERVER}/login`,
+        await login(username, password);
+        //const authData = await pb.collection("users").authWithPassword(username, password);
+
+        /*  await axios.post(
+          `${import.meta.env.VITE_LOCAL_SERVER}/login`,
           {
             username,
             password,
@@ -54,7 +63,7 @@ const Login = ({ setLoggedIn = null }) => {
           {
             withCredentials: false,
           }
-        );
+        ); */
         toast({
           title: "Login successful",
           description: "You have successfully logged in.",

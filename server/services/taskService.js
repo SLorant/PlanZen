@@ -7,14 +7,19 @@ import pb from "../database/SingletonDB.js";
 import moment from "moment";
 import { addEventService, getEventByTaskService, updateEventService } from "./eventService.js";
 
-async function getTasksService() {
+async function getTasksService(userID) {
   try {
-    const user = await pb.collection("users").getFirstListItem(`id="${pb.authStore.model.id}"`);
+    const user = await pb.collection("users").getFirstListItem(`id="${userID}"`, {
+      query: { userID: userID },
+    });
 
     const taskList = await pb.collection("tasks").getList(1, 50, {
-      filter: `userID = "${pb.authStore.model.id}"`,
+      query: { userID: userID },
+      /*   headers: { userID: userID }, */
+      filter: `userID = "${userID}"`,
       sort: "-created",
     });
+
     if (user.lastTaskFetch) {
       if (moment(user.lastTaskFetch).isBefore(moment(), "day")) {
         taskList.items.map((item) => {
@@ -27,7 +32,7 @@ async function getTasksService() {
     const data = {
       lastTaskFetch: moment(),
     };
-    await pb.collection("users").update(`${pb.authStore.model.id}`, data);
+    await pb.collection("users").update(`${userID}`, data);
 
     return taskList;
   } catch (e) {
@@ -36,19 +41,22 @@ async function getTasksService() {
   }
 }
 
-async function addTaskService(name, description, isRecurring, isEvent, start, end, color) {
+async function addTaskService(userID, name, description, isRecurring, isEvent, start, end, color) {
+  console.log(userID);
   try {
     const data = {
       name: name,
       description: description,
       isRecurring: isRecurring,
+      isDone: false,
       isEvent: isEvent,
-      userID: pb.authStore.model.id,
+      userID: userID,
     };
+    console.log(data);
     const result = await pb.collection("tasks").create(data);
-    if (isEvent) {
+    /*   if (isEvent) {
       await addEventService(name, start, end, color, result.id);
-    }
+    } */
   } catch (e) {
     console.log(e);
     throw new Api500Error("Something went wrong.");
@@ -56,13 +64,14 @@ async function addTaskService(name, description, isRecurring, isEvent, start, en
   return true;
 }
 
-async function updateTaskService(id, name, description, isRecurring, isEvent, start, end, color) {
+async function updateTaskService(userID, id, name, description, isRecurring, isEvent, start, end, color) {
   try {
     const data = {
       name: name,
       description: description,
       isRecurring: isRecurring,
       isEvent: isEvent,
+      userID: userID,
     };
     const result = await pb.collection("tasks").update(`${id}`, data);
     try {
@@ -80,10 +89,13 @@ async function updateTaskService(id, name, description, isRecurring, isEvent, st
   return true;
 }
 
-async function deleteTaskService(id) {
+async function deleteTaskService(id, userID) {
   try {
     if (id) {
-      await pb.collection("tasks").delete(`${id}`);
+      console.log(id);
+      await pb.collection("tasks").delete(`${id}`, {
+        query: { userID: userID },
+      });
     } else return false;
   } catch (e) {
     console.log(e);
@@ -92,10 +104,11 @@ async function deleteTaskService(id) {
   return true;
 }
 
-async function taskDoneService(id, isDone) {
+async function taskDoneService(id, isDone, userID) {
   try {
     const data = {
       isDone: isDone,
+      userID: userID,
     };
     await pb.collection("tasks").update(`${id}`, data);
   } catch (e) {

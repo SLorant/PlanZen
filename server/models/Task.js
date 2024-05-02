@@ -2,6 +2,7 @@ const Task = {
   type: "object",
   required: ["name"],
   properties: {
+    userID: { type: "string" },
     id: { type: "string" },
     name: { type: "string" },
     description: { type: "string" },

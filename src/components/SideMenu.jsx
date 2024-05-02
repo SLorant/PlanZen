@@ -21,12 +21,11 @@ import Login from "./auth/Login";
 import Register from "./auth/Register";
 import LoginCheckUtil from "../utils/LoginCheckUtil";
 import axios from "axios";
-import { AuthContext } from "../utils/AuthContext";
 const SideMenu = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef();
   const { toggleColorMode } = useColorMode();
-  const { loggedIn, setLoggedIn } = useContext(AuthContext);
+  /*  const { loggedIn, setLoggedIn } = useContext(AuthContext); */
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [initial, setInitial] = useState(true);
@@ -42,13 +41,13 @@ const SideMenu = () => {
     const result = await LoginCheckUtil();
     if (result) {
       await getUserInfo();
-      setLoggedIn(true);
+      /*    setLoggedIn(true); */
     }
   };
 
   const getUserInfo = async () => {
     try {
-      const result = await axios.get(`${import.meta.env.VITE_LIVE_SERVER}/userInfo`, {
+      const result = await axios.get(`${import.meta.env.VITE_LOCAL_SERVER}/userInfo`, {
         withCredentials: false,
       });
       if (result?.data?.username) setUserName(result?.data?.username);
@@ -59,9 +58,9 @@ const SideMenu = () => {
   };
 
   const handleLogout = async () => {
-    setLoggedIn(false);
+    /*   setLoggedIn(false); */
     try {
-      await axios.delete(`${import.meta.env.VITE_LIVE_SERVER}/logout`, {
+      await axios.delete(`${import.meta.env.VITE_LOCAL_SERVER}/logout`, {
         withCredentials: false,
       });
     } catch (e) {
@@ -211,7 +210,7 @@ const SideMenu = () => {
             </Link>
 
             <Divider size={20} mt={6} backgroundColor={"secondary"} />
-            {loggedIn ? (
+            {/*   {false ? (
               <Flex flexDirection={"column"} alignItems={"center"} justifyContent={"center"} mt={6}>
                 <Text textAlign={"center"}>Logged in as {userName}</Text>
                 <Text mt={2} textAlign={"center"}>
@@ -221,12 +220,12 @@ const SideMenu = () => {
                   Logout
                 </Button>
               </Flex>
-            ) : (
-              <>
-                <Login setLoggedIn={setLoggedIn} />
-                <Register />
-              </>
-            )}
+            ) : ( */}
+            <>
+              <Login />
+              <Register />
+            </>
+            {/*  )} */}
           </DrawerBody>
 
           <DrawerFooter justifyContent={"start"}>

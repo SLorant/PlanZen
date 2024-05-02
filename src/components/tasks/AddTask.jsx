@@ -28,6 +28,7 @@ import ColorPicker from "../calendar/ColorPicker";
 import axios from "axios";
 import PlusIcon from "../../assets/icons/PlusIcon";
 import LoginCheckUtil from "../../utils/LoginCheckUtil";
+import { usePocket } from "../../contexts/PocketContext";
 
 const AddTask = ({ tasks, fetchTasks, task = null }) => {
   //Time formatting
@@ -64,7 +65,7 @@ const AddTask = ({ tasks, fetchTasks, task = null }) => {
   const [error, setError] = useState("");
   const [nameError, setNameError] = useState("");
   const toast = useToast();
-
+  const { user } = usePocket();
   //Reset when tasks are freshly fetched
   useEffect(() => {
     setNewTask({
@@ -122,8 +123,9 @@ const AddTask = ({ tasks, fetchTasks, task = null }) => {
       try {
         if (!task) {
           await axios.post(
-            `${import.meta.env.VITE_LIVE_SERVER}/addTask`,
+            `${import.meta.env.VITE_LOCAL_SERVER}/addTask`,
             {
+              userID: user.id,
               name: newTask.name,
               description: newTask.description,
               isRecurring: isRecurring,
@@ -138,8 +140,9 @@ const AddTask = ({ tasks, fetchTasks, task = null }) => {
           );
         } else {
           await axios.post(
-            `${import.meta.env.VITE_LIVE_SERVER}/updateTask`,
+            `${import.meta.env.VITE_LOCAL_SERVER}/updateTask`,
             {
+              userID: user.id,
               id: newTask.id,
               name: newTask.name,
               description: newTask.description,
@@ -165,14 +168,15 @@ const AddTask = ({ tasks, fetchTasks, task = null }) => {
         fetchTasks();
         onClose();
       } catch (error) {
-        setError(error?.response?.data);
+        console.log(error);
+        //setError(error?.response?.data);
       }
     }
   }
 
   const handleAddButton = async () => {
-    const result = await LoginCheckUtil(toast, "to add an event");
-    if (result) onOpen();
+    /* const result = await LoginCheckUtil(toast, "to add an event");
+    if (result) */ onOpen();
   };
 
   return (

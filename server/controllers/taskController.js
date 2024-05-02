@@ -8,7 +8,8 @@ import {
 
 const getTasks = async (req, reply) => {
   try {
-    const tasks = await getTasksService();
+    const { userID } = req.params;
+    const tasks = await getTasksService(userID);
     reply.code(200).send(tasks);
   } catch (e) {
     reply.code(e.status).send(e.name);
@@ -16,9 +17,9 @@ const getTasks = async (req, reply) => {
 };
 
 const addTask = async (req, reply) => {
-  const { name, description, isRecurring, isEvent, start, end, color } = req.body;
+  const { userID, name, description, isRecurring, isEvent, start, end, color } = req.body;
   try {
-    const isSuccess = await addTaskService(name, description, isRecurring, isEvent, start, end, color);
+    const isSuccess = await addTaskService(userID, name, description, isRecurring, isEvent, start, end, color);
     isSuccess ? reply.code(200).send("Success") : reply.code(500).send("Something went wrong.");
   } catch (e) {
     reply.code(e.status).send(e.name);
@@ -26,9 +27,9 @@ const addTask = async (req, reply) => {
 };
 
 const updateTask = async (req, reply) => {
-  const { id, name, description, isRecurring, isEvent, start, end, color } = req.body;
+  const { userID, id, name, description, isRecurring, isEvent, start, end, color } = req.body;
   try {
-    const isSuccess = await updateTaskService(id, name, description, isRecurring, isEvent, start, end, color);
+    const isSuccess = await updateTaskService(userID, id, name, description, isRecurring, isEvent, start, end, color);
     isSuccess ? reply.code(200).send("Success") : reply.code(500).send("Something went wrong.");
   } catch (e) {
     reply.code(e.status).send(e.name);
@@ -38,7 +39,7 @@ const updateTask = async (req, reply) => {
 const deleteTask = async (req, reply) => {
   const task = req.body;
   try {
-    const isSuccess = await deleteTaskService(task.id);
+    const isSuccess = await deleteTaskService(task.id, task.userID);
     isSuccess ? reply.code(200).send("Success") : reply.code(500).send("Something went wrong.");
   } catch (e) {
     reply.code(e.status).send(e.name);
@@ -46,9 +47,9 @@ const deleteTask = async (req, reply) => {
 };
 
 const taskDone = async (req, reply) => {
-  const { id, isDone } = req.body.data;
+  const { id, isDone, userID } = req.body.data;
   try {
-    const isSuccess = await taskDoneService(id, isDone);
+    const isSuccess = await taskDoneService(id, isDone, userID);
     isSuccess ? reply.code(200).send("Success") : reply.code(500).send("Something went wrong.");
   } catch (e) {
     reply.code(e.status).send(e.name);

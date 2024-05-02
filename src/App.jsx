@@ -14,8 +14,8 @@ function App() {
   const [dailyQuote, setQuote] = useState("");
   const [author, setAuthor] = useState("");
   const { toggleColorMode } = useColorMode();
-  const { setLoggedIn } = useContext(AuthContext);
-
+  /*  const { setLoggedIn } = useContext(AuthContext);
+   */
   useEffect(() => {
     try {
       checkLoggedIn();
@@ -27,9 +27,9 @@ function App() {
 
   const checkLoggedIn = async () => {
     const result = await LoginCheckUtil();
-    if (result) {
+    /* if (result) {
       setLoggedIn(true);
-    }
+    } */
   };
 
   return (

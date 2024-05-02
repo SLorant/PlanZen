@@ -20,6 +20,7 @@ import {
   ModalBody,
   ModalFooter,
 } from "@chakra-ui/react";
+import { usePocket } from "../../contexts/PocketContext";
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -43,6 +44,8 @@ const Register = () => {
     setNameError("");
     setEmailError("");
   };
+
+  const { register } = usePocket();
 
   const isValidEmail = (email) => {
     // Regular expression for email validation
@@ -77,8 +80,8 @@ const Register = () => {
     }
     if (!hasErrors) {
       try {
-        await axios.post(
-          `${import.meta.env.VITE_LIVE_SERVER}/register`,
+        /*   await axios.post(
+          `${import.meta.env.VITE_LOCAL_SERVER}/register`,
           {
             username,
             email,
@@ -88,7 +91,8 @@ const Register = () => {
           {
             withCredentials: false,
           }
-        );
+        ); */
+        await register(username, email, password);
         toast({
           title: "Registration successful",
           description: "You have successfully registered.",

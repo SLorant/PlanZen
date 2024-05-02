@@ -12,6 +12,7 @@ import { ColorModeScript } from "@chakra-ui/react";
 import Tasks from "./pages/Tasks.jsx";
 import Meditation from "./pages/Meditation.jsx";
 import { AuthProvider } from "./utils/AuthContext.jsx";
+import { PocketProvider } from "./contexts/PocketContext";
 
 const router = createBrowserRouter([
   {
@@ -47,9 +48,9 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root")).render(
   /*  <React.StrictMode> */
   <ChakraProvider theme={theme}>
-    <AuthProvider>
+    <PocketProvider>
       <ColorModeScript initialColorMode={theme.config.initialColorMode} />
       <RouterProvider router={router} />
-    </AuthProvider>
+    </PocketProvider>
   </ChakraProvider>
 );

@@ -16,7 +16,6 @@ const getTasksOpts = {
       },
     },
   },
-  preHandler: authorize,
   handler: getTasks,
 };
 
@@ -30,7 +29,6 @@ const postTaskOpts = {
       200: Message,
     },
   },
-  preHandler: authorize,
   handler: addTask,
 };
 
@@ -44,7 +42,6 @@ const updateTaskOpts = {
       200: Message,
     },
   },
-  preHandler: authorize,
   handler: updateTask,
 };
 
@@ -54,6 +51,7 @@ const deleteTaskOpts = {
       type: "object",
       properties: {
         id: { type: "string" },
+        userID: { type: "string" },
       },
     },
     response: {
@@ -63,7 +61,6 @@ const deleteTaskOpts = {
       200: Message,
     },
   },
-  preHandler: authorize,
   handler: deleteTask,
 };
 
@@ -83,13 +80,12 @@ const taskDoneOpts = {
       200: Message,
     },
   },
-  preHandler: authorize,
   handler: taskDone,
 };
 
 const taskRoutes = (app, options, done) => {
   //Get all
-  app.get("/tasks", getTasksOpts);
+  app.get("/tasks/:userID", getTasksOpts);
 
   app.post("/updateTask", updateTaskOpts);
 
