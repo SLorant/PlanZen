@@ -40,7 +40,7 @@ const Tasks = () => {
   const fetchAllTasks = async () => {
     if (user) {
       try {
-        const result = await axios.get(`${import.meta.env.VITE_LOCAL_SERVER}/tasks/${user.id}`, {
+        const result = await axios.get(`${import.meta.env.VITE_LIVE_SERVER}/tasks/${user.id}`, {
           withCredentials: false,
         });
         const tasks = result?.data.items;
@@ -49,7 +49,7 @@ const Tasks = () => {
           //If task is an event too, get the corresponding event from db
           if (task.isEvent && task.id) {
             const event = await axios.post(
-              `${import.meta.env.VITE_LOCAL_SERVER}/getEventByTask`,
+              `${import.meta.env.VITE_LIVE_SERVER}/getEventByTask`,
               { userID: user.id, taskID: task.id },
               {
                 withCredentials: false,
@@ -130,7 +130,7 @@ const Tasks = () => {
     if (user && taskID) {
       try {
         await axios.post(
-          `${import.meta.env.VITE_LOCAL_SERVER}/taskDone`,
+          `${import.meta.env.VITE_LIVE_SERVER}/taskDone`,
           {
             data: { id: taskID, isDone: isDone, userID: user.id },
           },

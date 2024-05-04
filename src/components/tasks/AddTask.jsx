@@ -122,7 +122,7 @@ const AddTask = ({ tasks, fetchTasks, task = null }) => {
       try {
         if (!task) {
           await axios.post(
-            `${import.meta.env.VITE_LOCAL_SERVER}/addTask`,
+            `${import.meta.env.VITE_LIVE_SERVER}/addTask`,
             {
               userID: user.id,
               name: newTask.name,
@@ -139,7 +139,7 @@ const AddTask = ({ tasks, fetchTasks, task = null }) => {
           );
         } else {
           await axios.post(
-            `${import.meta.env.VITE_LOCAL_SERVER}/updateTask`,
+            `${import.meta.env.VITE_LIVE_SERVER}/updateTask`,
             {
               userID: user.id,
               id: newTask.id,

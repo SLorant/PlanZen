@@ -1,30 +1,67 @@
-# React + TypeScript + Vite
+# PlanZen
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Create a schedule, plan your vacation, and organize your day in one place. This project aims to help you focus by not having to switch between apps.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Calendar: A clean calendar where you can freely drag and drop your events, and create recurring ones to make a timetable
+- Tasks: Here you can add task with descriptions, and also make daily tasks that refresh every day
+- Meditation: A simple page to just meditate with a timer, you can choose a background sound too
+- Habit tracker: In progress
+- Daily quotes: On the home screen there is an inspirational quote that refreshes every day
+- Responsive: Smooth experience on all screen sizes
 
-## Expanding the ESLint configuration
+## Technologies Used
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- React
+- NodeJS
+- Chakra UI
+- Pocketbase
+- Fastify
 
-- Configure the top-level `parserOptions` property like this:
+## Local install
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+To run PlanZen locally, follow these steps:
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/SLorant/planzen.git
+   ```
+
+2. Navigate to the project directory:
+
+   ```bash
+   cd planzen
+   ```
+
+3. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+4. Do the same for the server:
+
+```bash
+ cd server
+ npm install
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+5. Install pocketbase :
+
+   - Instructions here: https://pocketbase.io/docs
+
+6. Start the development server:
+
+   ```bash
+   npm run dev
+   cd server
+   npm run dev
+   ```
+
+7. Open your browser and navigate to http://localhost:5173
+
+## License
+
+This project is licensed under the MIT License.

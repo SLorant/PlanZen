@@ -53,7 +53,7 @@ const Login = () => {
         //const authData = await pb.collection("users").authWithPassword(username, password);
 
         /*  await axios.post(
-          `${import.meta.env.VITE_LOCAL_SERVER}/login`,
+          `${import.meta.env.VITE_LIVE_SERVER}/login`,
           {
             username,
             password,

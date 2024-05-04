@@ -53,7 +53,7 @@ const Calendar2 = () => {
   const fetchAllEvents = async () => {
     if (user) {
       try {
-        const result = await axios.get(`${import.meta.env.VITE_LOCAL_SERVER}/events/${user.id}`, {
+        const result = await axios.get(`${import.meta.env.VITE_LIVE_SERVER}/events/${user.id}`, {
           withCredentials: false,
         });
         const events = result?.data.items;
@@ -131,7 +131,7 @@ const Calendar2 = () => {
       }
     });
     try {
-      await axios.post(`${import.meta.env.VITE_LOCAL_SERVER}/updateEvent`, updatedEvent, {
+      await axios.post(`${import.meta.env.VITE_LIVE_SERVER}/updateEvent`, updatedEvent, {
         withCredentials: false,
       });
     } catch (e) {

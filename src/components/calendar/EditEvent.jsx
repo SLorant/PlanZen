@@ -24,7 +24,7 @@ const EditEvent = ({ editedEvent, isOpen, onOpen, onClose, allEvents, setAllEven
     if (user && editedEvent.id) {
       try {
         const result = await axios.delete(
-          `${import.meta.env.VITE_LOCAL_SERVER}/deleteEvent`,
+          `${import.meta.env.VITE_LIVE_SERVER}/deleteEvent`,
           {
             data: { id: editedEvent.id, userID: user.id },
           },

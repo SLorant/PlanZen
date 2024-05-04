@@ -11,7 +11,7 @@ const DeleteTask = ({ fetchTasks, taskID }) => {
     if (user && taskID) {
       try {
         const result = await axios.delete(
-          `${import.meta.env.VITE_LOCAL_SERVER}/deleteTask`,
+          `${import.meta.env.VITE_LIVE_SERVER}/deleteTask`,
           {
             data: { id: taskID, userID: user.id },
           },
