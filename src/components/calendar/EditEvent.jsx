@@ -12,21 +12,21 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import AddEvent from "./AddEvent";
-import LoginCheckUtil from "../../utils/LoginCheckUtil";
 import axios from "axios";
+import { usePocket } from "../../contexts/PocketContext";
 
 const EditEvent = ({ editedEvent, isOpen, onOpen, onClose, allEvents, setAllEvents, fetchEvents }) => {
   const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
   const toast = useToast();
+  const { user } = usePocket();
 
   const deleteEvent = async () => {
-    const result = await LoginCheckUtil();
-    if (result && editedEvent.id) {
+    if (user && editedEvent.id) {
       try {
         const result = await axios.delete(
-          `${import.meta.env.VITE_LOCAL_SERVER}deleteEvent`,
+          `${import.meta.env.VITE_LOCAL_SERVER}/deleteEvent`,
           {
-            data: { id: editedEvent.id },
+            data: { id: editedEvent.id, userID: user.id },
           },
           {
             withCredentials: false,

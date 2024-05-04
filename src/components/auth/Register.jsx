@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import {
   FormControl,
   FormLabel,
@@ -45,7 +44,7 @@ const Register = () => {
     setEmailError("");
   };
 
-  const { register } = usePocket();
+  const { register, login } = usePocket();
 
   const isValidEmail = (email) => {
     // Regular expression for email validation
@@ -80,18 +79,6 @@ const Register = () => {
     }
     if (!hasErrors) {
       try {
-        /*   await axios.post(
-          `${import.meta.env.VITE_LOCAL_SERVER}/register`,
-          {
-            username,
-            email,
-            password,
-            passwordConfirm,
-          },
-          {
-            withCredentials: false,
-          }
-        ); */
         await register(username, email, password);
         toast({
           title: "Registration successful",
@@ -100,6 +87,8 @@ const Register = () => {
           duration: 5000,
           isClosable: true,
         });
+        onClose();
+        await login(username, password);
       } catch (error) {
         setError(error?.response?.data);
       }

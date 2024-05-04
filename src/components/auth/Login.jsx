@@ -1,5 +1,4 @@
-import React, { useContext, useState } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import {
   Button,
   FormControl,
@@ -19,12 +18,11 @@ import {
   ModalBody,
   ModalFooter,
 } from "@chakra-ui/react";
-import PocketBase from "pocketbase";
 import { usePocket } from "../../contexts/PocketContext";
 
 //const pb = new PocketBase("http://127.0.0.1:8090");
 
-const Login = ({ setLoggedIn = null }) => {
+const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -72,11 +70,8 @@ const Login = ({ setLoggedIn = null }) => {
           isClosable: true,
         });
         onClose();
-        if (setLoggedIn) {
-          setLoggedIn(true);
-        }
       } catch (error) {
-        setError(error?.response?.data);
+        setError("Username or password incorrect");
       }
     }
   };
@@ -87,7 +82,7 @@ const Login = ({ setLoggedIn = null }) => {
         Login
       </Button>
 
-      <Modal closeOnOverlayClick={false} size={"sm"} initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
+      <Modal closeOnOverlayClick={false} size={"xs"} initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Log in</ModalHeader>

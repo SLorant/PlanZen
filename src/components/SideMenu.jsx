@@ -15,54 +15,28 @@ import {
   Text,
   Flex,
 } from "@chakra-ui/react";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import Login from "./auth/Login";
 import Register from "./auth/Register";
-import LoginCheckUtil from "../utils/LoginCheckUtil";
-import axios from "axios";
+import { usePocket } from "../contexts/PocketContext";
 const SideMenu = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef();
   const { toggleColorMode } = useColorMode();
-  /*  const { loggedIn, setLoggedIn } = useContext(AuthContext); */
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
-  const [initial, setInitial] = useState(true);
-
+  const { user, logout } = usePocket();
   useEffect(() => {
-    if (isOpen || initial) {
-      checkLoggedIn();
-      setInitial(false);
+    if (user) {
+      setUserName(user.username);
+      setEmail(user.email);
     }
-  }, [isOpen]);
-
-  const checkLoggedIn = async () => {
-    const result = await LoginCheckUtil();
-    if (result) {
-      await getUserInfo();
-      /*    setLoggedIn(true); */
-    }
-  };
-
-  const getUserInfo = async () => {
-    try {
-      const result = await axios.get(`${import.meta.env.VITE_LOCAL_SERVER}/userInfo`, {
-        withCredentials: false,
-      });
-      if (result?.data?.username) setUserName(result?.data?.username);
-      if (result?.data?.email) setEmail(result?.data?.email);
-    } catch (e) {
-      console.log(e?.response?.data);
-    }
-  };
+  }, [user]);
 
   const handleLogout = async () => {
-    /*   setLoggedIn(false); */
     try {
-      await axios.delete(`${import.meta.env.VITE_LOCAL_SERVER}/logout`, {
-        withCredentials: false,
-      });
+      logout();
     } catch (e) {
       console.log(e?.response?.data);
     }
@@ -210,7 +184,7 @@ const SideMenu = () => {
             </Link>
 
             <Divider size={20} mt={6} backgroundColor={"secondary"} />
-            {/*   {false ? (
+            {user ? (
               <Flex flexDirection={"column"} alignItems={"center"} justifyContent={"center"} mt={6}>
                 <Text textAlign={"center"}>Logged in as {userName}</Text>
                 <Text mt={2} textAlign={"center"}>
@@ -220,12 +194,12 @@ const SideMenu = () => {
                   Logout
                 </Button>
               </Flex>
-            ) : ( */}
-            <>
-              <Login />
-              <Register />
-            </>
-            {/*  )} */}
+            ) : (
+              <>
+                <Login />
+                <Register />
+              </>
+            )}
           </DrawerBody>
 
           <DrawerFooter justifyContent={"start"}>

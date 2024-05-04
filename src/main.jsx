@@ -3,7 +3,6 @@ import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ChakraProvider } from "@chakra-ui/react";
-import RandomRoute from "./components/auth/Logout.jsx";
 import Register from "./components/auth/Register.jsx";
 import Login from "./components/auth/Login.jsx";
 import Calendar2 from "./pages/Calendar.jsx";
@@ -11,7 +10,6 @@ import theme from "./theme.js";
 import { ColorModeScript } from "@chakra-ui/react";
 import Tasks from "./pages/Tasks.jsx";
 import Meditation from "./pages/Meditation.jsx";
-import { AuthProvider } from "./utils/AuthContext.jsx";
 import { PocketProvider } from "./contexts/PocketContext";
 
 const router = createBrowserRouter([
@@ -26,10 +24,6 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
-  },
-  {
-    path: "/route",
-    element: <RandomRoute />,
   },
   {
     path: "/calendar",

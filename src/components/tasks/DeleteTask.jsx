@@ -1,7 +1,6 @@
 import React from "react";
 import { Button, useToast } from "@chakra-ui/react";
 import axios from "axios";
-import LoginCheckUtil from "../../utils/LoginCheckUtil";
 import { usePocket } from "../../contexts/PocketContext";
 
 const DeleteTask = ({ fetchTasks, taskID }) => {
@@ -20,7 +19,6 @@ const DeleteTask = ({ fetchTasks, taskID }) => {
             withCredentials: false,
           }
         );
-        console.log(result);
         if (result) {
           toast({
             title: `Task deleted succesfully`,

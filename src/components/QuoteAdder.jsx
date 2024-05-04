@@ -64,7 +64,6 @@ const QuoteAdder = ({ setAuthor, setQuote }) => {
       });
       const quotes = await res.json();
       const quote = quotes[0];
-      console.log(quote);
       return quote;
     } catch {
       setQuote("A wizard is never late, nor is he early, he arrives precisely when he means to");

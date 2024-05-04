@@ -87,6 +87,9 @@
 .rbc-addons-dnd-drag-preview {
   background-color: var(--light-secondary-color) !important;
 }
+.rbc-day-slot .rbc-events-container {
+  margin-right: 0px;
+}
 /* ---------- */
 
 /* -----Toolbar----- */
@@ -143,7 +146,7 @@
 @media (max-width: 768px) {
   .rbc-calendar {
     width: 100vw;
-    height: 90vh;
+    height: 80vh;
   }
   .rbc-event {
     height: 20px;
@@ -167,7 +170,7 @@
     padding-top: 4px;
     display: block;
   }
-  .week-view .rbc-events-container {
+  /* .week-view .rbc-events-container {
     margin-right: 0px;
   }
   .week-view .rbc-header {
@@ -181,7 +184,7 @@
   }
   .week-view .rbc-event-label {
     display: none;
-  }
+  } */
   .rbc-time-view .rbc-allday-cell {
     height: auto;
   }
@@ -245,16 +248,29 @@
   .rbc-toolbar .rbc-btn-group:first-child button:active {
     background: none !important;
   }
+
+  .week-view .rbc-toolbar .rbc-btn-group:first-child button:nth-child(3) {
+    right: 30px;
+  }
+  .week-view .rbc-toolbar .rbc-btn-group:first-child button:nth-child(2) {
+    left: 30px;
+  }
+  .day-view .rbc-toolbar .rbc-btn-group:first-child button:nth-child(3) {
+    right: 50px;
+  }
+  .day-view .rbc-toolbar .rbc-btn-group:first-child button:nth-child(2) {
+    left: 50px;
+  }
 }
 
 @media (max-width: 500px) {
-  .week-view .rbc-header span {
+  /*  .week-view .rbc-header span {
     overflow: hidden;
     margin-left: 4px;
     font-size: 15px;
     word-spacing: 20px;
     white-space: nowrap;
-  }
+  } */
 }
 
 /* ---------- */

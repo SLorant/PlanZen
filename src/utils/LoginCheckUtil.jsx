@@ -1,30 +1,17 @@
-import axios from "axios";
+import { usePocket } from "../contexts/PocketContext";
 
 const LoginCheckUtil = async (toast = null, message = "") => {
-  try {
-    const result = await axios.get(`${import.meta.env.VITE_LOCAL_SERVER}/check-logged-in`, {
-      withCredentials: false,
-    });
-    return result;
-  } catch (e) {
+  const { user } = usePocket();
+  if (user) return true;
+  else {
     if (toast !== null) {
-      if (e.response.status === 401) {
-        toast({
-          title: "Please log in",
-          description: message ? `You have to log in first ${message}` : "You have to log in first to do this.",
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-        });
-      } else {
-        toast({
-          title: "Unexpected error",
-          description: "Something went wrong :c",
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-        });
-      }
+      toast({
+        title: "Please log in",
+        description: message ? `You have to log in first ${message}` : "You have to log in first to do this.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
     }
     return false;
   }

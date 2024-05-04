@@ -27,7 +27,6 @@ import DatePicker from "../calendar/DatePicker";
 import ColorPicker from "../calendar/ColorPicker";
 import axios from "axios";
 import PlusIcon from "../../assets/icons/PlusIcon";
-import LoginCheckUtil from "../../utils/LoginCheckUtil";
 import { usePocket } from "../../contexts/PocketContext";
 
 const AddTask = ({ tasks, fetchTasks, task = null }) => {
@@ -168,15 +167,13 @@ const AddTask = ({ tasks, fetchTasks, task = null }) => {
         fetchTasks();
         onClose();
       } catch (error) {
-        console.log(error);
-        //setError(error?.response?.data);
+        setError(error?.response?.data);
       }
     }
   }
 
   const handleAddButton = async () => {
-    /* const result = await LoginCheckUtil(toast, "to add an event");
-    if (result) */ onOpen();
+    if (user) onOpen();
   };
 
   return (
@@ -204,7 +201,7 @@ const AddTask = ({ tasks, fetchTasks, task = null }) => {
           <PlusIcon />
         </Button>
       )}
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal size={"sm"} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader> {task ? "Edit" : "Add"} task</ModalHeader>
@@ -275,6 +272,7 @@ const AddTask = ({ tasks, fetchTasks, task = null }) => {
                     <Switch
                       isChecked={isEvent}
                       id="isEvent"
+                      size={"sm"}
                       colorScheme={"primary"}
                       _focusVisible={{
                         border: "none",
@@ -289,10 +287,11 @@ const AddTask = ({ tasks, fetchTasks, task = null }) => {
                 </TabPanel>
                 <TabPanel display={"flex"} flexDirection={"column"} justifyContent={"end"} alignItems={"end"}>
                   <FormControl width={"50%"} mt={0} display="flex" alignItems="center" justifyContent={"space-between"}>
-                    <FormLabel marginLeft={0} htmlFor="isEvent" mb="0">
+                    <FormLabel fontSize={"sm"} marginLeft={0} htmlFor="isEvent" mb="0">
                       Make it a habit?
                     </FormLabel>
                     <Switch
+                      size={"sm"}
                       isChecked={isEvent}
                       id="isEvent"
                       colorScheme={"primary"}

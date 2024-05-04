@@ -5,10 +5,11 @@ import Api404Error from "../utils/errors/api404Error.js";
 import Api500Error from "../utils/errors/api404Error.js";
 import pb from "../database/SingletonDB.js";
 
-async function getEventsService() {
+async function getEventsService(userID) {
   try {
-    const eventList = await pb.collection("events").getList(1, 50, {
-      filter: `userID = "${pb.authStore.model.id}"`,
+    const eventList = await pb.collection("events").getList(1, 200, {
+      query: { userID: userID },
+      filter: `userID = "${userID}"`,
     });
     return eventList;
   } catch (e) {
@@ -17,11 +18,11 @@ async function getEventsService() {
   }
 }
 
-async function getEventByTaskService(taskID) {
+async function getEventByTaskService(userID, taskID) {
   try {
-    const event = await pb
-      .collection("events")
-      .getFirstListItem(`userID = "${pb.authStore.model.id}" && taskID = "${taskID}"`);
+    const event = await pb.collection("events").getFirstListItem(`userID = "${userID}" && taskID = "${taskID}"`, {
+      query: { userID: userID },
+    });
     return event;
   } catch (e) {
     console.log(e);
@@ -29,7 +30,7 @@ async function getEventByTaskService(taskID) {
   }
 }
 
-async function addEventService(title, start, end, color, taskId, isRecurring) {
+async function addEventService(title, start, end, color, taskId, isRecurring, userID) {
   try {
     const data = {
       title: title,
@@ -39,7 +40,7 @@ async function addEventService(title, start, end, color, taskId, isRecurring) {
       isRecurring: isRecurring,
       until: isRecurring ? end : null,
       taskID: taskId ?? null,
-      userID: pb.authStore.model.id,
+      userID: userID,
     };
     await pb.collection("events").create(data);
   } catch (e) {
@@ -48,7 +49,7 @@ async function addEventService(title, start, end, color, taskId, isRecurring) {
   return true;
 }
 
-async function updateEventService(id, title, start, end, color, isRecurring, until) {
+async function updateEventService(id, title, start, end, color, isRecurring, until, userID) {
   try {
     const data = {
       title: title,
@@ -57,6 +58,7 @@ async function updateEventService(id, title, start, end, color, isRecurring, unt
       color: color,
       isRecurring: isRecurring,
       until: isRecurring ? until : null,
+      userID: userID,
     };
     await pb.collection("events").update(`${id}`, data);
   } catch (e) {
@@ -66,10 +68,12 @@ async function updateEventService(id, title, start, end, color, isRecurring, unt
   return true;
 }
 
-async function deleteEventService(id) {
+async function deleteEventService(id, userID) {
   try {
     if (id) {
-      await pb.collection("events").delete(`${id}`);
+      await pb.collection("events").delete(`${id}`, {
+        query: { userID: userID },
+      });
     } else return false;
   } catch (e) {
     console.log(e);

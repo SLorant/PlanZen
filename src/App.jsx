@@ -7,8 +7,6 @@ import Wrapper from "./components/Wrapper";
 import SideMenu from "./components/SideMenu";
 import { MoonIcon } from "@chakra-ui/icons";
 import QuoteAdder from "./components/QuoteAdder";
-import LoginCheckUtil from "./utils/LoginCheckUtil";
-import { AuthContext } from "./utils/AuthContext";
 
 function App() {
   const [dailyQuote, setQuote] = useState("");
@@ -18,19 +16,11 @@ function App() {
    */
   useEffect(() => {
     try {
-      checkLoggedIn();
       QuoteAdder({ setAuthor, setQuote });
     } catch (e) {
       console.error(e);
     }
   }, []);
-
-  const checkLoggedIn = async () => {
-    const result = await LoginCheckUtil();
-    /* if (result) {
-      setLoggedIn(true);
-    } */
-  };
 
   return (
     <Wrapper>
@@ -53,7 +43,7 @@ function App() {
         <MoonIcon boxSize={5} />
       </Button>
       {dailyQuote && author && (
-        <Flex justifyContent={"center"} placeItems={"center"}>
+        <Flex padding={["0px 2em", "0px 0px"]} justifyContent={"center"} placeItems={"center"}>
           <Box width={"max-content"} mt={10} textAlign={"center"} fontSize={["lg", "2xl"]} fontWeight={"bold"}>
             {dailyQuote}
             <Heading mt={0} textAlign={"end"} size={["xs", "sm"]}>
@@ -81,7 +71,7 @@ function App() {
             <CardFooter>
               <Link to={"/calendar"}>
                 <Button _hover={{ backgroundColor: "secondary.500" }} colorScheme="primary" textColor={"darktext"}>
-                  Calendar
+                  Go here
                 </Button>
               </Link>
             </CardFooter>
@@ -96,7 +86,7 @@ function App() {
             <CardFooter>
               <Link to={"/tasks"}>
                 <Button _hover={{ backgroundColor: "secondary.500" }} textColor={"darktext"} colorScheme="primary">
-                  View tasks
+                  Go here
                 </Button>
               </Link>
             </CardFooter>
@@ -111,7 +101,7 @@ function App() {
             <CardFooter>
               <Link to={"/meditation"}>
                 <Button _hover={{ backgroundColor: "secondary.500" }} textColor={"darktext"} colorScheme="primary">
-                  Meditate
+                  Go here
                 </Button>
               </Link>
             </CardFooter>
@@ -131,7 +121,7 @@ function App() {
                   isDisabled={true}
                   colorScheme="primary"
                 >
-                  Check habits
+                  Go here
                 </Button>
               </Link>
             </CardFooter>

@@ -19,11 +19,11 @@ import {
 } from "@chakra-ui/react";
 import ColorPicker from "./ColorPicker";
 import axios from "axios";
-import LoginCheckUtil from "../../utils/LoginCheckUtil";
 import DatePicker from "./DatePicker";
 import { isSameDay } from "../../utils/TimeUtils";
 import EventTabs from "./EventTabs";
 import PlusIcon from "../../assets/icons/PlusIcon";
+import { usePocket } from "../../contexts/PocketContext";
 
 const initialErrors = {
   api: "",
@@ -48,6 +48,7 @@ const AddEvent = ({ allEvents, slotEvent, editing, fetchAllEvents }) => {
   const [isRecurring, setIsRecurring] = useState(false);
   const [errors, setErrors] = useState(initialErrors);
   const toast = useToast();
+  const { user } = usePocket();
 
   //Refresh form event when calendar refreshes
   useEffect(() => {
@@ -55,6 +56,7 @@ const AddEvent = ({ allEvents, slotEvent, editing, fetchAllEvents }) => {
       title: "",
       start: new Date(),
       end: new Date(),
+      until: new Date(),
       color: "#43e56e",
     });
   }, [allEvents]);
@@ -104,6 +106,10 @@ const AddEvent = ({ allEvents, slotEvent, editing, fetchAllEvents }) => {
         updatedErrors.until = "Time distance too big";
         valid = false;
       }
+      if (startDate > endDate) {
+        updatedErrors.until = "Start date can't be later than end date";
+        valid = false;
+      }
     }
 
     setErrors(updatedErrors);
@@ -112,9 +118,7 @@ const AddEvent = ({ allEvents, slotEvent, editing, fetchAllEvents }) => {
 
   //Clicking on existing event, or spare slot executes this
   const handleSlotClick = async () => {
-    const result = await LoginCheckUtil(toast, "to add an event");
-
-    if (slotEvent && result) {
+    if (slotEvent && user) {
       //Date formatting
       const start = new Date(slotEvent.start);
       const end = new Date(slotEvent.end);
@@ -174,6 +178,7 @@ const AddEvent = ({ allEvents, slotEvent, editing, fetchAllEvents }) => {
               color: newEvent.color,
               isRecurring: isRecurring,
               until: newEvent.until,
+              userID: user.id,
             },
             {
               withCredentials: false,
@@ -188,6 +193,7 @@ const AddEvent = ({ allEvents, slotEvent, editing, fetchAllEvents }) => {
               end: endDateTime,
               color: newEvent.color,
               isRecurring: isRecurring,
+              userID: user.id,
             },
             {
               withCredentials: false,
@@ -214,9 +220,17 @@ const AddEvent = ({ allEvents, slotEvent, editing, fetchAllEvents }) => {
   }
 
   const handleAddButton = async () => {
-    const result = await LoginCheckUtil(toast, "to add an event");
-    if (editing && result) handleSlotClick();
-    if (result) onOpen();
+    if (editing && user) handleSlotClick();
+    else if (user) onOpen();
+    else {
+      toast({
+        title: "Please log in",
+        description: "You have to log in first to add an event",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
   };
 
   return (

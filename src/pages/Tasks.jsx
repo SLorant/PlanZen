@@ -10,12 +10,11 @@ import {
   ScaleFade,
   useColorModeValue,
 } from "@chakra-ui/react";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Wrapper from "../components/Wrapper";
 import SideMenu from "../components/SideMenu";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import AddTask from "../components/tasks/AddTask";
-import LoginCheckUtil from "../utils/LoginCheckUtil";
 import axios from "axios";
 import moment from "moment";
 import { Link } from "react-router-dom";
@@ -32,7 +31,6 @@ const Tasks = () => {
   const { user } = usePocket();
   useEffect(() => {
     try {
-      console.log(user);
       if (user) fetchAllTasks();
     } catch (e) {
       console.error(e?.response?.data);
@@ -52,7 +50,7 @@ const Tasks = () => {
           if (task.isEvent && task.id) {
             const event = await axios.post(
               `${import.meta.env.VITE_LOCAL_SERVER}/getEventByTask`,
-              { taskID: task.id },
+              { userID: user.id, taskID: task.id },
               {
                 withCredentials: false,
               }
@@ -165,8 +163,12 @@ const Tasks = () => {
         Tasks
       </Heading>
       <AddTask tasks={allTasks} fetchTasks={fetchAllTasks} />
-      {/*    {!userID && <Text>Log in to see your tasks!</Text>}
-      {!userID && allTasks.length < 1 && <Text>Loading...</Text>} */}
+      {!user ? (
+        <Text textAlign={"center"}>Log in to see your tasks!</Text>
+      ) : (
+        !user && allTasks.length < 1 && <Text textAlign={"center"}>Loading...</Text>
+      )}
+      {user && allTasks.length < 1 && <Text textAlign={"center"}>You have no tasks</Text>}
       <Flex
         flexDirection={"column"}
         gap={6}

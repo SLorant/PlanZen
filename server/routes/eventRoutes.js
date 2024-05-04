@@ -16,7 +16,6 @@ const getEventsOpts = {
       },
     },
   },
-  preHandler: authorize,
   handler: getEvents,
 };
 
@@ -25,6 +24,7 @@ const getEventOpts = {
     body: {
       type: "object",
       properties: {
+        userID: { type: "string" },
         taskID: { type: "string" },
       },
     },
@@ -35,7 +35,6 @@ const getEventOpts = {
       200: Event,
     },
   },
-  preHandler: authorize,
   handler: getEventByTask,
 };
 
@@ -50,7 +49,6 @@ const postEventOpts = {
       200: Message,
     },
   },
-  preHandler: authorize,
   handler: addEvent,
 };
 
@@ -65,7 +63,6 @@ const updateEventOpts = {
       200: Message,
     },
   },
-  preHandler: authorize,
   handler: updateEvent,
 };
 
@@ -84,13 +81,12 @@ const deleteEventOpts = {
       200: Message,
     },
   },
-  preHandler: authorize,
   handler: deleteEvent,
 };
 
 const eventRoutes = (app, options, done) => {
   //Get all
-  app.get("/events", getEventsOpts);
+  app.get("/events/:userID", getEventsOpts);
 
   app.post("/getEventByTask", getEventOpts);
 

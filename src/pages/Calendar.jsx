@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Calendar, Views, momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { useState } from "react";
@@ -10,20 +10,18 @@ const DnDCalendar = withDragAndDrop(Calendar);
 import moment from "moment";
 import "moment/dist/locale/en-gb";
 import AddEvent from "../components/calendar/AddEvent";
-import LoginCheckUtil from "../utils/LoginCheckUtil";
 import { Heading, useColorMode, useDisclosure } from "@chakra-ui/react";
 import EditEvent from "../components/calendar/EditEvent";
 import Wrapper from "../components/Wrapper";
 import SideMenu from "../components/SideMenu";
 import { RRule } from "rrule";
-import { AuthContext } from "../utils/AuthContext";
+import { usePocket } from "../contexts/PocketContext";
 
 const Calendar2 = () => {
   moment.locale("en-GB");
   const [allEvents, setAllEvents] = useState([]);
   const localizer = momentLocalizer(moment);
   const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
-  const { loggedIn } = useContext(AuthContext);
   const { colorMode } = useColorMode();
   const [slotEvent, setSlotEvent] = useState({
     slotClicked: false,
@@ -35,6 +33,7 @@ const Calendar2 = () => {
   const [monthView, setMonthView] = useState(true);
   const [dayView, setDayView] = useState(true);
   const [fetchNew, setFetchNew] = useState(false);
+  const { user } = usePocket();
 
   useEffect(() => {
     if (fetchNew) {
@@ -44,18 +43,17 @@ const Calendar2 = () => {
 
   useEffect(() => {
     try {
-      if (loggedIn) fetchAllEvents();
+      if (user) fetchAllEvents();
       else setAllEvents([]);
     } catch (e) {
       console.error(e?.response?.data);
     }
-  }, [loggedIn]);
+  }, [user]);
 
   const fetchAllEvents = async () => {
-    const result = await LoginCheckUtil();
-    if (result) {
+    if (user) {
       try {
-        const result = await axios.get(`${import.meta.env.VITE_LOCAL_SERVER}/events`, {
+        const result = await axios.get(`${import.meta.env.VITE_LOCAL_SERVER}/events/${user.id}`, {
           withCredentials: false,
         });
         const events = result?.data.items;
@@ -102,6 +100,7 @@ const Calendar2 = () => {
 
   const onEventResize = async ({ event, start, end }) => {
     const updatedEvent = { ...event, start, end };
+    updatedEvent.userID = user.id;
     //If event is recurring, and we are on week/day view, when the user moves an event
     //the corresponding event dates should update too. Without this feature, if the user
     // moves a recurring date that is not the first one, the new date would become the first
@@ -194,7 +193,11 @@ const Calendar2 = () => {
       <Heading textAlign={"center"} mt={[7, 0]} mb={2}>
         Calendar
       </Heading>
-      <div className={(weekView ? "week-view" : "", colorMode === "dark" ? "dark" : "")}>
+      <div
+        className={`${weekView ? "week-view " : ""} ${dayView ? "day-view " : ""} ${
+          colorMode === "dark" ? "dark" : ""
+        }`}
+      >
         <DnDCalendar
           localizer={localizer}
           events={allEvents}

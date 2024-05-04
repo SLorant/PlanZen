@@ -12,6 +12,7 @@ const Event = {
     isRecurring: { type: "boolean" },
     until: { type: "string" },
     taskId: { type: "string" },
+    userID: { type: "string" },
   },
 };
 export default Event;

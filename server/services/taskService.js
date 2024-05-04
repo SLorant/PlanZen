@@ -13,7 +13,7 @@ async function getTasksService(userID) {
       query: { userID: userID },
     });
 
-    const taskList = await pb.collection("tasks").getList(1, 50, {
+    const taskList = await pb.collection("tasks").getList(1, 200, {
       query: { userID: userID },
       /*   headers: { userID: userID }, */
       filter: `userID = "${userID}"`,
@@ -54,9 +54,9 @@ async function addTaskService(userID, name, description, isRecurring, isEvent, s
     };
     console.log(data);
     const result = await pb.collection("tasks").create(data);
-    /*   if (isEvent) {
-      await addEventService(name, start, end, color, result.id);
-    } */
+    if (isEvent) {
+      await addEventService(name, start, end, color, result.id, false, userID);
+    }
   } catch (e) {
     console.log(e);
     throw new Api500Error("Something went wrong.");
@@ -75,12 +75,12 @@ async function updateTaskService(userID, id, name, description, isRecurring, isE
     };
     const result = await pb.collection("tasks").update(`${id}`, data);
     try {
-      const event = await getEventByTaskService(id);
+      const event = await getEventByTaskService(userID, id);
       if (event) {
-        await updateEventService(event.id, name, start, end, color);
+        await updateEventService(event.id, name, start, end, color, false, false, userID);
       }
     } catch {
-      await addEventService(name, start, end, color, id);
+      await addEventService(name, start, end, color, id, false, userID);
     }
   } catch (e) {
     console.log(e);
