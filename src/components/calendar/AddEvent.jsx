@@ -94,7 +94,7 @@ const AddEvent = ({ allEvents, slotEvent, editing, fetchAllEvents }) => {
       updatedErrors.end = "End time required";
       valid = false;
     }
-    if (newEvent.until) {
+    if (newEvent.until && isRecurring && !isSimple) {
       const startDate = newEvent.start;
       const endDate = newEvent.until;
 

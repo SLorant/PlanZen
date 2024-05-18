@@ -35,3 +35,6 @@ unused.txt
 .firebaserc
 firebase.json
 .firebase
+server/.dockerignore
+server/Dockerfile
+server/fly.toml

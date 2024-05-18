@@ -43,10 +43,10 @@ To run PlanZen locally, follow these steps:
 
 4. Do the same for the server:
 
-```bash
- cd server
- npm install
-```
+   ```bash
+   cd server
+   npm install
+   ```
 
 5. Install pocketbase :
 

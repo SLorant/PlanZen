@@ -8,13 +8,12 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server",
     "dev": "nodemon server",
-    "authServer": "nodemon authServer",
-    "build": "npx tsc"
+    "authServer": "nodemon authServer"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@fastify/swagger": "^7.0.0",
+    "@flydotio/dockerfile": "^0.5.7",
     "@types/bcrypt": "^5.0.2",
     "@types/node": "^20.11.30",
     "nodemon": "^3.1.0",

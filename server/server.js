@@ -1,5 +1,5 @@
 import fastify from "fastify";
-import fastifySwagger from "@fastify/swagger";
+//import fastifySwagger from "@fastify/swagger";
 import fastifyCors from "@fastify/cors";
 import { configDotenv } from "dotenv";
 import { authRoutes } from "./routes/authRoutes.js";
@@ -9,16 +9,18 @@ import { taskRoutes } from "./routes/taskRoutes.js";
 
 const app = fastify({ logger: false });
 configDotenv.apply();
-const port = process.env.PORT || 4000;
-const host = "RENDER" in process.env ? `0.0.0.0` : `localhost`;
+const port = process.env.PORT || 3000;
+const host = /* "RENDER" in process.env ?  */ `0.0.0.0`; /* : `localhost` */
 
-app.register(fastifySwagger, {
+/* app.register(fastifySwagger, {
   exposeRoute: true,
   routePrefix: "/docs",
   swagger: {
     info: { title: "fastify-api" },
   },
-});
+}); */
+
+//  "build": "npx tsc"
 
 app.register(fastifyCors, {
   //origin: "RENDER" in process.env ? `https://plan-zen.web.app/` : `http://localhost:5173`,
