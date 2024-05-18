@@ -4,7 +4,7 @@ import { useInterval } from "usehooks-ts";
 import { jwtDecode } from "jwt-decode";
 import ms from "ms";
 
-const BASE_URL = import.meta.env.VITE_LIVE_SERVER;
+const BASE_URL = import.meta.env.VITE_DATABASE_URL;
 const fiveMinutesInMs = ms("5 minutes");
 const twoMinutesInMs = ms("2 minutes");
 
